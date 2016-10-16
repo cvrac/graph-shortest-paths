@@ -9,3 +9,8 @@ In this contest, the task is to answer shortest path queries on a changing graph
 The graphs are directed and unweighted. Input to your program will be provided via standard input, and the output must appear on the standard output.
 
 http://dsg.uwaterloo.ca/sigmod16contest/task.html
+
+# Development Notes
+Ειχε πει στο φροντ οτι οι κομβοι θα ερχονται με τη σειρα. Στις εικονες 4,5 
+αρχιζει απο το 0, ωστοσο στον αρχικο γραφο του παραδειγματος ριπης εργασιων 
+της τελευταιας σελιδας αρχιζει απο το 1.
