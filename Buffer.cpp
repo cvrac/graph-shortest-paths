@@ -1,4 +1,6 @@
 #include "Buffer.h"
+#include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -10,7 +12,7 @@ Buffer::~Buffer() {
     delete[] buffer;
 }
 
-u_int32_t Buffer::allocNewNode() {
+uint32_t Buffer::allocNewNode() {
     if (curListNodes == maxListNodes) {
         maxListNodes *= 2;
         ListNode *oldBuffer = buffer;
@@ -21,6 +23,29 @@ u_int32_t Buffer::allocNewNode() {
     return curListNodes++;
 }
 
-ListNode *Buffer::getListNode(const u_int32_t& listNode) {
-    return &buffer[listNode];
+ListNode *Buffer::getListNode(const uint32_t &listNodePos) {
+    return &buffer[listNodePos];
+}
+
+void Buffer::insertNeighbor(const uint32_t &listNodePos, const uint32_t &neighborId) {
+    ListNode *listNode = this->getListNode(listNodePos);
+    ListNodePos nextNodePos = listNode->getNextListNodePos();
+    while (nextNodePos.getExists()) {
+        uint32_t nextPos = nextNodePos.getListNodePos();
+        listNode = this->getListNode(nextPos);
+        nextNodePos = listNode->getNextListNodePos();
+    }
+
+    if (listNode->isFull()) {
+        uint32_t nextPos = this->allocNewNode();
+        ListNodePos nextListNodePos(nextPos);
+        listNode->setNextListNodePos(nextListNodePos);
+        listNode = this->getListNode(nextPos);
+    }
+
+    listNode->insertNeighbor(neighborId);
+}
+
+void Buffer::print() const {
+    cout << "--- Buffer ---\ncurListNodes: " << curListNodes << ", maxListNodes: " << maxListNodes << "\n" << endl;
 }

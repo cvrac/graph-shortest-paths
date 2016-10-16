@@ -5,31 +5,34 @@
 using namespace std;
 
 Index::Index() : curSize(0), maxSize(INITIAL_INDEX_MAX_SIZE) {
-    index = new u_int32_t[INITIAL_INDEX_MAX_SIZE];
+    index = new ListNodePos[INITIAL_INDEX_MAX_SIZE];
 }
 
 Index::~Index() {
     delete[] index;
 }
 
-void Index::insertNode(const u_int32_t& nodeId) {
+void Index::insertNode(const uint32_t &nodeId) {
     if (curSize == maxSize) {
         maxSize *= 2;
-        u_int32_t *oldIndex = index;
-        index = new u_int32_t[maxSize];
-        memcpy(index, oldIndex, curSize * sizeof(u_int32_t));
+        ListNodePos *oldIndex = index;
+        index = new ListNodePos[maxSize];
+        memcpy(index, oldIndex, curSize * sizeof(ListNodePos));
         delete[] oldIndex;
     }
-    index[curSize++] = -1;
+    curSize++;
 }
 
-u_int32_t Index::getListHead(const u_int32_t &nodeId) {
-    return index[nodeId];
+void Index::setListHead(const uint32_t &nodeId, const ListNodePos &head) {
+    index[nodeId] = head;
 }
 
 void Index::print() const {
-    cout << "--- Index ---\ncurSize: " << curSize << "\nmaxSize: " << maxSize << endl;
-    for (u_int32_t node = 0 ; node < curSize ; node++) {
-        cout << index[node] << endl;
+    cout << "--- Index ---\ncurSize: " << curSize << ", maxSize: " << maxSize << endl;
+    for (uint32_t node = 0; node < curSize; node++) {
+        cout << node << ": ";
+        index[node].print();
     }
+    cout << endl;
 }
+

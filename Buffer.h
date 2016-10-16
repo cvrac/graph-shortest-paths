@@ -2,21 +2,23 @@
 #define GRAPHSHORTESTPATHS_BUFFER_H
 
 #include "ListNode.h"
-#include <sys/types.h>
+#include <stdint.h>
 
 #define INITIAL_MAX_LIST_NODES 10
 
 class Buffer {
 private:
     ListNode *buffer;
-    u_int32_t curListNodes;
-    u_int32_t maxListNodes;
+    uint32_t curListNodes;
+    uint32_t maxListNodes;
 
 public:
     Buffer();
     ~Buffer();
-    u_int32_t allocNewNode();
-    ListNode *getListNode(const u_int32_t& listNode);
+    uint32_t allocNewNode();
+    ListNode *getListNode(const uint32_t &listNodePos);
+    void insertNeighbor(const uint32_t &listNodePos, const uint32_t &neighborId);
+    void print() const;
 };
 
 #endif //GRAPHSHORTESTPATHS_BUFFER_H
