@@ -1,5 +1,5 @@
 OBJS =  Index.o ListNodePos.o ListNode.o Buffer.o Graph.o main.o
-HEADER = Index.h
+HEADER = Index.h ListNodePos.h ListNode.h Buffer.h Graph.h
 
 all: gsp
 

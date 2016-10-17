@@ -4,12 +4,12 @@
 using namespace std;
 
 ListNodePos::ListNodePos() : exists(false) {}
-ListNodePos::ListNodePos(const uint32_t &listNodePos) : listNodePos(listNodePos), exists(true) {}
+ListNodePos::ListNodePos(const uint32_t &pos) : pos(pos), exists(true) {}
 
 
 void ListNodePos::print() const {
     if (exists) {
-        cout << listNodePos << endl;
+        cout << pos << endl;
     }
     else {
         cout << "none" << endl;

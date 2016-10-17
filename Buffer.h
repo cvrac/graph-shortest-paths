@@ -15,9 +15,9 @@ private:
 public:
     Buffer();
     ~Buffer();
-    uint32_t allocNewNode();
+    ListNodePos allocNewNode();
     ListNode *getListNode(const uint32_t &listNodePos);
-    void insertNeighbor(const uint32_t &listNodePos, const uint32_t &neighborId);
+    bool insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId);
     void print() const;
 };
 

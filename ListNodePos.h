@@ -6,17 +6,15 @@
 class ListNodePos {
 
 private:
-    uint32_t listNodePos;
+    uint32_t pos;
     bool exists;
 
 public:
     ListNodePos();
-    ListNodePos(const uint32_t &listNodePos);
+    ListNodePos(const uint32_t &pos);
     ~ListNodePos() {}
     bool getExists() const {return exists;}
-    uint32_t getListNodePos() const {return listNodePos;}
-    void setListNodePos(uint32_t listNodePos) {this->listNodePos = listNodePos;}
-    void setExists(bool flag) {exists = flag;}
+    uint32_t getPos() const {return pos;}
     void print() const;
 };
 

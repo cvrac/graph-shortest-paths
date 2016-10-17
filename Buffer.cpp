@@ -12,7 +12,11 @@ Buffer::~Buffer() {
     delete[] buffer;
 }
 
-uint32_t Buffer::allocNewNode() {
+/* Get a new listNode, reallocate buffer if necessary.
+ * Any pointers to listNodes received prior to this function call
+ * should be considered invalid and must be fetched again,
+ * due to the possibility of a buffer reallocation. */
+ListNodePos Buffer::allocNewNode() {
     if (curListNodes == maxListNodes) {
         maxListNodes *= 2;
         ListNode *oldBuffer = buffer;
@@ -20,30 +24,43 @@ uint32_t Buffer::allocNewNode() {
         memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
         delete[] oldBuffer;
     }
-    return curListNodes++;
+    return ListNodePos(curListNodes++);
 }
 
 ListNode *Buffer::getListNode(const uint32_t &listNodePos) {
     return &buffer[listNodePos];
 }
 
-void Buffer::insertNeighbor(const uint32_t &listNodePos, const uint32_t &neighborId) {
-    ListNode *listNode = this->getListNode(listNodePos);
-    ListNodePos nextNodePos = listNode->getNextListNodePos();
+bool Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId) {
+    uint32_t curPos = firstPos;
+    ListNode *curNode = this->getListNode(curPos);
+
+    /* No duplicates */
+    if (curNode->search(neighborId)) {
+        return false;
+    }
+    ListNodePos nextNodePos = curNode->getNextPos();
+
+    /* Reach final listNode */
     while (nextNodePos.getExists()) {
-        uint32_t nextPos = nextNodePos.getListNodePos();
-        listNode = this->getListNode(nextPos);
-        nextNodePos = listNode->getNextListNodePos();
+        curPos = nextNodePos.getPos();
+        curNode = this->getListNode(curPos);
+        if (curNode->search(neighborId)) {
+            return false;
+        }
+        nextNodePos = curNode->getNextPos();
     }
 
-    if (listNode->isFull()) {
-        uint32_t nextPos = this->allocNewNode();
-        ListNodePos nextListNodePos(nextPos);
-        listNode->setNextListNodePos(nextListNodePos);
-        listNode = this->getListNode(nextPos);
-    }
+    /* Allocate new if necessary */
+    if (curNode->isFull()) {
+        nextNodePos = this->allocNewNode();
 
-    listNode->insertNeighbor(neighborId);
+        curNode = this->getListNode(curPos);
+        curNode->setNextPos(nextNodePos);
+        curNode = this->getListNode(nextNodePos.getPos());
+    }
+    curNode->insertNeighbor(neighborId);
+    return true;
 }
 
 void Buffer::print() const {

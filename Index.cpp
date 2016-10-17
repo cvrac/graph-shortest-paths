@@ -12,7 +12,11 @@ Index::~Index() {
     delete[] index;
 }
 
+/* Insert node only if it is the direct successor of the last one */
 void Index::insertNode(const uint32_t &nodeId) {
+    if (nodeId != curSize){
+        return;
+    }
     if (curSize == maxSize) {
         maxSize *= 2;
         ListNodePos *oldIndex = index;
