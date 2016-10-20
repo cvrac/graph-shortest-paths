@@ -1,16 +1,20 @@
 #include "Index.h"
 #include <iostream>
 #include <cstring>
+#include <stdlib.h>
 
 using namespace std;
 
 Index::Index() : curSize(0), maxSize(INITIAL_INDEX_MAX_SIZE) {
-    index = new ListNodePos[INITIAL_INDEX_MAX_SIZE];
+//    index = new ListNodePos[INITIAL_INDEX_MAX_SIZE];
+    index = (ListNodePos *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListNodePos));
 }
 
 Index::~Index() {
-    delete[] index;
+//    delete[] index;
+    free(index);
 }
+
 
 /* Insert node only if it is the direct successor of the last one */
 void Index::insertNode(const uint32_t &nodeId) {
@@ -20,9 +24,10 @@ void Index::insertNode(const uint32_t &nodeId) {
     if (curSize == maxSize) {
         maxSize *= 2;
         ListNodePos *oldIndex = index;
-        index = new ListNodePos[maxSize];
-        memcpy(index, oldIndex, curSize * sizeof(ListNodePos));
-        delete[] oldIndex;
+//        index = new ListNodePos[maxSize];
+//        memcpy(index, oldIndex, curSize * sizeof(ListNodePos));
+        index = (ListNodePos *)realloc(index, maxSize * sizeof(ListNodePos));
+//        delete[] oldIndex;
     }
     curSize++;
 }
