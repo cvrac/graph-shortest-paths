@@ -8,6 +8,7 @@ using namespace std;
 Index::Index() : curSize(0), maxSize(INITIAL_INDEX_MAX_SIZE) {
 //    index = new ListNodePos[INITIAL_INDEX_MAX_SIZE];
     index = (ListNodePos *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListNodePos));
+    assert(index != NULL);
 }
 
 Index::~Index() {
@@ -27,6 +28,7 @@ void Index::insertNode(const uint32_t &nodeId) {
 //        index = new ListNodePos[maxSize];
 //        memcpy(index, oldIndex, curSize * sizeof(ListNodePos));
         index = (ListNodePos *)realloc(index, maxSize * sizeof(ListNodePos));
+        assert(index != NULL);
 //        delete[] oldIndex;
     }
     curSize++;

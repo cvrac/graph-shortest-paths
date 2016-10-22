@@ -20,6 +20,7 @@ public:
     Graph() {}
     ~Graph() {}
     void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
+    bool shortestPath(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     void print();
 };
 

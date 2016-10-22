@@ -2,6 +2,7 @@
 #define _LINKEDLIST_H_
 
 #include <iostream>
+#include <assert.h>
 
 template <class T>
 class LinkedList {
@@ -71,9 +72,9 @@ bool LinkedList<T>::empty() {
 
 template <class T>
 T *LinkedList<T>::push_front(const T& data) {
+
 	node *temp = new node(data, head);
-	if (temp == NULL) 
-		return NULL;
+	assert(temp != NULL);
 
 	head = temp;
 	current = head;
@@ -84,6 +85,7 @@ T *LinkedList<T>::push_front(const T& data) {
 template <class T>
 bool LinkedList<T>::push_back(const T& data) {
 	node *temp = new node(data, NULL);
+	assert(temp != NULL);
 
 	if (temp == NULL)
 		return false;
@@ -110,6 +112,7 @@ bool LinkedList<T>::push_back(const T& data) {
 template <class T>
 bool LinkedList<T>::insert(const T& data) {
 	node *temp = new node(data, NULL);
+	assert(temp != NULL);
 	bool found_pos = false;
 
 	if (temp == NULL)
@@ -191,7 +194,6 @@ bool LinkedList<T>::rem(const T& data) {
 
 	while (temp != NULL) {
 		if (temp->data == data) {
-			//std::cout << "deleted " << temp->data << std::endl;
 			prev->next = temp->next;
 			current = head;
 			delete temp;
@@ -222,7 +224,6 @@ template <class T>
 T *LinkedList<T>::member(const T& d) {
 	node *temp = head;
 	while (temp != NULL) {
-		//std::cout << temp->data << std::endl;
 		if (d == temp->data) return &temp->data;
 		temp = temp->next;
 	}
@@ -233,7 +234,6 @@ template <class T>
 bool LinkedList<T>::exists(const T& d) {
 	node *temp = head;
 	while (temp != NULL) {
-		// std::cout << d << " " << temp->data << std::endl;
 		if (d == temp->data) return true;
 		temp = temp->next;
 	}

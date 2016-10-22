@@ -8,6 +8,7 @@ using namespace std;
 Buffer::Buffer() : curListNodes(0), maxListNodes(INITIAL_MAX_LIST_NODES) {
 //    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
     buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
+    assert(buffer != NULL);
 }
 
 Buffer::~Buffer() {
@@ -24,6 +25,7 @@ ListNodePos Buffer::allocNewNode() {
         maxListNodes *= 2;
         ListNode *oldBuffer = buffer;
         buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
+        assert(buffer != NULL);
 //        buffer = new ListNode[maxListNodes];
 //        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
 //        delete[] oldBuffer;
