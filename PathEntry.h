@@ -9,6 +9,7 @@ struct path_entry {
 	unsigned int pathCost;
 	char direction;
 	friend std::ostream& operator<<(std::ostream& out, const path_entry& e);	
+	path_entry(uint32_t& id, uint32_t& parentId, unsigned int& pathC, char& dir);
 };
 
 #endif

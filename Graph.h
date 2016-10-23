@@ -15,12 +15,12 @@ private:
     void insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     void insertNode(const uint32_t nodeId);
     void print(Index &index, Buffer &buffer);
+    void expand(uint32_t &nodeId, LinkedList<int> frontier);
 
 public:
     Graph() {}
     ~Graph() {}
     void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
-    bool shortestPath(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     void print();
 };
 

@@ -1,5 +1,6 @@
-#include "Graph.h"
 #include <iostream>
+#include "Graph.h"
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -62,4 +63,3 @@ void Graph::print(Index &index, Buffer &buffer)  {
         }
     }
 }
-

@@ -19,6 +19,7 @@ private:
 	void step();
 public:
 	ShortestPath(Graph& gr);
+	~ShortestPath();
 	int shortestPath(uint32_t& source, uint32_t& target);
 }
 
