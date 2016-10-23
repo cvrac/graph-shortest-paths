@@ -11,9 +11,8 @@ The graphs are directed and unweighted. Input to your program will be provided v
 http://dsg.uwaterloo.ca/sigmod16contest/task.html
 
 # Development Notes
-- Ειχε πει στο φροντ οτι οι κομβοι θα ερχονται με τη σειρα. Στις εικονες 4,5 
-αρχιζει απο το 0, ωστοσο στον αρχικο γραφο του παραδειγματος ριπης εργασιων 
-της τελευταιας σελιδας αρχιζει απο το 1.
+- Google testing setup: κατεβαζεις το ρεπο, extract, εκτελεις make μεσα στο googletest-master/googletest/make, μετονομαζεις το gtest_main.a σε libgtest_main.a , 
+φροντιζεις οι μεταβλτητες GTEST_INCLUDE και GTEST_LIBDIR του graph-shortest-paths/tests/Makefile να δειχνουν στο σωστο σημειο, εκτελεις make.
 
 - Θα πρεπει να βρουμε μια καλη τιμη για τον αριθμο των γειτονων N ανα listNode.
  Ο μεγαλυτερος δυνατος γραφος μπορει να αποτελειται απο A = 2,814749432 * 10^14 ακμες, 
