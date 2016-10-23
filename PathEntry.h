@@ -6,8 +6,8 @@
 struct path_entry {
 	uint32_t nodeId;
 	uint32_t parentId;
-	uint32_t pathCost;
-	uint32_t direction;
+	unsigned int pathCost;
+	char direction;
 	friend std::ostream& operator<<(std::ostream& out, const path_entry& e);	
 };
 
