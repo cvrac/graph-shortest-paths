@@ -22,6 +22,8 @@ public:
     void setNextPos(const ListNodePos &nextPos) {this->nextPos = nextPos;}
     ListNodePos getNextPos() {return nextPos;}
     bool search(const uint32_t &targetId);
+    uint32_t *getNeighborArray() {return neighbor;}
+    uint32_t getNeighborNumber() {return curNeighbors;}
     void print() const;
 };
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "Graph.h"
 #include "LinkedList.h"
 
@@ -28,13 +29,60 @@ void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeI
 }
 
 void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer) {
-    ListNodePos firstPos = index.getListHead(sourceNodeId);
+    ListNodePos firstPos = index.getListHead(sourceNodeId).pos;
     if (! firstPos.getExists()) {
         firstPos = buffer.allocNewNode();
-        index.setListHead(sourceNodeId, firstPos);
+        index.setListHeadPos(sourceNodeId, firstPos);
     }
-    buffer.insertNeighbor(firstPos.getPos(), targetNodeId);
+    if (buffer.insertNeighbor(firstPos.getPos(), targetNodeId)) {
+        index.setListHeadNeighbors(sourceNodeId, index.getListHeadNeighbors(sourceNodeId) + 1);
+    }
 }
+
+NodeArray *Graph::getNeighbors(const uint32_t &nodeId, std::string direction) {
+    Index *index;
+    Buffer *buffer;
+    if (! direction.compare("outer")) {
+        index = &outerIndex;
+        buffer = &outerBuffer;
+    }
+    else if (! direction.compare("inner")) {
+        index = &innerIndex;
+        buffer = &innerBuffer;
+    }
+    else {
+        return NULL;
+    }
+    return this->getNeighbors(nodeId, *index, *buffer);
+}
+
+/* Caller should free after use */
+NodeArray *Graph::getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buffer) {
+    NodeArray *nodeArray = new NodeArray;
+    ListHead listHead = index.getListHead(nodeId);
+    nodeArray->array = new uint32_t[listHead.totalNeighbors];
+    nodeArray->size = listHead.totalNeighbors;
+
+    uint32_t curNeighbor = 0;
+    ListNodePos listNodePos = listHead.pos;
+    if (listNodePos.getExists()) {
+        uint32_t pos = listNodePos.getPos();
+        do {
+            ListNode *listNode = buffer.getListNode(pos);
+            uint32_t neighborsToAdd = listNode->getNeighborNumber();
+            memcpy(&nodeArray->array[curNeighbor], listNode->getNeighborArray(), neighborsToAdd * sizeof(uint32_t));
+            curNeighbor += neighborsToAdd;
+
+            listNodePos = listNode->getNextPos();
+            if (! listNodePos.getExists()) {
+                break;
+            }
+            pos = listNodePos.getPos();
+        } while (1);
+    }
+    return nodeArray;
+}
+
 
 void Graph::print() {
     cout << "*** OUTER ***\n";
@@ -47,7 +95,7 @@ void Graph::print(Index &index, Buffer &buffer)  {
     buffer.print();
     index.print();
     for (uint32_t nodeId = 0 ; nodeId < index.getCurSize() ; nodeId++) {
-        ListNodePos listNodePos = index.getListHead(nodeId);
+        ListNodePos listNodePos = index.getListHead(nodeId).pos;
         if (listNodePos.getExists()) {
             cout << "---Node " << nodeId << " ListNodes --- " << endl;
             uint32_t pos = listNodePos.getPos();
@@ -62,4 +110,18 @@ void Graph::print(Index &index, Buffer &buffer)  {
             } while (1);
         }
     }
+}
+
+NodeArray::~NodeArray() {
+    if (array != NULL) {
+        delete[] array;
+    }
+}
+
+void NodeArray::print() {
+    cout << "--- NodeArray ---\n" << "size: " << size << endl;
+    for (int n = 0 ; n < size ; n++) {
+        cout << array[n] << " ";
+    }
+    cout << "\n" << endl;
 }

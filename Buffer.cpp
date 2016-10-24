@@ -2,18 +2,19 @@
 #include <iostream>
 #include <cstring>
 #include <stdlib.h>
+#include <assert.h>
 
 using namespace std;
 
 Buffer::Buffer() : curListNodes(0), maxListNodes(INITIAL_MAX_LIST_NODES) {
-//    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
-    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
+    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
+//    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
     assert(buffer != NULL);
 }
 
 Buffer::~Buffer() {
-//    delete[] buffer;
-    free(buffer);
+    delete[] buffer;
+//    free(buffer);
 }
 
 /* Get a new listNode, reallocate buffer if necessary.
@@ -24,11 +25,11 @@ ListNodePos Buffer::allocNewNode() {
     if (curListNodes == maxListNodes) {
         maxListNodes *= 2;
         ListNode *oldBuffer = buffer;
-        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
+//        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
         assert(buffer != NULL);
-//        buffer = new ListNode[maxListNodes];
-//        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
-//        delete[] oldBuffer;
+        buffer = new ListNode[maxListNodes];
+        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
+        delete[] oldBuffer;
     }
     return ListNodePos(curListNodes++);
 }

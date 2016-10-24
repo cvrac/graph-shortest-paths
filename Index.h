@@ -6,21 +6,31 @@
 
 #define INITIAL_INDEX_MAX_SIZE 4
 
+struct ListHead {
+    ListNodePos pos;
+    uint32_t totalNeighbors;
+    ListHead() : totalNeighbors(0) {}
+};
+
 class Index {
 
 private:
-    ListNodePos *index;
+    ListHead *index;
     uint32_t curSize;
     uint32_t maxSize;
+
 
 public:
     Index();
     ~Index();
     void insertNode(const uint32_t &nodeId);
-    ListNodePos getListHead(const uint32_t &nodeId) const {return index[nodeId];}
+    ListHead getListHead(const uint32_t &nodeId) const {return index[nodeId];}
     uint32_t getCurSize() {return curSize;}
-    void setListHead(const uint32_t &nodeId, const ListNodePos &head);
+    void setListHeadPos(const uint32_t &nodeId, const ListNodePos head) {index[nodeId].pos = head;}
+    void setListHeadNeighbors(const uint32_t &nodeId, const uint32_t &n) {index[nodeId].totalNeighbors = n;}
+    uint32_t getListHeadNeighbors(const uint32_t &nodeId) {return index[nodeId].totalNeighbors;}
     void print() const;
 };
+
 
 #endif //GRAPHSHORTESTPATHS_INDEX_H

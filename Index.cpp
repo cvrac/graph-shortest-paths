@@ -2,18 +2,20 @@
 #include <iostream>
 #include <cstring>
 #include <stdlib.h>
+#include <assert.h>
 
 using namespace std;
 
 Index::Index() : curSize(0), maxSize(INITIAL_INDEX_MAX_SIZE) {
-//    index = new ListNodePos[INITIAL_INDEX_MAX_SIZE];
-    index = (ListNodePos *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListNodePos));
+    index = new ListHead[INITIAL_INDEX_MAX_SIZE];
+//    index = (ListHead *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListHead));
     assert(index != NULL);
+    index->totalNeighbors = 0;
 }
 
 Index::~Index() {
-//    delete[] index;
-    free(index);
+    delete[] index;
+//    free(index);
 }
 
 
@@ -24,25 +26,21 @@ void Index::insertNode(const uint32_t &nodeId) {
     }
     if (curSize == maxSize) {
         maxSize *= 2;
-        ListNodePos *oldIndex = index;
-//        index = new ListNodePos[maxSize];
-//        memcpy(index, oldIndex, curSize * sizeof(ListNodePos));
-        index = (ListNodePos *)realloc(index, maxSize * sizeof(ListNodePos));
+        ListHead *oldIndex = index;
+        index = new ListHead[maxSize];
+        memcpy(index, oldIndex, curSize * sizeof(ListHead));
+//        index = (ListHead *)realloc(index, maxSize * sizeof(ListHead));
         assert(index != NULL);
-//        delete[] oldIndex;
+        delete[] oldIndex;
     }
     curSize++;
-}
-
-void Index::setListHead(const uint32_t &nodeId, const ListNodePos &head) {
-    index[nodeId] = head;
 }
 
 void Index::print() const {
     cout << "--- Index ---\ncurSize: " << curSize << ", maxSize: " << maxSize << endl;
     for (uint32_t node = 0; node < curSize; node++) {
-        cout << node << ": ";
-        index[node].print();
+        cout << node << " with " << index[node].totalNeighbors << " neighbors: ";
+        index[node].pos.print();
     }
     cout << endl;
 }
