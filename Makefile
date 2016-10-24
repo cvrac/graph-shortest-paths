@@ -1,5 +1,5 @@
-OBJS =  Index.o ListNodePos.o ListNode.o Buffer.o Graph.o main.o
-HEADER = Index.h ListNodePos.h ListNode.h Buffer.h Graph.h
+OBJS =  Index.o ListNodePos.o ListNode.o HashTable.o PathEntry.o ShortestPath.o Buffer.o Graph.o main.o
+HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h Buffer.h Graph.h
 
 all: gsp
 
@@ -18,6 +18,15 @@ ListNodePos.o: ListNodePos.cpp
 ListNode.o: ListNode.cpp
 	$(CC) $(FLAGS) ListNode.cpp
 
+HashTable.o: HashTable.cpp
+	$(CC) $(FLAGS) HashTable.cpp
+
+PathEntry.o: PathEntry.cpp
+	$(CC) $(FLAGS) PathEntry.cpp
+
+ShortestPath.o: ShortestPath.cpp
+	$(CC) $(FLAGS) ShortestPath.cpp
+
 Buffer.o: Buffer.cpp
 	$(CC) $(FLAGS) Buffer.cpp
 
@@ -30,3 +39,5 @@ main.o: main.cpp
 clean:
 	rm -f gsp $(OBJS)
 
+count:
+	wc -l *.cpp *.h

@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include "ShortestPath.h"
 
+using namespace std;
+
 ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(10), dirF('F'), dirB('B') {
 	frontierFront = new LinkedList<uint32_t>();
 	assert(frontierFront != NULL);
@@ -29,27 +31,40 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
 	or return solution cost, if we reached a node already visited from the other side*/
 
+//	cout << "expanding " << nodeId << endl;
 	uint32_t tempId;
 	path_entry *data;
 	NodeArray *neighbors = prGraph.getNeighbors(nodeId, dir);
 
 	for (int i = 0; i < neighbors->size; i++) {
 		tempId = neighbors->array[i];
+//		cout << "neighbor " << tempId << endl;
 		if (exploredSet->search(tempId, &data)) {
-			if (data->direction != dir) 
+//			cout << "node exists" << endl;
+//			cout << data->direction << endl;
+//			cout << dir << endl;
+			if (data->direction != dir) {
+//				cout << "return cost" << endl;
+				delete neighbors;
 				return data->pathCost + ((dir == 'F') ? distanceFront : distanceBack);
+			}
 		} else {
 			data = new path_entry(tempId, nodeId, (dir == 'F') ? distanceFront : distanceBack, dir);
 			exploredSet->insert(data);
 			frontier->push_back(tempId);
 		}
+//		exploredSet->print();
 	}
-
+	delete neighbors;
 	return -2;
 }
 
 int ShortestPath::step(LinkedList<uint32_t> *frontier, char& dir) {
 	uint32_t nodeId = frontier->pop();
+	if (dir == 'F')
+		++distanceFront;
+	else
+		++distanceBack;
 	return expand(nodeId, frontier, dir);
 }
 
@@ -76,21 +91,21 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 			res = step(frontierFront, dirF);
 			if (res != -2)
 				return res;
-			distanceFront++;
+//			distanceFront++;
 		} else if (distanceFront > distanceBack) {
 			res = step(frontierBack, dirB);
 			if (res != -2)
 				return res;
-			distanceBack++;
+//			distanceBack++;
 		} else if (distanceFront == distanceBack) {
 			res = step(frontierFront, dirF);
 			if (res != -2)
 				return res;			
-			distanceFront++;
+//			distanceFront++;
 			res = step(frontierBack, dirB);
 			if (res != -2)
 				return res;			
-			distanceBack++;
+//			distanceBack++;
 		}
 	}
 

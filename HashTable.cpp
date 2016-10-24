@@ -46,7 +46,7 @@ void HashTable::iterandel() {
 		iter = NULL;
 		while ((iter = t_hash[i]->get_next()) != NULL) {
 			if (iter->nodeEntry != NULL) {
-				cout << "deleted " << iter->nodeId << endl;
+//				cout << "deleted " << iter->nodeId << endl;
 				delete iter->nodeEntry;
 				iter->nodeEntry = NULL;
 			}
@@ -70,7 +70,7 @@ void HashTable::insert(path_entry *nodeEntry) {
 	HashEntry qq(nodeEntry->nodeId, nodeEntry);
 	t_hash[pos]->push_front(qq);
 	_elements++;
-	cout << "inserted" << *nodeEntry << endl;
+//	cout << "inserted" << *nodeEntry << endl;
 }
 
 bool HashTable::search(uint32_t& entry_id, path_entry** data) {
