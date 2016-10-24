@@ -39,14 +39,14 @@ void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeI
     }
 }
 
-NodeArray *Graph::getNeighbors(const uint32_t &nodeId, std::string direction) {
+NodeArray *Graph::getNeighbors(const uint32_t &nodeId, char& direction) {
     Index *index;
     Buffer *buffer;
-    if (! direction.compare("outer")) {
+    if (direction == 'F') {
         index = &outerIndex;
         buffer = &outerBuffer;
     }
-    else if (! direction.compare("inner")) {
+    else if (direction == 'B') {
         index = &innerIndex;
         buffer = &innerBuffer;
     }

@@ -2,14 +2,12 @@
 #include <stdint.h>
 #include "ShortestPath.h"
 
-ShortestPath::ShortestPath(Graph& gr) {
-	prGraph = gr;
-	frontierFront = new LinkedList();
+ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(10), dirF('F'), dirB('B') {
+	frontierFront = new LinkedList<uint32_t>();
 	assert(frontierFront != NULL);
-	frontierBack = new LinkedList();
+	frontierBack = new LinkedList<uint32_t>();
 	assert(frontierBack != NULL);
-	int i = 10;
-	exploredSet = new HashTable(i);
+	exploredSet = new HashTable(hash_size);
 	assert(exploredSet != NULL);
 	distanceFront = 0;
 	distanceBack = 0;
@@ -27,43 +25,75 @@ ShortestPath::~ShortestPath() {
 	exploredSet = NULL;
 }
 
-void ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t>& frontier) {
-	uint32_t tempId;
+int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char& dir) {
+	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
+	or return solution cost, if we reached a node already visited from the other side*/
 
+	uint32_t tempId;
+	path_entry *data;
+	NodeArray *neighbors = prGraph.getNeighbors(nodeId, dir);
+
+	for (int i = 0; i < neighbors->size; i++) {
+		tempId = neighbors->array[i];
+		if (exploredSet->search(tempId, &data)) {
+			if (data->direction != dir) 
+				return data->pathCost + ((dir == 'F') ? distanceFront : distanceBack);
+		} else {
+			data = new path_entry(tempId, nodeId, (dir == 'F') ? distanceFront : distanceBack, dir);
+			exploredSet->insert(data);
+			frontier->push_back(tempId);
+		}
+	}
+
+	return -2;
 }
 
-void ShortestPath::step(LinkedList<uint32_t>& frontier) {
-	uint32_t nodeId = frontier.pop();
-	expand(nodeId, frontier);
+int ShortestPath::step(LinkedList<uint32_t> *frontier, char& dir) {
+	uint32_t nodeId = frontier->pop();
+	return expand(nodeId, frontier, dir);
 }
 
 int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
-	frontierFront.push_back(source);
-	frontierBack.push_back(target);
-	path_entry *node = new path_entry(source, source, distanceFront, 'F');
+	
+	if (source == target)
+		return 0;
+	
+	int res = 0;
+	frontierFront->push_back(source);
+	frontierBack->push_back(target);
+	path_entry *node = new path_entry(source, source, distanceFront, dirF);
 	exploredSet->insert(node);
-	node = new path_entry(target, target, distanceBack, 'B');
+	node = new path_entry(target, target, distanceBack, dirB);
 	exploredSet->insert(node);
 
 	while (true) {
 
 		//no solution, return failure
-		if (frontierFront.empty() || frontierBack.empty())
+		if (frontierFront->empty() || frontierBack->empty())
 			return -1;
 
 		if (distanceFront < distanceBack) {
-			step(frontierFront);
+			res = step(frontierFront, dirF);
+			if (res != -2)
+				return res;
 			distanceFront++;
 		} else if (distanceFront > distanceBack) {
-			step(frontierBack);
+			res = step(frontierBack, dirB);
+			if (res != -2)
+				return res;
 			distanceBack++;
 		} else if (distanceFront == distanceBack) {
-			step(frontierFront);
+			res = step(frontierFront, dirF);
+			if (res != -2)
+				return res;			
 			distanceFront++;
-			step(frontierBack);
+			res = step(frontierBack, dirB);
+			if (res != -2)
+				return res;			
 			distanceBack++;
 		}
-
 	}
+
+	return -1;
 }
 

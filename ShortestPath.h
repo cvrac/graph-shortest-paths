@@ -8,19 +8,21 @@
 
 class ShortestPath {
 private:
+	int hash_size;
 	Graph& prGraph;
-	LinkedList<uint32_t> frontierFront;
-	LinkedList<uint32_t> frontierBack;
-	HashTable exploredSet;
+	LinkedList<uint32_t> *frontierFront;
+	LinkedList<uint32_t> *frontierBack;
+	HashTable *exploredSet;
 	unsigned int distanceFront;
 	unsigned int distanceBack;
-	bool interesection();
-	void expand(uint32_t& nodeId);
-	void step();
+	char dirF;
+	char dirB;
+	int expand(uint32_t& nodeId, LinkedList<uint32_t> * frontier, char& dir);
+	int step(LinkedList<uint32_t> * frontier, char& dir);
 public:
 	ShortestPath(Graph& gr);
 	~ShortestPath();
 	int shortestPath(uint32_t& source, uint32_t& target);
-}
+};
 
 #endif

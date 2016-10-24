@@ -21,7 +21,7 @@ class HashTable {
 	friend bool operator== (const HashEntry& e1, const HashEntry& e2);
 	LinkedList<HashEntry> **t_hash;
 public:
-	HashTable(uint32_t& numofbucks);
+	HashTable(const uint32_t& numofbucks);
 	~HashTable();
 	int size();
 	void insert(path_entry *nodeEntry);

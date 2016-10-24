@@ -47,91 +47,91 @@ int main() {
 
     g.print();
 
-    /* Outer neighbors */
-    std::cout << "\n\nOuter neighbors" << std::endl;
+    // /* Outer neighbors */
+    // std::cout << "\n\nOuter neighbors" << std::endl;
 
-    NodeArray *neighbors = g.getNeighbors(0, "outer");
-    neighbors->print();
-    delete neighbors;
+    // NodeArray *neighbors = g.getNeighbors(0, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(1, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(1, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(2, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(2, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(3, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(3, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(4, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(4, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(5, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(5, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(6, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(6, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(7, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(7, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(8, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(8, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(9, "outer");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(9, "outer");
+    // neighbors->print();
+    // delete neighbors;
 
-    /* Inner neighbors */
-    std::cout << "\n\nInner neighbors" << std::endl;
+    // /* Inner neighbors */
+    // std::cout << "\n\nInner neighbors" << std::endl;
 
-    neighbors = g.getNeighbors(0, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(0, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(1, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(1, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(2, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(2, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(3, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(3, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(4, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(4, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(5, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(5, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(6, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(6, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(7, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(7, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(8, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(8, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
-    neighbors = g.getNeighbors(9, "inner");
-    neighbors->print();
-    delete neighbors;
+    // neighbors = g.getNeighbors(9, "inner");
+    // neighbors->print();
+    // delete neighbors;
 
     return 0;
 }
