@@ -4,7 +4,7 @@
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(10), dirF('F'), dirB('B') {
+ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(1000), dirF('F'), dirB('B') {
 	frontierFront = new LinkedList<uint32_t>();
 	assert(frontierFront != NULL);
 	frontierBack = new LinkedList<uint32_t>();

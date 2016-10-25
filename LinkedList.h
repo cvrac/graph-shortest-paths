@@ -13,6 +13,7 @@ class LinkedList {
 			node(const T& data, node *n);
 		};
 		node *head;
+		node *back;
 		node *current;
 		unsigned int _size;
 	public:
@@ -43,7 +44,7 @@ template <class T>
 LinkedList<T>::node::node(const T& d, node *n) : data(d), next(n) {}
 
 template <class T>
-LinkedList<T>::LinkedList() : head(NULL),current(NULL), _size(0) {}
+LinkedList<T>::LinkedList() : head(NULL), back(NULL), current(NULL), _size(0) {}
 
 template <class T>
 LinkedList<T>::~LinkedList() {
@@ -76,6 +77,8 @@ T *LinkedList<T>::push_front(const T& data) {
 	node *temp = new node(data, head);
 	assert(temp != NULL);
 
+	if (head == NULL)
+		back = temp;
 	head = temp;
 	current = head;
 	_size++;
@@ -90,18 +93,27 @@ bool LinkedList<T>::push_back(const T& data) {
 	if (temp == NULL)
 		return false;
 	
-	node *prev = NULL;
-	current = head;
+	// node *prev = NULL;
+	// current = head;
 
-	while (current != NULL) {
-		prev = current;
-		current = current->next;
-	}
+	// while (current != NULL) {
+	// 	prev = current;
+	// 	current = current->next;
+	// }
 
-	if (prev == NULL) 
+	// if (prev == NULL) 
+	// 	head = temp;
+	// else 
+	// 	prev->next = temp;
+
+	if (head == NULL) {
 		head = temp;
-	else 
+		back = temp;
+	} else {
+		node *prev = back;
 		prev->next = temp;
+		back = temp;
+	}
 
 	current = head;
 	_size++;
