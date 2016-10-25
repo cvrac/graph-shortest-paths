@@ -8,6 +8,7 @@ using namespace std;
 
 void OperationsControl::run() {
     this->buildGraph();
+//    cout << graph.getNodes() << endl;
     this->runQueries();
 //    graph.print();
 }

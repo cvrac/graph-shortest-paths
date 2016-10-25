@@ -33,6 +33,7 @@ public:
     void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     NodeArray *getNeighbors(const uint32_t &nodeId, char &direction);
     NodeArray *getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buffer);
+    uint32_t getNodes() {return innerIndex.getCurSize();}
     void printAll();
     void print();
 };
