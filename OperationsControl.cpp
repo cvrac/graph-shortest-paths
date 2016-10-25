@@ -8,7 +8,7 @@ using namespace std;
 
 void OperationsControl::run() {
     this->buildGraph();
-    this->runQueries();
+    //this->runQueries();
     //graph.print();
 }
 
@@ -24,23 +24,23 @@ void OperationsControl::buildGraph() {
             return;
         }
         strcpy(cLine, line.c_str());
-        char *node;
-        node = strtok(cLine, " \n\0");
-        if (node == NULL) {
+        char *n1;
+        n1 = strtok(cLine, " \t\n\0");
+        if (n1 == NULL) {
             delete[] cLine;
             continue;
         }
-        if (node[0] == 'S') {
+        if (n1[0] == 'S') {
             delete[] cLine;
             break;
         }
-        uint32_t sourceNode = atol(node);
-        node = strtok(NULL, " \n\0");
-        if (node == NULL) {
+        uint32_t sourceNode = atol(n1);
+        char *n2 = strtok(NULL, " \t\n\0");
+        if (n2 == NULL) {
             delete[] cLine;
             continue;
         }
-        uint32_t targetNode = atol(node);
+        uint32_t targetNode = atol(n2);
         delete[] cLine;
         graph.insertEdge(sourceNode, targetNode);
     }
@@ -59,19 +59,19 @@ void OperationsControl::runQueries() {
         }
         strcpy(cLine, line.c_str());
         char *op;
-        op = strtok(cLine, " \n\0");
+        op = strtok(cLine, " \t\n\0");
         if (op == NULL) {
             delete[] cLine;
             continue;
         }
         if (!strcmp(op, "A")) {
-            char *node = strtok(NULL, " \n\0");
+            char *node = strtok(NULL, " \t\n\0");
             if (node == NULL) {
                 delete[] cLine;
                 continue;
             }
             uint32_t sourceNode = atol(node);
-            node = strtok(NULL, " \n\0");
+            node = strtok(NULL, " \t\n\0");
             if (node == NULL) {
                 delete[] cLine;
                 continue;
@@ -81,13 +81,13 @@ void OperationsControl::runQueries() {
             graph.insertEdge(sourceNode, targetNode);
         }
         else if (!strcmp(op, "Q")) {
-            char *node = strtok(NULL, " \n\0");
+            char *node = strtok(NULL, " \t\n\0");
             if (node == NULL) {
                 delete[] cLine;
                 continue;
             }
             uint32_t sourceNode = atol(node);
-            node = strtok(NULL, " \n\0");
+            node = strtok(NULL, " \t\n\0");
             if (node == NULL) {
                 delete[] cLine;
                 continue;

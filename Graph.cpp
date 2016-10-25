@@ -36,6 +36,7 @@ void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeI
     }
     if (buffer.insertNeighbor(firstPos.getPos(), targetNodeId)) {
         index.setListHeadNeighbors(sourceNodeId, index.getListHeadNeighbors(sourceNodeId) + 1);
+        //cout << index.getListHeadNeighbors(sourceNodeId) << endl;
     }
 }
 
