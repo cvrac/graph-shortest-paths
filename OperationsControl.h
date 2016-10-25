@@ -8,12 +8,12 @@ class OperationsControl {
 
 private:
     Graph graph;
-    ShortestPath path;
+    ShortestPath *path;
     void buildGraph();
     void runQueries();
 
 public:
-    OperationsControl() : path(graph) {}
+    OperationsControl() : path(NULL) {}
     ~OperationsControl() {}
     void run();
 };
