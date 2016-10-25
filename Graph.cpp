@@ -18,8 +18,8 @@ void Graph::insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNode
         min = targetNodeId;
         max = sourceNodeId;
     }
-    this->insertNode(min);
     this->insertNode(max);
+    this->insertNode(min);
 }
 
 void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
@@ -83,15 +83,14 @@ NodeArray *Graph::getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buf
     return nodeArray;
 }
 
-
-void Graph::print() {
+void Graph::printAll() {
     cout << "*** OUTER ***\n";
-    this->print(outerIndex, outerBuffer);
+    this->printAll(outerIndex, outerBuffer);
     cout << "\n*** INNER ***\n";
-    this->print(innerIndex, innerBuffer);
+    this->printAll(innerIndex, innerBuffer);
 }
 
-void Graph::print(Index &index, Buffer &buffer)  {
+void Graph::printAll(Index &index, Buffer &buffer)  {
     buffer.print();
     index.print();
     for (uint32_t nodeId = 0 ; nodeId < index.getCurSize() ; nodeId++) {
@@ -118,10 +117,30 @@ NodeArray::~NodeArray() {
     }
 }
 
+void Graph::print() {
+    cout << "*** OUTER ***\n";
+    this->print(outerIndex, outerBuffer);
+    cout << "\n*** INNER ***\n";
+    this->print(innerIndex, innerBuffer);
+}
+
+void Graph::print(Index &index, Buffer &buffer) {
+    for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
+        NodeArray *neighbors = this->getNeighbors(node, index, buffer);
+        cout << "Node " << node << " has " << (neighbors == NULL ? 0 : neighbors->size) << " neighbors:\n";
+        if (neighbors != NULL) {
+            neighbors->print();
+            delete neighbors;
+        }
+        cout << "\n";
+    }
+    cout << endl;
+}
+
 void NodeArray::print() {
-    cout << "--- NodeArray ---\n" << "size: " << size << endl;
+    //cout << "--- NodeArray ---\n" << "size: " << size << endl;
     for (int n = 0 ; n < size ; n++) {
         cout << array[n] << " ";
     }
-    cout << "\n" << endl;
+    cout << endl;
 }

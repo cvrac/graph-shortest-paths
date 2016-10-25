@@ -19,21 +19,22 @@ Index::~Index() {
 }
 
 
-/* Insert node only if it is the direct successor of the last one */
 void Index::insertNode(const uint32_t &nodeId) {
-    if (nodeId != curSize){
-        return;
-    }
-    if (curSize == maxSize) {
-        maxSize *= 2;
+    if (maxSize <= nodeId) {
+        while (maxSize <= nodeId) {
+            maxSize *= 2;
+        }
         ListHead *oldIndex = index;
         index = new ListHead[maxSize];
         memcpy(index, oldIndex, curSize * sizeof(ListHead));
 //        index = (ListHead *)realloc(index, maxSize * sizeof(ListHead));
         assert(index != NULL);
         delete[] oldIndex;
+        curSize = nodeId + 1;
     }
-    curSize++;
+    else if (curSize <= nodeId){
+        curSize = nodeId + 1;
+    }
 }
 
 void Index::print() const {

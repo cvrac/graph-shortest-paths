@@ -23,6 +23,7 @@ private:
     void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer);
     void insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     void insertNode(const uint32_t nodeId);
+    void printAll(Index &index, Buffer &buffer);
     void print(Index &index, Buffer &buffer);
     void expand(uint32_t &nodeId, LinkedList<int> frontier);
 
@@ -32,6 +33,7 @@ public:
     void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     NodeArray *getNeighbors(const uint32_t &nodeId, char &direction);
     NodeArray *getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buffer);
+    void printAll();
     void print();
 };
 
