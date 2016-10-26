@@ -92,19 +92,6 @@ bool LinkedList<T>::push_back(const T& data) {
 
 	if (temp == NULL)
 		return false;
-	
-	// node *prev = NULL;
-	// current = head;
-
-	// while (current != NULL) {
-	// 	prev = current;
-	// 	current = current->next;
-	// }
-
-	// if (prev == NULL) 
-	// 	head = temp;
-	// else 
-	// 	prev->next = temp;
 
 	if (head == NULL) {
 		head = temp;

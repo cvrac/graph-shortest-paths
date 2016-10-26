@@ -9,6 +9,8 @@
 class ShortestPath {
 private:
 	int hash_size;
+	unsigned int clevelF, clevelF1;
+	unsigned int clevelB, clevelB1;
 	Graph& prGraph;
 	LinkedList<uint32_t> *frontierFront;
 	LinkedList<uint32_t> *frontierBack;

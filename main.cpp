@@ -13,30 +13,43 @@ int main() {
     return 0;
 
     Graph g;
-    g.insertEdge(0, 1);
     g.insertEdge(1, 2);
-    g.insertEdge(2, 0);
-    g.insertEdge(3, 0);
+    g.insertEdge(2, 3);
+    g.insertEdge(3, 1);
+    g.insertEdge(4, 1);
 //    g.insertEdge(4, 1);
-    g.insertEdge(1, 3);
+    g.insertEdge(2, 4);
     g.print();
     ShortestPath *path = new ShortestPath(g);
-    uint32_t source = 0, target = 2;
+    uint32_t source = 1, target = 3;
     cout << "shortest path from " << source << " to " << target << " is "
                                                                 << path->shortestPath(source, target) << endl;
     delete path;
-    g.insertEdge(3, 4);
+    g.insertEdge(4, 5);
     path = new ShortestPath(g);
-    source = 0, target = 4;
+    source = 1, target = 5;
     cout << "shortest path from " << source << " to " << target << " is "
                                                                 << path->shortestPath(source, target) << endl;
     delete path;
     path = new ShortestPath(g);
-    source = 4, target = 0;
+    source = 5, target = 1;
     cout << "shortest path from " << source << " to " << target << " is "
                                                                 << path->shortestPath(source, target) << endl;
     delete path;
 
+    g.insertEdge(5, 3);
+    path = new ShortestPath(g);
+    source = 1, target = 3;
+    cout << "shortest path from " << source << " to " << target << " is "
+                                                                << path->shortestPath(source, target) << endl;
+    delete path;
+
+    g.insertEdge(3, 4);
+    path = new ShortestPath(g);
+    source = 1, target = 4;
+    cout << "shortest path from " << source << " to " << target << " is "
+                                                                << path->shortestPath(source, target) << endl;
+    delete path;
 
 
 

@@ -12,3 +12,10 @@ ostream& operator<<(ostream& out, const path_entry& d) {
 	out << "neti" << endl;
 	return out;
 }
+
+bool operator== (const path_entry& e1, const path_entry& e2) {
+	if (e1.nodeId == e2.nodeId && e1.parentId == e2.parentId && e1.pathCost == e2.pathCost && e1.direction == e2.direction)
+		return true;
+	else
+		return false;
+}

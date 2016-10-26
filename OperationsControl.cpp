@@ -9,8 +9,8 @@ using namespace std;
 void OperationsControl::run() {
     this->buildGraph();
 //    cout << graph.getNodes() << endl;
+    // this->graph.print();
     this->runQueries();
-//    graph.print();
 }
 
 void OperationsControl::buildGraph() {
@@ -95,6 +95,7 @@ void OperationsControl::runQueries() {
             }
             uint32_t targetNode = atol(node);
             delete[] cLine;
+            // cout << sourceNode << " " << targetNode << endl;
             path = new ShortestPath(this->graph);
             cout << path->shortestPath(sourceNode, targetNode) << endl;
             delete path;
