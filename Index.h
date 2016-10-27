@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "ListNodePos.h"
 
-#define INITIAL_INDEX_MAX_SIZE 4
+#define INITIAL_INDEX_MAX_SIZE 100
 
 struct ListHead {
     ListNodePos pos;

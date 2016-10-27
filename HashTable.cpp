@@ -68,7 +68,7 @@ uint32_t HashTable::hash(uint32_t& id) {
 void HashTable::insert(path_entry *nodeEntry) {
 	int pos = this->hash(nodeEntry->nodeId);
 	HashEntry qq(nodeEntry->nodeId, nodeEntry);
-	t_hash[pos]->push_front(qq);
+	t_hash[pos]->push_back(qq);
 	_elements++;
 //	cout << "inserted" << *nodeEntry << endl;
 }

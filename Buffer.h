@@ -4,7 +4,7 @@
 #include "ListNode.h"
 #include <stdint.h>
 
-#define INITIAL_MAX_LIST_NODES 100
+#define INITIAL_MAX_LIST_NODES 1000
 
 class Buffer {
 private:

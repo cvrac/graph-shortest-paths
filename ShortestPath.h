@@ -15,6 +15,7 @@ private:
 	LinkedList<uint32_t> *frontierFront;
 	LinkedList<uint32_t> *frontierBack;
 	HashTable *exploredSet;
+	// path_entry **exploredSet;
 	unsigned int distanceFront;
 	unsigned int distanceBack;
 	char dirF;

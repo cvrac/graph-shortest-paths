@@ -4,13 +4,18 @@
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(10000), dirF('F'), dirB('B'), distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0) {
+//9721, 70537
+
+ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(70537), dirF('F'), dirB('B'), distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0) {
 	frontierFront = new LinkedList<uint32_t>();
 	assert(frontierFront != NULL);
 	frontierBack = new LinkedList<uint32_t>();
 	assert(frontierBack != NULL);
 	exploredSet = new HashTable(hash_size);
+	// exploredSet = new path_entry *[prGraph.getNodes()];
 	assert(exploredSet != NULL);
+	// for (int i = 0; i < prGraph.getNodes(); i++)
+	// 	exploredSet[i] = NULL;
 }
 
 ShortestPath::~ShortestPath() {
@@ -20,6 +25,14 @@ ShortestPath::~ShortestPath() {
 		delete frontierBack;
 	if (exploredSet != NULL)
 		delete exploredSet;
+	// if (exploredSet != NULL) {
+	// 	for (int i = 0; i < prGraph.getNodes(); i++)
+	// 		if (exploredSet[i] != NULL) {
+	// 			delete exploredSet[i];
+	// 			exploredSet[i] = NULL;
+	// 		}
+	// 	delete[] exploredSet;
+	// }
 	frontierBack = NULL;
 	frontierFront = NULL;
 	exploredSet = NULL;
@@ -35,6 +48,7 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 
 	for (int i = 0; i < neighbors->size; i++) {
 		tempId = neighbors->array[i];
+		// if (exploredSet[tempId] != NULL) {
 		if (exploredSet->search(tempId, &data)) {
 			if (data->direction != dir) {
 				delete neighbors;
@@ -44,6 +58,7 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 			unsigned int dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
 			data = new path_entry(tempId, nodeId, dist, dir);
 			exploredSet->insert(data);
+			// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
 			frontier->push_back(tempId);
 			if (dir == 'F')
 				clevelF1++;
@@ -76,8 +91,10 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	clevelB = 1;
 	path_entry *node = new path_entry(source, source, distanceFront, dirF);
 	exploredSet->insert(node);
+	// exploredSet[source] = new path_entry(source, source, distanceFront, dirF);
 	node = new path_entry(target, target, distanceBack, dirB);
 	exploredSet->insert(node);
+	// exploredSet[target] = new path_entry(target, target, distanceBack, dirB);
 
 	while (true) {
 
