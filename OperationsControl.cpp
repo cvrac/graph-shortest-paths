@@ -6,10 +6,16 @@
 
 using namespace std;
 
+OperationsControl::OperationsControl(uint32_t &hashSize) {
+    path = new ShortestPath(graph, hashSize);
+}
+
+OperationsControl::~OperationsControl() {
+    delete path;
+}
+
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
-//    graph.getStatistics();
-    path.init(hashSize);
     this->runQueries();
 }
 
@@ -95,8 +101,8 @@ void OperationsControl::runQueries() {
             }
             uint32_t targetNode = atol(node);
             delete[] cLine;
-            cout << path.shortestPath(sourceNode, targetNode) << endl;
-            path.reset();
+            cout << path->shortestPath(sourceNode, targetNode) << endl;
+            path->reset();
         }
         else {
             delete[] cLine;

@@ -5,18 +5,19 @@
 using namespace std;
 
 //9721, 70537
+int ShortestPath::creat = 0;
 
-ShortestPath::ShortestPath(Graph& gr) : prGraph(gr), hash_size(gr.getNodes()), dirF('F'), dirB('B'),
+ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : prGraph(gr), hash_size(hashSize), dirF('F'), dirB('B'),
 										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(NULL) {
 	frontierFront = new LinkedList<uint32_t>();
 	assert(frontierFront != NULL);
 	frontierBack = new LinkedList<uint32_t>();
 	assert(frontierBack != NULL);
-//	exploredSet = new HashTable(hash_size);
-	// exploredSet = new path_entry *[prGraph.getNodes()];
-//	assert(exploredSet != NULL);
-	// for (int i = 0; i < prGraph.getNodes(); i++)
-	// 	exploredSet[i] = NULL;
+	if (ShortestPath::creat == 0) {
+		exploredSet = new HashTable(hash_size);
+		assert(exploredSet != NULL);
+		ShortestPath::creat++;
+	}
 }
 
 ShortestPath::~ShortestPath() {
@@ -26,17 +27,9 @@ ShortestPath::~ShortestPath() {
 		delete frontierBack;
 	if (exploredSet != NULL)
 		delete exploredSet;
-	// if (exploredSet != NULL) {
-	// 	for (int i = 0; i < prGraph.getNodes(); i++)
-	// 		if (exploredSet[i] != NULL) {
-	// 			delete exploredSet[i];
-	// 			exploredSet[i] = NULL;
-	// 		}
-	// 	delete[] exploredSet;
-	// }
 	frontierBack = NULL;
 	frontierFront = NULL;
-//	exploredSet = NULL;
+	exploredSet = NULL;
 }
 
 int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char& dir) {

@@ -9,6 +9,7 @@
 class ShortestPath {
 private:
 	int hash_size;
+	static int creat;
 	unsigned int clevelF, clevelF1;
 	unsigned int clevelB, clevelB1;
 	Graph& prGraph;
@@ -24,7 +25,7 @@ private:
 	int step(LinkedList<uint32_t> * frontier, char& dir);
 	uint32_t determineHashSize();
 public:
-	ShortestPath(Graph& gr);
+	ShortestPath(Graph& gr, uint32_t &hashSize);
 	~ShortestPath();
 	int shortestPath(uint32_t& source, uint32_t& target);
 	void init(const uint32_t &hashSize);

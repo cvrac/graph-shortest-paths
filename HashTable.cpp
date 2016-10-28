@@ -102,30 +102,3 @@ ostream& operator<<(ostream& out, const HashTable::HashEntry& d) {
 bool operator== (const HashTable::HashEntry& e1, const HashTable::HashEntry& e2) {
 	return e1.nodeId == e2.nodeId;
 }
-
-// int main(void) {
-// 	uint32_t i = 10;
-// 	// HashTable *table = new HashTable(i);
-// 	// path_entry *e1 = new path_entry();
-// 	// path_entry *e2 = new path_entry();
-// 	// e1->nodeId = 5;
-// 	// e2->nodeId = 10;
-
-// 	// table->insert(e1);
-// 	// table->insert(e2);
-// 	// table->print();
-// 	// path_entry *temp;
-// 	// bool b;
-// 	// uint32_t id = 5;
-// 	// if ((b = table->search(id, &temp)) != false) {
-// 	// 	cout << "exists" << *temp << endl;
-// 	// } else
-// 	// 	cout << "does not exist" << endl;
-// 	// id = 100;
-// 	// if ((b = table->search(id, &temp)) != false) {
-// 	// 	cout << "exists" << *temp << endl;
-// 	// } else
-// 	// 	cout << "does not exist" << endl;
-// 	// delete table;
-// 	return 0;
-// }
