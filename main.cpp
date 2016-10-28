@@ -5,7 +5,6 @@
 #include "OperationsControl.h"
 
 using namespace std;
-/* Nodes are expected to come in ascending order starting from 0. */
 
 int main() {
     OperationsControl operationsControl;

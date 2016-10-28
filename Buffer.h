@@ -6,6 +6,12 @@
 
 #define INITIAL_MAX_LIST_NODES 1000
 
+struct BufferFeedback {
+    bool edgeExists;
+    uint32_t lastPos;
+    BufferFeedback(const bool &edgeExists, const uint32_t &lastPos) : edgeExists(edgeExists),  lastPos(lastPos) {}
+};
+
 class Buffer {
 private:
     ListNode *buffer;
@@ -17,7 +23,7 @@ public:
     ~Buffer();
     ListNodePos allocNewNode();
     ListNode *getListNode(const uint32_t &listNodePos);
-    bool insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId);
+    BufferFeedback insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId, bool &skipSearch);
     void print() const;
 };
 

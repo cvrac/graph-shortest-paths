@@ -10,17 +10,24 @@ Index::Index() : curSize(0), maxSize(INITIAL_INDEX_MAX_SIZE) {
     index = new ListHead[INITIAL_INDEX_MAX_SIZE];
 //    index = (ListHead *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListHead));
     assert(index != NULL);
+//    for (uint32_t i = 0 ; i < INITIAL_INDEX_MAX_SIZE ; i++) {
+//        new (&index[i]) ListHead();
+//    }
     index->totalNeighbors = 0;
 }
 
 Index::~Index() {
     delete[] index;
+//    for (uint32_t i = 0 ; i < maxSize ; i++) {
+//        index[i].~ListHead();
+//    }
 //    free(index);
 }
 
 
 void Index::insertNode(const uint32_t &nodeId) {
     if (maxSize <= nodeId) {
+        uint32_t oldMaxSize = maxSize;
         while (maxSize <= nodeId) {
             maxSize *= 2;
         }
@@ -28,7 +35,10 @@ void Index::insertNode(const uint32_t &nodeId) {
         index = new ListHead[maxSize];
         memcpy(index, oldIndex, curSize * sizeof(ListHead));
 //        index = (ListHead *)realloc(index, maxSize * sizeof(ListHead));
-        assert(index != NULL);
+//        assert(index != NULL);
+//        for (uint32_t i = oldMaxSize ; i < maxSize ; i++) {
+//            new (&index[i]) ListHead();
+//        }
         delete[] oldIndex;
         curSize = nodeId + 1;
     }
@@ -42,6 +52,9 @@ void Index::print() const {
     for (uint32_t node = 0; node < curSize; node++) {
         cout << node << " with " << index[node].totalNeighbors << " neighbors: ";
         index[node].pos.print();
+        if (index[node].pos.getExists()) {
+            cout << "Last pos is " << index[node].lastPos << endl;
+        }
     }
     cout << endl;
 }

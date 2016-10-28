@@ -10,7 +10,6 @@ void Graph::insertNode(const uint32_t nodeId) {
     innerIndex.insertNode(nodeId);
 }
 
-/* Insert nodes if they don't already exist */
 void Graph::insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
     uint32_t min = sourceNodeId;
     uint32_t max = targetNodeId;
@@ -24,19 +23,56 @@ void Graph::insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNode
 
 void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
     this->insertNodes(sourceNodeId, targetNodeId);
-    this->insertEdge(sourceNodeId, targetNodeId, outerIndex, outerBuffer);
-    this->insertEdge(targetNodeId, sourceNodeId, innerIndex, innerBuffer);
+    const uint32_t *node1 = &sourceNodeId;
+    const uint32_t *node2 = &targetNodeId;
+    Index *index = &outerIndex;
+    Buffer *buffer = &outerBuffer;
+    bool skipSearch = false;
+
+    if (outerIndex.getListHead(*node1).totalNeighbors > innerIndex.getListHead(*node2).totalNeighbors) {
+        this->toggleDirection(sourceNodeId, targetNodeId, node1, node2, index, buffer);
+    }
+    if (this->insertEdge(*node1, *node2, *index, *buffer, skipSearch)) {
+        this->toggleDirection(sourceNodeId, targetNodeId, node1, node2, index, buffer);
+        this->insertEdge(*node1, *node2, *index, *buffer, skipSearch);
+    }
 }
 
-void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer) {
+bool Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer, bool &skipSearch) {
     ListNodePos firstPos = index.getListHead(sourceNodeId).pos;
     if (! firstPos.getExists()) {
         firstPos = buffer.allocNewNode();
         index.setListHeadPos(sourceNodeId, firstPos);
+        index.setListHeadLast(sourceNodeId, firstPos.getPos());
     }
-    if (buffer.insertNeighbor(firstPos.getPos(), targetNodeId)) {
-        index.setListHeadNeighbors(sourceNodeId, index.getListHeadNeighbors(sourceNodeId) + 1);
-        //cout << index.getListHeadNeighbors(sourceNodeId) << endl;
+    uint32_t pos;
+    if (! skipSearch) {
+        pos = firstPos.getPos();
+    } else {
+        pos = index.getListHead(sourceNodeId).lastPos;
+    }
+    BufferFeedback feedback = buffer.insertNeighbor(pos, targetNodeId, skipSearch);
+    if (feedback.edgeExists) {
+        return false;
+    }
+    index.setListHeadNeighbors(sourceNodeId, index.getListHeadNeighbors(sourceNodeId) + 1);
+    index.setListHeadLast(sourceNodeId, feedback.lastPos);
+    //cout << index.getListHeadNeighbors(sourceNodeId) << endl;
+    return true;
+}
+
+void Graph::toggleDirection(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, const uint32_t *&node1, const uint32_t *&node2, Index *&index, Buffer *&buffer) {
+    if (*node1 == sourceNodeId) {
+        node1 = &targetNodeId;
+        node2 = &sourceNodeId;
+        index = &innerIndex;
+        buffer = &innerBuffer;
+    }
+    else {
+        node1 = &sourceNodeId;
+        node2 = &targetNodeId;
+        index = &outerIndex;
+        buffer = &outerBuffer;
     }
 }
 

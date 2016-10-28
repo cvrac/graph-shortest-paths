@@ -10,10 +10,16 @@ Buffer::Buffer() : curListNodes(0), maxListNodes(INITIAL_MAX_LIST_NODES) {
     buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
 //    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
     assert(buffer != NULL);
+//    for (uint32_t i = 0 ; i < INITIAL_MAX_LIST_NODES ; i++) {
+//        new (&buffer[i]) ListNode();
+//    }
 }
 
 Buffer::~Buffer() {
     delete[] buffer;
+//    for (uint32_t i = 0 ; i < maxListNodes ; i++) {
+//        buffer[i].~ListNode();
+//    }
 //    free(buffer);
 }
 
@@ -26,7 +32,10 @@ ListNodePos Buffer::allocNewNode() {
         maxListNodes *= 2;
         ListNode *oldBuffer = buffer;
 //        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
-        assert(buffer != NULL);
+//        assert(buffer != NULL);
+//        for (uint32_t i = curListNodes ; i < maxListNodes ; i++) {
+//            new (&buffer[i]) ListNode();
+//        }
         buffer = new ListNode[maxListNodes];
         memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
         delete[] oldBuffer;
@@ -38,13 +47,13 @@ ListNode *Buffer::getListNode(const uint32_t &listNodePos) {
     return &buffer[listNodePos];
 }
 
-bool Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId) {
+BufferFeedback Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId, bool &skipSearch) {
     uint32_t curPos = firstPos;
     ListNode *curNode = this->getListNode(curPos);
 
     /* No duplicates */
-    if (curNode->search(neighborId)) {
-        return false;
+    if (! skipSearch && curNode->search(neighborId)) {
+        return BufferFeedback(true, curPos);
     }
     ListNodePos nextNodePos = curNode->getNextPos();
 
@@ -53,10 +62,11 @@ bool Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId
         curPos = nextNodePos.getPos();
         curNode = this->getListNode(curPos);
         if (curNode->search(neighborId)) {
-            return false;
+            return BufferFeedback(true, curPos);
         }
         nextNodePos = curNode->getNextPos();
     }
+    skipSearch = true;
 
     /* Allocate new if necessary */
     if (curNode->isFull()) {
@@ -64,10 +74,11 @@ bool Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId
 
         curNode = this->getListNode(curPos);
         curNode->setNextPos(nextNodePos);
-        curNode = this->getListNode(nextNodePos.getPos());
+        curPos = nextNodePos.getPos();
+        curNode = this->getListNode(curPos);
     }
     curNode->insertNeighbor(neighborId);
-    return true;
+    return BufferFeedback(false, curPos);
 }
 
 void Buffer::print() const {

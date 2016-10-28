@@ -20,9 +20,10 @@ private:
     Buffer outerBuffer;
     Index innerIndex;
     Buffer innerBuffer;
-    void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer);
+    bool insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer, bool &skipSearch);
     void insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
     void insertNode(const uint32_t nodeId);
+    void toggleDirection(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, const uint32_t *&node1, const uint32_t *&node2, Index *&index, Buffer *&buffer);
     void printAll(Index &index, Buffer &buffer);
     void print(Index &index, Buffer &buffer);
     void expand(uint32_t &nodeId, LinkedList<int> frontier);
