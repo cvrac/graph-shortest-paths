@@ -6,9 +6,13 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
+    uint32_t hashSize = 70537;
+    if (argc > 1) {
+        hashSize = (uint32_t ) atol(argv[1]);
+    }
     OperationsControl operationsControl;
-    operationsControl.run();
+    operationsControl.run(hashSize);
     return 0;
 
     Graph g;

@@ -31,6 +31,7 @@ public:
     void setListHeadLast(const uint32_t &nodeId, const uint32_t &last) {index[nodeId].lastPos = last;}
     void setListHeadNeighbors(const uint32_t &nodeId, const uint32_t &n) {index[nodeId].totalNeighbors = n;}
     uint32_t getListHeadNeighbors(const uint32_t &nodeId) {return index[nodeId].totalNeighbors;}
+    uint32_t getAverageNeighbors();
     void print() const;
 };
 

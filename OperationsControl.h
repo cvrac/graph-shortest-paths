@@ -8,14 +8,14 @@ class OperationsControl {
 
 private:
     Graph graph;
-    ShortestPath *path;
+    ShortestPath path;
     void buildGraph();
     void runQueries();
 
 public:
-    OperationsControl() : path(NULL) {}
+    OperationsControl() : path(graph) {}
     ~OperationsControl() {}
-    void run();
+    void run(const uint32_t &hashSize);
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

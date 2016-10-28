@@ -120,6 +120,12 @@ NodeArray *Graph::getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buf
     return nodeArray;
 }
 
+uint32_t Graph::getStatistics() {
+    cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
+    outerIndex.getAverageNeighbors() << "\nAverage inner edges: " <<
+    innerIndex.getAverageNeighbors() << endl;
+}
+
 void Graph::printAll() {
     cout << "*** OUTER ***\n";
     this->printAll(outerIndex, outerBuffer);

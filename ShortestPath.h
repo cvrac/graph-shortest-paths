@@ -22,10 +22,13 @@ private:
 	char dirB;
 	int expand(uint32_t& nodeId, LinkedList<uint32_t> * frontier, char& dir);
 	int step(LinkedList<uint32_t> * frontier, char& dir);
+	uint32_t determineHashSize();
 public:
 	ShortestPath(Graph& gr);
 	~ShortestPath();
 	int shortestPath(uint32_t& source, uint32_t& target);
+	void init(const uint32_t &hashSize);
+	void reset();
 };
 
 #endif

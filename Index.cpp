@@ -47,6 +47,14 @@ void Index::insertNode(const uint32_t &nodeId) {
     }
 }
 
+uint32_t Index::getAverageNeighbors() {
+    long long sum = 0;
+    for (uint32_t node = 0; node < curSize; node++) {
+        sum += index[node].totalNeighbors;
+    }
+    return (uint32_t) (sum / curSize);
+}
+
 void Index::print() const {
     cout << "--- Index ---\ncurSize: " << curSize << ", maxSize: " << maxSize << endl;
     for (uint32_t node = 0; node < curSize; node++) {

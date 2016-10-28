@@ -35,6 +35,7 @@ public:
     NodeArray *getNeighbors(const uint32_t &nodeId, char &direction);
     NodeArray *getNeighbors(const uint32_t &nodeId, Index &index, Buffer &buffer);
     uint32_t getNodes() {return innerIndex.getCurSize();}
+    uint32_t getStatistics();
     void printAll();
     void print();
 };
