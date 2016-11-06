@@ -37,6 +37,7 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 	or return solution cost, if we reached a node already visited from the other side*/
 
 	uint32_t tempId;
+	unsigned int dist;
 	path_entry *data;
 	NodeArray *neighbors = prGraph.getNeighbors(nodeId, dir);
 
@@ -49,9 +50,8 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 				return data->pathCost + ((dir == 'F') ? distanceFront : distanceBack) + 1;
 			}
 		} else {
-			unsigned int dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
-			data = new path_entry(tempId, nodeId, dist, dir);
-			exploredSet->insert(data);
+			dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
+			exploredSet->insert(tempId, nodeId, dist, dir);
 			// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
 			frontier->push_back(tempId);
 			if (dir == 'F')
@@ -74,20 +74,18 @@ int ShortestPath::step(LinkedList<uint32_t> *frontier, char& dir) {
 }
 
 int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
-	
+
 	if (source == target)
 		return 0;
-	
+
 	int res = 0;
 	frontierFront->push_back(source);
 	clevelF = 1;
 	frontierBack->push_back(target);
 	clevelB = 1;
-	path_entry *node = new path_entry(source, source, distanceFront, dirF);
-	exploredSet->insert(node);
+	exploredSet->insert(source, source, distanceFront, dirF);
 	// exploredSet[source] = new path_entry(source, source, distanceFront, dirF);
-	node = new path_entry(target, target, distanceBack, dirB);
-	exploredSet->insert(node);
+	exploredSet->insert(target, target, distanceBack, dirB);
 	// exploredSet[target] = new path_entry(target, target, distanceBack, dirB);
 
 	while (true) {
@@ -104,7 +102,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				++distanceFront;
 				clevelF = clevelF1;
 				clevelF1 = 0;
-			}			
+			}
 		} else if (distanceFront > distanceBack) {
 			res = step(frontierBack, dirB);
 			if (res != -3)

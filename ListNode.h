@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "ListNodePos.h"
 
-#define MAX_NEIGHBORS 100
+#define MAX_NEIGHBORS 20
 class ListNode {
 
 private:

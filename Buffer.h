@@ -4,7 +4,7 @@
 #include "ListNode.h"
 #include <stdint.h>
 
-#define INITIAL_MAX_LIST_NODES 1000
+#define INITIAL_MAX_LIST_NODES 10000
 
 struct BufferFeedback {
     bool edgeExists;

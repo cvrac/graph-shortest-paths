@@ -1,8 +1,11 @@
-#include "OperationsControl.h"
 #include <string>
 #include <cstring>
 #include <iostream>
 #include <stdint.h>
+#include <unistd.h>
+#include <time.h>
+#include <iomanip>
+#include "OperationsControl.h"
 
 using namespace std;
 
@@ -15,7 +18,11 @@ OperationsControl::~OperationsControl() {
 }
 
 void OperationsControl::run(const uint32_t &hashSize) {
+    clock_t start = clock();
     this->buildGraph();
+    clock_t end = clock();
+    cout << "took " << (static_cast<double>(end - start) /CLOCKS_PER_SEC) << " secs" << endl;
+    sleep(1);
     this->runQueries();
 }
 
@@ -101,8 +108,13 @@ void OperationsControl::runQueries() {
             }
             uint32_t targetNode = atol(node);
             delete[] cLine;
+            // clock_t start = clock();
             cout << path->shortestPath(sourceNode, targetNode) << endl;
+            // clock_t end = clock();
             path->reset();
+            // cout << "path find took ";
+            // cout.precision(5);
+            // cout << setprecision(15) << fixed << ((end - start) / static_cast<double>(CLOCKS_PER_SEC)) << " secs" << endl;
         }
         else {
             delete[] cLine;

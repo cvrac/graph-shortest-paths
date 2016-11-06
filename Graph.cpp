@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <time.h>
 #include "Graph.h"
 #include "LinkedList.h"
 
@@ -23,6 +24,7 @@ void Graph::insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNode
 
 void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
     this->insertNodes(sourceNodeId, targetNodeId);
+    // clock_t start = clock();
     const uint32_t *node1 = &sourceNodeId;
     const uint32_t *node2 = &targetNodeId;
     Index *index = &outerIndex;
@@ -36,6 +38,8 @@ void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeI
         this->toggleDirection(sourceNodeId, targetNodeId, node1, node2, index, buffer);
         this->insertEdge(*node1, *node2, *index, *buffer, skipSearch);
     }
+    // clock_t end = clock();
+    // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
 }
 
 bool Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index &index, Buffer &buffer, bool &skipSearch) {
