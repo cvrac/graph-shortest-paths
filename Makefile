@@ -1,5 +1,5 @@
-OBJS =  Index.o ListNodePos.o ListNode.o HashTable.o PathEntry.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o
-HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h Buffer.h Graph.h OperationsControl.h
+OBJS =  Index.o ListNodePos.o ListNode.o HashTable.o PathEntry.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o Queue.o
+HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h Buffer.h Graph.h OperationsControl.h Queue.h
 
 all: gsp
 
@@ -11,6 +11,9 @@ gsp: $(OBJS) $(HEADER)
 
 Index.o: Index.cpp
 	$(CC) $(FLAGS) Index.cpp
+
+Queue.o: Queue.cpp
+	$(CC) $(FLAGS) Queue.cpp
 
 ListNodePos.o: ListNodePos.cpp
 	$(CC) $(FLAGS) ListNodePos.cpp
