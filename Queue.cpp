@@ -5,9 +5,9 @@
 
 using namespace std;
 
-Queue::Queue() : size(4096), head(0), tail(0), elements(0) {
-    // queueArray = new uint32_t[size];
-    queueArray = (uint32_t *) malloc(size * sizeof(uint32_t));
+Queue::Queue() : size_(16384), head(0), tail(0), elements(0) {
+    // queueArray = new uint32_t[size_];
+    queueArray = (uint32_t *) malloc(size_ * sizeof(uint32_t));
 }
 
 Queue::~Queue() {
@@ -18,10 +18,10 @@ Queue::~Queue() {
 void Queue::push(uint32_t &id) {
     if (!this->full()) {
         queueArray[tail] = id;
-        tail = (tail+1) % size;
+        tail = (tail+1) % size_;
         ++elements;
     } else {
-        queueArray = (uint32_t *) realloc(queueArray, 2 * size * sizeof(uint32_t));
+        queueArray = (uint32_t *) realloc(queueArray, 2 * size_ * sizeof(uint32_t));
         int temp = head;
         int i = 0;
         while (true) {
@@ -33,9 +33,9 @@ void Queue::push(uint32_t &id) {
         }
         tail = i;
         head = i;
-        size *= 2;
+        size_ *= 2;
         queueArray[tail] = id;
-        tail = (tail+1)%size;
+        tail = (tail+1)%size_;
         ++elements;
     }
 }
@@ -43,7 +43,7 @@ void Queue::push(uint32_t &id) {
 uint32_t Queue::pop() {
     if (!this->empty()) {
         int temp = head;
-        head = (head+1) % size;
+        head = (head+1) % size_;
         --elements;
         return queueArray[temp];
     }
@@ -54,11 +54,15 @@ bool Queue::empty() {
 }
 
 bool Queue::full() {
-    return (elements == size);
+    return (elements == size_);
 }
 
 void Queue::clear() {
     head = 0;
     tail = 0;
     elements = 0;
+}
+
+int Queue::size() {
+    return elements;
 }

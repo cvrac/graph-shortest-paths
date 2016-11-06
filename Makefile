@@ -15,9 +15,6 @@ Queue.o: Queue.cpp
 Index.o: Index.cpp
 	$(CC) $(FLAGS) Index.cpp
 
-Queue.o: Queue.cpp
-	$(CC) $(FLAGS) Queue.cpp
-
 ListNodePos.o: ListNodePos.cpp
 	$(CC) $(FLAGS) ListNodePos.cpp
 

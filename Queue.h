@@ -6,7 +6,7 @@
 class Queue {
 private:
     uint32_t *queueArray;
-    int size;
+    int size_;
     int head;
     int tail;
     int elements;
@@ -18,6 +18,7 @@ public:
     bool full();
     uint32_t pop();
     void push(uint32_t &temp);
+    int size();
 };
 
 #endif

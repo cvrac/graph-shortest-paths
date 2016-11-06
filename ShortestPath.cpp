@@ -94,7 +94,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 		if (frontierFront->empty() || frontierBack->empty())
 			return -1;
 
-		if (distanceFront <= distanceBack) {
+		if (clevelF <= clevelB) {
 			res = step(frontierFront, dirF);
 			if (res != -3)
 				return res;
@@ -103,7 +103,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				clevelF = clevelF1;
 				clevelF1 = 0;
 			}
-		} else if (distanceFront > distanceBack) {
+		} else if (clevelF > clevelB) {
 			res = step(frontierBack, dirB);
 			if (res != -3)
 				return res;
