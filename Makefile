@@ -9,6 +9,9 @@ FLAGS	= -c
 gsp: $(OBJS) $(HEADER)
 	$(CC) -o gsp $(OBJS)
 
+Queue.o: Queue.cpp
+	$(CC) $(FLAGS) Queue.cpp
+
 Index.o: Index.cpp
 	$(CC) $(FLAGS) Index.cpp
 

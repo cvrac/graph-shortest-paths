@@ -9,9 +9,9 @@ int ShortestPath::creat = 0;
 
 ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : prGraph(gr), hash_size(hashSize), dirF('F'), dirB('B'),
 										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(NULL) {
-	frontierFront = new LinkedList<uint32_t>();
+	frontierFront = new Queue();
 	assert(frontierFront != NULL);
-	frontierBack = new LinkedList<uint32_t>();
+	frontierBack = new Queue();
 	assert(frontierBack != NULL);
 	if (ShortestPath::creat == 0) {
 		exploredSet = new HashTable(hash_size);
@@ -32,7 +32,7 @@ ShortestPath::~ShortestPath() {
 	exploredSet = NULL;
 }
 
-int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char& dir) {
+int ShortestPath::expand(uint32_t& nodeId, Queue *frontier, char& dir) {
 	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
 	or return solution cost, if we reached a node already visited from the other side*/
 
@@ -53,7 +53,7 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 			dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
 			exploredSet->insert(tempId, nodeId, dist, dir);
 			// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
-			frontier->push_back(tempId);
+			frontier->push(tempId);
 			if (dir == 'F')
 				clevelF1++;
 			else
@@ -64,7 +64,7 @@ int ShortestPath::expand(uint32_t& nodeId, LinkedList<uint32_t> *frontier, char&
 	return -3;
 }
 
-int ShortestPath::step(LinkedList<uint32_t> *frontier, char& dir) {
+int ShortestPath::step(Queue *frontier, char& dir) {
 	uint32_t nodeId = frontier->pop();
 	if (dir == 'F')
 		clevelF--;
@@ -79,9 +79,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 		return 0;
 
 	int res = 0;
-	frontierFront->push_back(source);
+	frontierFront->push(source);
 	clevelF = 1;
-	frontierBack->push_back(target);
+	frontierBack->push(target);
 	clevelB = 1;
 	exploredSet->insert(source, source, distanceFront, dirF);
 	// exploredSet[source] = new path_entry(source, source, distanceFront, dirF);
@@ -125,14 +125,16 @@ void ShortestPath::reset() {
 	clevelB1 = 0;
 	clevelF = 0;
 	clevelF1 = 0;
-	if (frontierFront != NULL) {
-		delete frontierFront;
-		frontierFront = new LinkedList<uint32_t>();
-	}
-	if (frontierBack != NULL) {
-		delete frontierBack;
-		frontierBack = new LinkedList<uint32_t>();
-	}
+	// if (frontierFront != NULL) {
+	// 	delete frontierFront;
+	// 	frontierFront = new Queue();
+	// }
+	// if (frontierBack != NULL) {
+	// 	delete frontierBack;
+	// 	frontierBack = new Queue();
+	// }
+	frontierFront->clear();
+	frontierBack->clear();
 	exploredSet->iterandel();
 }
 

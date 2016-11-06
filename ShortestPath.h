@@ -5,6 +5,7 @@
 #include "HashTable.h"
 #include "PathEntry.h"
 #include "Graph.h"
+#include "Queue.h"
 
 class ShortestPath {
 private:
@@ -13,16 +14,16 @@ private:
 	unsigned int clevelF, clevelF1;
 	unsigned int clevelB, clevelB1;
 	Graph& prGraph;
-	LinkedList<uint32_t> *frontierFront;
-	LinkedList<uint32_t> *frontierBack;
+	Queue *frontierFront;
+	Queue *frontierBack;
 	HashTable *exploredSet;
 	// path_entry **exploredSet;
 	unsigned int distanceFront;
 	unsigned int distanceBack;
 	char dirF;
 	char dirB;
-	int expand(uint32_t& nodeId, LinkedList<uint32_t> * frontier, char& dir);
-	int step(LinkedList<uint32_t> * frontier, char& dir);
+	int expand(uint32_t& nodeId, Queue * frontier, char& dir);
+	int step(Queue * frontier, char& dir);
 	uint32_t determineHashSize();
 public:
 	ShortestPath(Graph& gr, uint32_t &hashSize);
