@@ -8,31 +8,31 @@ using namespace std;
 int ShortestPath::creat = 0;
 
 ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : prGraph(gr), hash_size(hashSize), dirF('F'), dirB('B'),
-										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(NULL) {
-	frontierFront = new Queue();
-	assert(frontierFront != NULL);
-	frontierBack = new Queue();
-	assert(frontierBack != NULL);
+										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(hash_size) {
+	// frontierFront = new Queue();
+	// assert(frontierFront != NULL);
+	// frontierBack = new Queue();
+	// assert(frontierBack != NULL);
 	if (ShortestPath::creat == 0) {
-		exploredSet = new HashTable(hash_size);
-		assert(exploredSet != NULL);
+		// exploredSet = new HashTable(hash_size);
+		// assert(exploredSet != NULL);
 		ShortestPath::creat++;
 	}
 }
 
 ShortestPath::~ShortestPath() {
-	if (frontierFront != NULL)
-		delete frontierFront;
-	if (frontierBack != NULL)
-		delete frontierBack;
-	if (exploredSet != NULL)
-		delete exploredSet;
-	frontierBack = NULL;
-	frontierFront = NULL;
-	exploredSet = NULL;
+	// if (frontierFront != NULL)
+	// 	delete frontierFront;
+	// if (frontierBack != NULL)
+	// 	delete frontierBack;
+	// if (exploredSet != NULL)
+	// 	delete exploredSet;
+	// frontierBack = NULL;
+	// frontierFront = NULL;
+	// exploredSet = NULL;
 }
 
-int ShortestPath::expand(uint32_t& nodeId, Queue *frontier, char& dir) {
+int ShortestPath::expand(uint32_t& nodeId, Queue &frontier, char& dir) {
 	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
 	or return solution cost, if we reached a node already visited from the other side*/
 
@@ -44,16 +44,16 @@ int ShortestPath::expand(uint32_t& nodeId, Queue *frontier, char& dir) {
 	for (int i = 0; i < neighbors->size; i++) {
 		tempId = neighbors->array[i];
 		// if (exploredSet[tempId] != NULL) {
-		if (exploredSet->search(tempId, &data)) {
+		if (exploredSet.search(tempId, &data)) {
 			if (data->direction != dir) {
 				delete neighbors;
 				return data->pathCost + ((dir == 'F') ? distanceFront : distanceBack) + 1;
 			}
 		} else {
 			dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
-			exploredSet->insert(tempId, nodeId, dist, dir);
+			exploredSet.insert(tempId, nodeId, dist, dir);
 			// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
-			frontier->push(tempId);
+			frontier.push(tempId);
 			if (dir == 'F')
 				clevelF1++;
 			else
@@ -64,8 +64,8 @@ int ShortestPath::expand(uint32_t& nodeId, Queue *frontier, char& dir) {
 	return -3;
 }
 
-int ShortestPath::step(Queue *frontier, char& dir) {
-	uint32_t nodeId = frontier->pop();
+int ShortestPath::step(Queue &frontier, char& dir) {
+	uint32_t nodeId = frontier.pop();
 	if (dir == 'F')
 		clevelF--;
 	else
@@ -83,38 +83,38 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	NodeArray *neighbors;
 	unsigned int dist;
 	path_entry *data;
-	frontierFront->push(source);
+	frontierFront.push(source);
 	clevelF = 1;
-	frontierBack->push(target);
+	frontierBack.push(target);
 	clevelB = 1;
-	exploredSet->insert(source, source, distanceFront, dirF);
+	exploredSet.insert(source, source, distanceFront, dirF);
 	// exploredSet[source] = new path_entry(source, source, distanceFront, dirF);
-	exploredSet->insert(target, target, distanceBack, dirB);
+	exploredSet.insert(target, target, distanceBack, dirB);
 	// exploredSet[target] = new path_entry(target, target, distanceBack, dirB);
 
 	while (true) {
 
 		//no solution, return failure
-		if (frontierFront->empty() || frontierBack->empty())
+		if (frontierFront.empty() || frontierBack.empty())
 			return -1;
 
 		if (clevelF <= clevelB) {
 			clevelF--;
-			nodeId = frontierFront->pop();
+			nodeId = frontierFront.pop();
 			neighbors = prGraph.getNeighbors(nodeId, dirF);
 			for (int i = 0; i < neighbors->size; i++) {
 				tempId = neighbors->array[i];
 				// if (exploredSet[tempId] != NULL) {
-				if (exploredSet->search(tempId, &data)) {
+				if (exploredSet.search(tempId, &data)) {
 					if (data->direction != dirF) {
 						delete neighbors;
 						return data->pathCost + distanceFront + 1;
 					}
 				} else {
 					dist = distanceFront + 1;
-					exploredSet->insert(tempId, nodeId, dist, dirF);
+					exploredSet.insert(tempId, nodeId, dist, dirF);
 					// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
-					frontierFront->push(tempId);
+					frontierFront.push(tempId);
 					clevelF1++;
 				}
 			}
@@ -130,21 +130,21 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 			}
 		} else if (clevelF > clevelB) {
 			clevelB--;
-			nodeId = frontierBack->pop();
+			nodeId = frontierBack.pop();
 			NodeArray *neighbors = prGraph.getNeighbors(nodeId, dirB);
 			for (int i = 0; i < neighbors->size; i++) {
 				tempId = neighbors->array[i];
 				// if (exploredSet[tempId] != NULL) {
-				if (exploredSet->search(tempId, &data)) {
+				if (exploredSet.search(tempId, &data)) {
 					if (data->direction != dirB) {
 						delete neighbors;
 						return data->pathCost + distanceBack + 1;
 					}
 				} else {
 					dist = distanceBack + 1;
-					exploredSet->insert(tempId, nodeId, dist, dirB);
+					exploredSet.insert(tempId, nodeId, dist, dirB);
 					// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
-					frontierBack->push(tempId);
+					frontierBack.push(tempId);
 					clevelB1++;
 				}
 			}
@@ -171,14 +171,14 @@ void ShortestPath::reset() {
 	clevelB1 = 0;
 	clevelF = 0;
 	clevelF1 = 0;
-	frontierFront->clear();
-	frontierBack->clear();
-	exploredSet->iterandel();
+	frontierFront.clear();
+	frontierBack.clear();
+	exploredSet.iterandel();
 }
 
 void ShortestPath::init(const uint32_t &hashSize) {
-	exploredSet = new HashTable(hashSize);
-	assert(exploredSet != NULL);
+	// exploredSet = new HashTable(hashSize);
+	// assert(exploredSet != NULL);
 }
 
 uint32_t ShortestPath::determineHashSize() {

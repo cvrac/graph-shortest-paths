@@ -20,6 +20,7 @@ class LinkedList {
 		LinkedList();
 		~LinkedList();
 		int size();
+		void clear();
 		bool empty();
 		T *push_front(const T& data);
 		bool pop_front();
@@ -37,7 +38,7 @@ class LinkedList {
 		template <class G>
 		friend std::ostream& operator<<(std::ostream& out, const LinkedList<G>& l);
 		template <class G>
-		friend std::ostream& operator<<(std::ostream& out, const LinkedList<G>* l);		
+		friend std::ostream& operator<<(std::ostream& out, const LinkedList<G>* l);
 };
 
 template <class T>
@@ -58,6 +59,25 @@ LinkedList<T>::~LinkedList() {
 		}
 		current = NULL;
 		head = NULL;
+		back = NULL;
+		_size = 0;
+	}
+}
+
+template <class T>
+void LinkedList<T>::clear() {
+	if (_size > 0) {
+		current = head;
+		node *tempx ;
+		while (current != NULL) {
+			tempx = current;
+			current = current->next;
+			delete tempx;
+		}
+		current = NULL;
+		head = NULL;
+		back = NULL;
+		_size = 0;
 	}
 }
 
@@ -116,7 +136,7 @@ bool LinkedList<T>::insert(const T& data) {
 
 	if (temp == NULL)
 		return false;
-	
+
 	//Empty list case
 
 	if (head == NULL) {
@@ -199,7 +219,7 @@ bool LinkedList<T>::rem(const T& data) {
 			temp = NULL;
 			_size--;
 			return true;
-		} 
+		}
 		prev = temp;
 		temp = temp->next;
 	}
@@ -262,7 +282,7 @@ bool LinkedList<T>::check_next() {
 	if (current != NULL) {
 		if (current->next == NULL)
 			return false;
-		else 
+		else
 			return true;
 	}
 	return false;

@@ -9,15 +9,20 @@ HashTable::HashEntry::HashEntry(uint32_t& id,  uint32_t &parent_id, unsigned int
 
 HashTable::HashEntry::~HashEntry() {}
 
+void HashTable::HashEntry::update(uint32_t& parentId, unsigned int &cost, char &dir) {
+	nodeEntry.update(nodeId, parentId, cost, dir);
+}
+
+
 HashTable::HashTable(const uint32_t& numofbucks) : hashentries(numofbucks), _elements(0) {
 
-	t_hash = new LinkedList<HashEntry> *[hashentries];
+	t_hash = new LinkedList<HashEntry>[hashentries];
 	assert(t_hash != NULL);
 
-	for (int i = 0; i < hashentries; i++)  {
-		t_hash[i] = new LinkedList<HashEntry>;
-		assert(t_hash[i] != NULL);
-	}
+	// for (int i = 0; i < hashentries; i++)  {
+	// 	t_hash[i] = new LinkedList<HashEntry>;
+	// 	assert(t_hash[i] != NULL);
+	// }
 
 }
 
@@ -26,10 +31,10 @@ HashTable::~HashTable() {
 	if (t_hash != NULL) {
 		// iterandel();
 
-		for (int i = 0; i < hashentries; i++) {
-			if (t_hash[i] != NULL)
-				delete t_hash[i];
-		}
+		// for (int i = 0; i < hashentries; i++) {
+		// 	if (t_hash[i] != NULL)
+		// 		delete t_hash[i];
+		// }
 
 		delete[] t_hash;
 		t_hash = NULL;
@@ -39,13 +44,20 @@ HashTable::~HashTable() {
 
 void HashTable::iterandel() {
 	HashEntry *iter;
-
+	unsigned int cost = 0;
+	char dir = '-';
+	uint32_t parent = 0;
 	for (int i = 0; i < hashentries; i++) {
-		if (t_hash[i]->empty() == true) continue;
+		if (t_hash[i].empty() == true) continue;
 		else {
-			delete t_hash[i];
-			t_hash[i] = NULL;
-			t_hash[i] = new LinkedList<HashEntry>;
+			// iter = NULL;
+			// while ((iter = t_hash[i].get_next()) != NULL) {
+			// 	iter->update(parent, cost, dir);
+			// }
+			// delete t_hash[i];
+			// t_hash[i] = NULL;
+			// t_hash[i] = new LinkedList<HashEntry>;
+			t_hash[i].clear();
 		}
 	}
 	_elements = 0;
@@ -63,7 +75,7 @@ uint32_t HashTable::hash(uint32_t& id) {
 void HashTable::insert(uint32_t &nodeId, uint32_t &parentId, unsigned int &pathCost, char &direction) {
 	int pos = this->hash(nodeId);
 	HashEntry qq(nodeId, parentId, pathCost, direction);
-	t_hash[pos]->push_back(qq);
+	t_hash[pos].push_back(qq);
 	_elements++;
 }
 
@@ -73,7 +85,7 @@ bool HashTable::search(uint32_t& entry_id, path_entry **data) {
 	unsigned int d = 0;
 	HashEntry temp(entry_id, entry_id, d, f);
 	HashEntry *tempx;
-	tempx = t_hash[pos]->member(temp);
+	tempx = t_hash[pos].member(temp);
 	if (tempx != NULL)
 		*data = &(tempx->nodeEntry);
 	return tempx != NULL;
@@ -82,10 +94,10 @@ bool HashTable::search(uint32_t& entry_id, path_entry **data) {
 
 void HashTable::print() {
 	for (int i = 0; i < hashentries; i++) {
-		if (t_hash[i] == NULL) continue;
-		if (t_hash[i]->empty()) continue;
+		// if (t_hash[i] == NULL) continue;
+		if (t_hash[i].empty()) continue;
 		cout << "bucket[" << i << "]:" << endl;
-		t_hash[i]->print();
+		t_hash[i].print();
 	}
 }
 

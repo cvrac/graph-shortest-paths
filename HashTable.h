@@ -16,10 +16,11 @@ class HashTable {
 		path_entry nodeEntry;
 		HashEntry(uint32_t& entry_id, uint32_t &parent_id, unsigned int &cost, char &dir);
 		~HashEntry();
+		void update(uint32_t& parentId, unsigned int &cost, char &dir);
 	};
 	friend std::ostream& operator<<(std::ostream& out, const HashEntry& d);
 	friend bool operator== (const HashEntry& e1, const HashEntry& e2);
-	LinkedList<HashEntry> **t_hash;
+	LinkedList<HashEntry> *t_hash;
 public:
 	HashTable(const uint32_t& numofbucks);
 	~HashTable();

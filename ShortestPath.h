@@ -14,16 +14,16 @@ private:
 	unsigned int clevelF, clevelF1;
 	unsigned int clevelB, clevelB1;
 	Graph& prGraph;
-	Queue *frontierFront;
-	Queue *frontierBack;
-	HashTable *exploredSet;
+	Queue frontierFront;
+	Queue frontierBack;
+	HashTable exploredSet;
 	// path_entry **exploredSet;
 	unsigned int distanceFront;
 	unsigned int distanceBack;
 	char dirF;
 	char dirB;
-	int expand(uint32_t& nodeId, Queue * frontier, char& dir);
-	int step(Queue * frontier, char& dir);
+	int expand(uint32_t& nodeId, Queue &frontier, char& dir);
+	int step(Queue &frontier, char& dir);
 	uint32_t determineHashSize();
 public:
 	ShortestPath(Graph& gr, uint32_t &hashSize);
