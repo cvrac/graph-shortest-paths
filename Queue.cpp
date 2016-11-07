@@ -22,8 +22,9 @@ void Queue::push(uint32_t &id) {
         tail = (tail+1) % size_;
         ++elements;
     } else {
+        tail = (tail-1) % size_;
         queueArray = (uint32_t *) realloc(queueArray, 2 * size_ * sizeof(uint32_t));
-        memcpy(&queueArray[size_], queueArray, tail * sizeof(uint32_t));
+        memcpy(queueArray + size_, queueArray, tail * sizeof(uint32_t));
         tail = size_ + tail;
         size_ *= 2;
         queueArray[tail] = id;
@@ -38,7 +39,7 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
         if (head <= tail) {
             uint32_t right_space = size_ - tail;
             if (right_space >= batch_size) {
-                memcpy(&queueArray[tail], batch, batch_size * sizeof(uint32_t));
+                memcpy(queueArray + tail, batch, batch_size * sizeof(uint32_t));
                 pushed += batch_size;
                 tail += batch_size;
                 if (tail == size_) {
@@ -46,13 +47,13 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
                 }
             }
             else {
-                memcpy(&queueArray[tail], batch, right_space * sizeof(uint32_t));
+                memcpy(queueArray + tail, batch, right_space * sizeof(uint32_t));
                 pushed += right_space;
                 tail = 0;
             }
         }
         if (tail <= head && pushed != batch_size) {
-            memcpy(&queueArray[tail], &batch[pushed], (batch_size - pushed) * sizeof(uint32_t));
+            memcpy(queueArray + tail, batch + pushed, (batch_size - pushed) * sizeof(uint32_t));
             pushed += (batch_size - pushed);
             tail += pushed;
         }
@@ -64,10 +65,10 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
         }
         queueArray = (uint32_t *) realloc(queueArray, new_size * sizeof(uint32_t));
         if (tail <= head) {
-            memcpy(&queueArray[size_], queueArray, tail * sizeof(uint32_t));
+            memcpy(queueArray + size_, queueArray, tail * sizeof(uint32_t));
             tail = size_ + tail;
         }
-        memcpy(&queueArray[tail], batch, batch_size * sizeof(uint32_t));
+        memcpy(queueArray + tail, batch, batch_size * sizeof(uint32_t));
         size_ = new_size;
     }
     elements += batch_size;
@@ -99,3 +100,42 @@ void Queue::clear() {
 int Queue::size() {
     return elements;
 }
+
+void Queue::print() {
+    for (int i = 0; i < size_; i++)
+        cout << queueArray[i] << " ";
+    cout << endl;
+}
+
+// main() {
+//     uint32_t x;
+//     Queue q;
+//     x = 2;
+//     q.push(x);
+//     q.print();
+//     x = 3;
+//     q.push(x);
+//     q.print();
+//     x = 4;
+//     q.push(x);
+//     q.print();
+//
+//     cout << q.pop() << endl;
+//     q.print();
+//
+//     x = 5;
+//     q.push(x);
+//     q.print();
+//
+//     x = 6;
+//     q.push(x);
+//     q.print();
+//
+//     x = 7;
+//     q.push(x);
+//     q.print();
+//
+//     cout << endl;
+//     while (!q.empty())
+//         cout << q.pop() << endl;
+// }

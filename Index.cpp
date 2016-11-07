@@ -29,7 +29,7 @@ Index::~Index() {
 
 void Index::insertNode(const uint32_t &nodeId) {
     if (maxSize <= nodeId) {
-        uint32_t oldMaxSize = maxSize;
+        // uint32_t oldMaxSize = maxSize;
         while (maxSize <= nodeId) {
             maxSize *= 2;
         }
@@ -69,4 +69,3 @@ void Index::print() const {
     }
     cout << endl;
 }
-

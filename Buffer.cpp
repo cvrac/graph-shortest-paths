@@ -23,6 +23,7 @@ Buffer::~Buffer() {
 //        buffer[i].~ListNode();
 //    }
 //    free(buffer);
+
 }
 
 /* Get a new listNode, reallocate buffer if necessary.

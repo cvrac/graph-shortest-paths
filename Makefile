@@ -4,7 +4,7 @@ HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h
 all: gsp
 
 CC 	= g++
-FLAGS	= -c -O2
+FLAGS	= -O2 -c
 
 gsp: $(OBJS) $(HEADER)
 	$(CC) -O2 -o gsp $(OBJS)

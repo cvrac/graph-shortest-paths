@@ -8,7 +8,7 @@ class OperationsControl {
 
 private:
     Graph graph;
-    ShortestPath *path;
+    ShortestPath path;
     void buildGraph();
     void runQueries();
 

@@ -130,9 +130,14 @@ NodeArray *Graph::getNeighbors(const uint32_t &nodeId, const Index &index, const
 uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
     outerIndex.getAverageNeighbors() << "\nAverage inner edges: " <<
+<<<<<<< HEAD
     innerIndex.getAverageNeighbors() << "\nBuffer reallocs: " <<
     outerBuffer.getTotalReallocs() + innerBuffer.getTotalReallocs() << "\nIndex reallocs: " <<
     outerIndex.getTotalReallocs() + outerIndex.getTotalReallocs() << endl;
+=======
+    innerIndex.getAverageNeighbors() << endl;
+    return 1;
+>>>>>>> db1c9b491a94c9ec8ad60bcdbbdd91bef2ed0c9a
 }
 
 void Graph::printAll() {
@@ -191,7 +196,7 @@ void Graph::print(const Index &index, const Buffer &buffer) {
 
 void NodeArray::print() {
     //cout << "--- NodeArray ---\n" << "size: " << size << endl;
-    for (int n = 0 ; n < size ; n++) {
+    for (unsigned int n = 0 ; n < size ; n++) {
         cout << array[n] << " ";
     }
     cout << endl;
