@@ -79,6 +79,10 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 		return 0;
 
 	int res = 0;
+	uint32_t nodeId, tempId;
+	NodeArray *neighbors;
+	unsigned int dist;
+	path_entry *data;
 	frontierFront->push(source);
 	clevelF = 1;
 	frontierBack->push(target);
@@ -95,18 +99,60 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 			return -1;
 
 		if (clevelF <= clevelB) {
-			res = step(frontierFront, dirF);
-			if (res != -3)
-				return res;
+			clevelF--;
+			nodeId = frontierFront->pop();
+			neighbors = prGraph.getNeighbors(nodeId, dirF);
+			for (int i = 0; i < neighbors->size; i++) {
+				tempId = neighbors->array[i];
+				// if (exploredSet[tempId] != NULL) {
+				if (exploredSet->search(tempId, &data)) {
+					if (data->direction != dirF) {
+						delete neighbors;
+						return data->pathCost + distanceFront + 1;
+					}
+				} else {
+					dist = distanceFront + 1;
+					exploredSet->insert(tempId, nodeId, dist, dirF);
+					// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
+					frontierFront->push(tempId);
+					clevelF1++;
+				}
+			}
+			delete neighbors;
+			// res = -3;
+			// res = step(frontierFront, dirF);
+			// if (res != -3)
+			// 	return res;
 			if (clevelF == 0) {
 				++distanceFront;
 				clevelF = clevelF1;
 				clevelF1 = 0;
 			}
 		} else if (clevelF > clevelB) {
-			res = step(frontierBack, dirB);
-			if (res != -3)
-				return res;
+			clevelB--;
+			nodeId = frontierBack->pop();
+			NodeArray *neighbors = prGraph.getNeighbors(nodeId, dirB);
+			for (int i = 0; i < neighbors->size; i++) {
+				tempId = neighbors->array[i];
+				// if (exploredSet[tempId] != NULL) {
+				if (exploredSet->search(tempId, &data)) {
+					if (data->direction != dirB) {
+						delete neighbors;
+						return data->pathCost + distanceBack + 1;
+					}
+				} else {
+					dist = distanceBack + 1;
+					exploredSet->insert(tempId, nodeId, dist, dirB);
+					// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
+					frontierBack->push(tempId);
+					clevelB1++;
+				}
+			}
+			delete neighbors;
+			// res = -3;
+			// res = step(frontierBack, dirB);
+			// if (res != -3)
+			// 	return res;
 			if (clevelB == 0) {
 				++distanceBack;
 				clevelB = clevelB1;
@@ -125,14 +171,6 @@ void ShortestPath::reset() {
 	clevelB1 = 0;
 	clevelF = 0;
 	clevelF1 = 0;
-	// if (frontierFront != NULL) {
-	// 	delete frontierFront;
-	// 	frontierFront = new Queue();
-	// }
-	// if (frontierBack != NULL) {
-	// 	delete frontierBack;
-	// 	frontierBack = new Queue();
-	// }
 	frontierFront->clear();
 	frontierBack->clear();
 	exploredSet->iterandel();
