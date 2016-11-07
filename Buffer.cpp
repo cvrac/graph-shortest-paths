@@ -7,20 +7,20 @@
 using namespace std;
 
 Buffer::Buffer() : curListNodes(0), maxListNodes(INITIAL_MAX_LIST_NODES) {
-    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
-//    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
+//    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
+    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
     assert(buffer != NULL);
-//    for (uint32_t i = 0 ; i < INITIAL_MAX_LIST_NODES ; i++) {
-//        new (&buffer[i]) ListNode();
-//    }
+    for (uint32_t i = 0 ; i < INITIAL_MAX_LIST_NODES ; i++) {
+        new (&buffer[i]) ListNode();
+    }
 }
 
 Buffer::~Buffer() {
-    delete[] buffer;
-//    for (uint32_t i = 0 ; i < maxListNodes ; i++) {
-//        buffer[i].~ListNode();
-//    }
-//    free(buffer);
+//    delete[] buffer;
+    for (uint32_t i = 0 ; i < maxListNodes ; i++) {
+        buffer[i].~ListNode();
+    }
+    free(buffer);
 }
 
 /* Get a new listNode, reallocate buffer if necessary.
@@ -30,15 +30,15 @@ Buffer::~Buffer() {
 ListNodePos Buffer::allocNewNode() {
     if (curListNodes == maxListNodes) {
         maxListNodes *= 2;
-        ListNode *oldBuffer = buffer;
-//        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
-//        assert(buffer != NULL);
-//        for (uint32_t i = curListNodes ; i < maxListNodes ; i++) {
-//            new (&buffer[i]) ListNode();
-//        }
-        buffer = new ListNode[maxListNodes];
-        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
-        delete[] oldBuffer;
+//        ListNode *oldBuffer = buffer;
+        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
+        assert(buffer != NULL);
+        for (uint32_t i = curListNodes ; i < maxListNodes ; i++) {
+            new (&buffer[i]) ListNode();
+        }
+//        buffer = new ListNode[maxListNodes];
+//        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
+//        delete[] oldBuffer;
     }
     return ListNodePos(curListNodes++);
 }
