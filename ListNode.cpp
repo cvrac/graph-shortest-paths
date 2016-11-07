@@ -1,9 +1,8 @@
 #include "ListNode.h"
+
 #include <iostream>
 
 using namespace std;
-
-ListNode::ListNode() : curNeighbors(0) {}
 
 void ListNode::insertNeighbor(const uint32_t &neighborId) {
     if (this->isFull()) {

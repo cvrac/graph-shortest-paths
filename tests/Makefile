@@ -1,4 +1,4 @@
-OBJS =  Index.o ListNodePos.o ListNode.o Buffer.o Graph.o Check.o ListNodeCheck.o
+OBJS =  Index.o ListNode.o Buffer.o Graph.o Check.o ListNodeCheck.o
 HEADER = ../Index.h ../ListNodePos.h ../ListNode.h ../Buffer.h ../Graph.h
 
 all: check
@@ -14,9 +14,6 @@ check: $(OBJS) $(HEADER)
 
 Index.o: ../Index.cpp
 	$(CC) $(COMP_FLAGS) ../Index.cpp
-
-ListNodePos.o: ../ListNodePos.cpp
-	$(CC) $(COMP_FLAGS) ../ListNodePos.cpp
 
 ListNode.o: ../ListNode.cpp
 	$(CC) $(COMP_FLAGS) ../ListNode.cpp

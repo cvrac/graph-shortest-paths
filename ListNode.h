@@ -7,14 +7,8 @@
 #define MAX_NEIGHBORS 20
 class ListNode {
 
-private:
-    uint32_t curNeighbors;
-    uint32_t neighbor[MAX_NEIGHBORS];
-    uint32_t edgeProperty[MAX_NEIGHBORS];
-    ListNodePos nextPos;
-
 public:
-    ListNode();
+    ListNode() : curNeighbors(0) {}
     ~ListNode() {}
     void insertNeighbor(const uint32_t &neighborId);
     bool isFull() const {return curNeighbors == MAX_NEIGHBORS;}
@@ -24,6 +18,12 @@ public:
     uint32_t *getNeighborArray() {return neighbor;}
     uint32_t getNeighborNumber() {return curNeighbors;}
     void print() const;
+
+private:
+    uint32_t curNeighbors;
+    uint32_t neighbor[MAX_NEIGHBORS];
+    uint32_t edgeProperty[MAX_NEIGHBORS];
+    ListNodePos nextPos;
 };
 
 #endif //GRAPHSHORTESTPATHS_LISTNODE_H
