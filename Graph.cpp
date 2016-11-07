@@ -128,6 +128,7 @@ uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
     outerIndex.getAverageNeighbors() << "\nAverage inner edges: " <<
     innerIndex.getAverageNeighbors() << endl;
+    return 1;
 }
 
 void Graph::printAll() {
@@ -186,7 +187,7 @@ void Graph::print(Index &index, Buffer &buffer) {
 
 void NodeArray::print() {
     //cout << "--- NodeArray ---\n" << "size: " << size << endl;
-    for (int n = 0 ; n < size ; n++) {
+    for (unsigned int n = 0 ; n < size ; n++) {
         cout << array[n] << " ";
     }
     cout << endl;

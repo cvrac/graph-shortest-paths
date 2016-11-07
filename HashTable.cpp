@@ -16,26 +16,14 @@ void HashTable::HashEntry::update(uint32_t& parentId, unsigned int &cost, char &
 
 HashTable::HashTable(const uint32_t& numofbucks) : hashentries(numofbucks), _elements(0) {
 
-	t_hash = new LinkedList<HashEntry>[hashentries];
+	t_hash = new LinkedList<HashEntry> [hashentries];
 	assert(t_hash != NULL);
-
-	// for (int i = 0; i < hashentries; i++)  {
-	// 	t_hash[i] = new LinkedList<HashEntry>;
-	// 	assert(t_hash[i] != NULL);
-	// }
 
 }
 
 HashTable::~HashTable() {
 
 	if (t_hash != NULL) {
-		// iterandel();
-
-		// for (int i = 0; i < hashentries; i++) {
-		// 	if (t_hash[i] != NULL)
-		// 		delete t_hash[i];
-		// }
-
 		delete[] t_hash;
 		t_hash = NULL;
 		hashentries = 0;
@@ -43,22 +31,11 @@ HashTable::~HashTable() {
 }
 
 void HashTable::iterandel() {
-	HashEntry *iter;
-	unsigned int cost = 0;
-	char dir = '-';
-	uint32_t parent = 0;
-	for (int i = 0; i < hashentries; i++) {
-		if (t_hash[i].empty() == true) continue;
-		else {
-			// iter = NULL;
-			// while ((iter = t_hash[i].get_next()) != NULL) {
-			// 	iter->update(parent, cost, dir);
-			// }
-			// delete t_hash[i];
-			// t_hash[i] = NULL;
-			// t_hash[i] = new LinkedList<HashEntry>;
+	for (unsigned int i = 0; i < hashentries; i++) {
+		if (t_hash[i].empty() == true)
+			continue;
+		else
 			t_hash[i].clear();
-		}
 	}
 	_elements = 0;
 }
@@ -93,8 +70,7 @@ bool HashTable::search(uint32_t& entry_id, path_entry **data) {
 
 
 void HashTable::print() {
-	for (int i = 0; i < hashentries; i++) {
-		// if (t_hash[i] == NULL) continue;
+	for (unsigned int i = 0; i < hashentries; i++) {
 		if (t_hash[i].empty()) continue;
 		cout << "bucket[" << i << "]:" << endl;
 		t_hash[i].print();

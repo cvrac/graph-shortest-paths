@@ -7,30 +7,11 @@ using namespace std;
 //9721, 70537
 int ShortestPath::creat = 0;
 
-ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : prGraph(gr), hash_size(hashSize), dirF('F'), dirB('B'),
-										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(hash_size) {
-	// frontierFront = new Queue();
-	// assert(frontierFront != NULL);
-	// frontierBack = new Queue();
-	// assert(frontierBack != NULL);
-	if (ShortestPath::creat == 0) {
-		// exploredSet = new HashTable(hash_size);
-		// assert(exploredSet != NULL);
-		ShortestPath::creat++;
-	}
+ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : hash_size(hashSize), dirF('F'), dirB('B'),
+										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(hash_size), prGraph(gr) {
 }
 
-ShortestPath::~ShortestPath() {
-	// if (frontierFront != NULL)
-	// 	delete frontierFront;
-	// if (frontierBack != NULL)
-	// 	delete frontierBack;
-	// if (exploredSet != NULL)
-	// 	delete exploredSet;
-	// frontierBack = NULL;
-	// frontierFront = NULL;
-	// exploredSet = NULL;
-}
+ShortestPath::~ShortestPath() { }
 
 int ShortestPath::expand(uint32_t& nodeId, Queue &frontier, char& dir) {
 	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
@@ -88,9 +69,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	frontierBack.push(target);
 	clevelB = 1;
 	exploredSet.insert(source, source, distanceFront, dirF);
-	// exploredSet[source] = new path_entry(source, source, distanceFront, dirF);
 	exploredSet.insert(target, target, distanceBack, dirB);
-	// exploredSet[target] = new path_entry(target, target, distanceBack, dirB);
 
 	while (true) {
 
@@ -104,7 +83,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 			neighbors = prGraph.getNeighbors(nodeId, dirF);
 			for (int i = 0; i < neighbors->size; i++) {
 				tempId = neighbors->array[i];
-				// if (exploredSet[tempId] != NULL) {
 				if (exploredSet.search(tempId, &data)) {
 					if (data->direction != dirF) {
 						delete neighbors;

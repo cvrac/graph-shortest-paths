@@ -8,8 +8,8 @@ path_entry::path_entry(uint32_t& id, uint32_t& pd, unsigned int& pathC, char& di
 
 
 ostream& operator<<(ostream& out, const path_entry& d) {
-	out << d.nodeId << endl;
-	out << "neti" << endl;
+	out << d.nodeId << " " << d.parentId << " " << d.pathCost << " " << d.direction << endl;;
+	// out << "neti" << endl;
 	return out;
 }
 

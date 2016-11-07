@@ -10,12 +10,12 @@
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) {
-    path = new ShortestPath(graph, hashSize);
+OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize) {
+    // path = new ShortestPath(graph, hashSize);
 }
 
 OperationsControl::~OperationsControl() {
-    delete path;
+    // delete path;
 }
 
 void OperationsControl::run(const uint32_t &hashSize) {
@@ -112,9 +112,9 @@ void OperationsControl::runQueries() {
             uint32_t targetNode = atol(node);
             //delete[] cLine;
             // clock_t start = clock();
-            cout << path->shortestPath(sourceNode, targetNode) << endl;
+            cout << path.shortestPath(sourceNode, targetNode) << endl;
             // clock_t end = clock();
-            path->reset();
+            path.reset();
             // cout << "path find took ";
             // cout.precision(5);
             // cout << setprecision(15) << fixed << ((end - start) / static_cast<double>(CLOCKS_PER_SEC)) << " secs" << endl;

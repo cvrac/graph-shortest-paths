@@ -1,4 +1,4 @@
-took 1.27706 secs
+took 0.758151 secs
 -1
 -1
 -1

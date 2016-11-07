@@ -17,7 +17,6 @@ private:
 	Queue frontierFront;
 	Queue frontierBack;
 	HashTable exploredSet;
-	// path_entry **exploredSet;
 	unsigned int distanceFront;
 	unsigned int distanceBack;
 	char dirF;
