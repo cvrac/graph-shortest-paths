@@ -13,7 +13,7 @@ using namespace std;
 // 	nodeEntry.update(nodeId, parentId, cost, dir);
 // }
 
-HashTable::Bucket::Bucket() : count(0), size(4) {
+HashTable::Bucket::Bucket() : count(0), size(16) {
 	entries = new path_entry[size];
 	assert(entries != NULL);
 }
