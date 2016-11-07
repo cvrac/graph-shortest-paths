@@ -19,6 +19,7 @@ public:
     uint32_t pop();
     void push(uint32_t &temp);
     int size();
+    void print();
 };
 
 #endif

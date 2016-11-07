@@ -13,16 +13,23 @@ void HashTable::HashEntry::update(uint32_t& parentId, unsigned int &cost, char &
 	nodeEntry.update(nodeId, parentId, cost, dir);
 }
 
+HashTable::Bucket::Bucket() : count(0), size(4) {
+	entries = new path_entry[size];
+	assert(entries != NULL);
+}
+
+HashTable::Bucket::~Bucket() {
+	delete[] entries;
+	entries = NULL;
+}
+
 
 HashTable::HashTable(const uint32_t& numofbucks) : hashentries(numofbucks), _elements(0) {
-
-	t_hash = new LinkedList<HashEntry> [hashentries];
+	t_hash = new Bucket[hashentries];
 	assert(t_hash != NULL);
-
 }
 
 HashTable::~HashTable() {
-
 	if (t_hash != NULL) {
 		delete[] t_hash;
 		t_hash = NULL;
@@ -30,12 +37,11 @@ HashTable::~HashTable() {
 	}
 }
 
-void HashTable::iterandel() {
+void HashTable::clear() {
+	//reset buckets for next queries
 	for (unsigned int i = 0; i < hashentries; i++) {
-		if (t_hash[i].empty() == true)
-			continue;
-		else
-			t_hash[i].clear();
+		if (t_hash[i].count == 0) continue;
+		else t_hash[i].count = 0;
 	}
 	_elements = 0;
 }
@@ -51,8 +57,20 @@ uint32_t HashTable::hash(uint32_t& id) {
 
 void HashTable::insert(uint32_t &nodeId, uint32_t &parentId, unsigned int &pathCost, char &direction) {
 	int pos = this->hash(nodeId);
-	HashEntry qq(nodeId, parentId, pathCost, direction);
-	t_hash[pos].push_back(qq);
+	path_entry qq(nodeId, parentId, pathCost, direction);
+
+	if (t_hash[pos].count == t_hash[pos].size - 1) {
+		path_entry *old = t_hash[pos].entries;
+		t_hash[pos].entries = new path_entry[t_hash[pos].size * 2];
+		memcpy(t_hash[pos].entries, old, t_hash[pos].size);
+		delete[] old;
+		t_hash[pos].count = t_hash[pos].size;
+		t_hash[pos].size *= 2;
+	}
+
+	t_hash[pos].entries[t_hash[pos].count] = qq;
+	t_hash[pos].count++;
+
 	_elements++;
 }
 
@@ -60,20 +78,25 @@ bool HashTable::search(uint32_t& entry_id, path_entry **data) {
 	int pos = this->hash(entry_id);
 	char f = 'f';
 	unsigned int d = 0;
-	HashEntry temp(entry_id, entry_id, d, f);
-	HashEntry *tempx;
-	tempx = t_hash[pos].member(temp);
-	if (tempx != NULL)
-		*data = &(tempx->nodeEntry);
-	return tempx != NULL;
+	path_entry qq(entry_id, entry_id, d, f);
+	Bucket *temp = &t_hash[pos];
+	for (int i = 0; i < temp->count; i++) {
+		if (qq.nodeId == temp->entries[i].nodeId) {
+			*data = &(temp->entries[i]);
+			return true;
+		}
+	}
+	return false;
 }
 
 
 void HashTable::print() {
+	Bucket *temp;
 	for (unsigned int i = 0; i < hashentries; i++) {
-		if (t_hash[i].empty()) continue;
 		cout << "bucket[" << i << "]:" << endl;
-		t_hash[i].print();
+		temp = &t_hash[i];
+		for (int i = 0; i < temp->count; i++)
+			cout << temp->entries[i] << endl;
 	}
 }
 
@@ -85,21 +108,3 @@ ostream& operator<<(ostream& out, const HashTable::HashEntry& d) {
 bool operator== (const HashTable::HashEntry& e1, const HashTable::HashEntry& e2) {
 	return e1.nodeId == e2.nodeId;
 }
-
-
-// int main(void) {
-// 	uint32_t i = 5;
-// 	char b = 'f';
-// 	unsigned int c = 5;
-// 	int size = 11;
-// 	HashTable table(size);
-// 	table.insert(i, i, c, b);
-// 	i = 10;
-// 	table.insert(i, i, c, b);
-// 	table.print();
-// 	path_entry *data = NULL;
-// 	if (table.search(i, &data)) {
-// 		cout << "found" << endl;
-// 		cout << *data << endl;
-// 	}
-// }

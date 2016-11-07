@@ -1,11 +1,12 @@
 #include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
+#include <cstring>
 #include "Queue.h"
 
 using namespace std;
 
-Queue::Queue() : size_(16384), head(0), tail(0), elements(0) {
+Queue::Queue() : size_(8192), head(0), tail(0), elements(0) {
     // queueArray = new uint32_t[size_];
     queueArray = (uint32_t *) malloc(size_ * sizeof(uint32_t));
 }
@@ -21,18 +22,9 @@ void Queue::push(uint32_t &id) {
         tail = (tail+1) % size_;
         ++elements;
     } else {
+        tail = (tail-1) % size_;
         queueArray = (uint32_t *) realloc(queueArray, 2 * size_ * sizeof(uint32_t));
-        int temp = head;
-        int i = 0;
-        while (true) {
-            if (i >= head)
-                break;
-            queueArray[i] = queueArray[temp];
-            temp++;
-            i++;
-        }
-        tail = i;
-        head = i;
+        memcpy(queueArray + size_, queueArray, tail * sizeof(uint32_t));
         size_ *= 2;
         queueArray[tail] = id;
         tail = (tail+1)%size_;
@@ -66,3 +58,42 @@ void Queue::clear() {
 int Queue::size() {
     return elements;
 }
+
+void Queue::print() {
+    for (int i = 0; i < size_; i++)
+        cout << queueArray[i] << " ";
+    cout << endl;
+}
+
+// main() {
+//     uint32_t x;
+//     Queue q;
+//     x = 2;
+//     q.push(x);
+//     q.print();
+//     x = 3;
+//     q.push(x);
+//     q.print();
+//     x = 4;
+//     q.push(x);
+//     q.print();
+//
+//     cout << q.pop() << endl;
+//     q.print();
+//
+//     x = 5;
+//     q.push(x);
+//     q.print();
+//
+//     x = 6;
+//     q.push(x);
+//     q.print();
+//
+//     x = 7;
+//     q.push(x);
+//     q.print();
+//
+//     cout << endl;
+//     while (!q.empty())
+//         cout << q.pop() << endl;
+// }

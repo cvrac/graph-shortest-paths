@@ -11,6 +11,9 @@ struct path_entry {
 	friend std::ostream& operator<<(std::ostream& out, const path_entry& e);
 	friend bool operator== (const path_entry& e1, const path_entry& e2);
 	path_entry(uint32_t& id, uint32_t& parentId, unsigned int& pathC, char& dir);
+	path_entry();
+	path_entry(const path_entry &ent);
+	path_entry& operator=(const path_entry& entr);
 	void update(uint32_t& id, uint32_t &parentId, unsigned int &pathC, char &dir);
 };
 

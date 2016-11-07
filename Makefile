@@ -4,10 +4,10 @@ HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h
 all: gsp
 
 CC 	= g++
-FLAGS	= -c
+FLAGS	= -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -o gsp $(OBJS)
+	$(CC) -O2 -o gsp $(OBJS)
 
 Queue.o: Queue.cpp
 	$(CC) $(FLAGS) Queue.cpp

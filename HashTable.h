@@ -11,6 +11,13 @@
 class HashTable {
 	uint32_t hashentries;
 	uint32_t _elements;
+	struct Bucket {
+		int count;
+		int size;
+		path_entry *entries;
+		Bucket();
+		~Bucket();
+	};
 	struct HashEntry {
 		uint32_t nodeId;
 		path_entry nodeEntry;
@@ -20,16 +27,15 @@ class HashTable {
 	};
 	friend std::ostream& operator<<(std::ostream& out, const HashEntry& d);
 	friend bool operator== (const HashEntry& e1, const HashEntry& e2);
-	LinkedList<HashEntry> *t_hash;
+	Bucket *t_hash;
 public:
 	HashTable(const uint32_t& numofbucks);
 	~HashTable();
 	int size();
-	// void insert(path_entry *nodeEntry);
 	void insert(uint32_t &nodeId, uint32_t &parentId, unsigned int &pathCost, char &direction);
 	bool search(uint32_t& entry_id, path_entry **data);
 	void print();
-	void iterandel();
+	void clear();
 	uint32_t hash(uint32_t& id);
 };
 

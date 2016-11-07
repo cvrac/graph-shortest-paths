@@ -1,7 +1,21 @@
 #include <iostream>
+#include <cstring>
 #include "PathEntry.h"
 
 using namespace std;
+
+path_entry::path_entry() : nodeId(0), parentId(0), pathCost(0), direction('-') { }
+
+path_entry::path_entry(const path_entry &entr) : nodeId(entr.nodeId), parentId(entr.parentId), pathCost(entr.pathCost), direction(entr.direction) {
+	cout << "created man" << endl;
+}
+
+path_entry& path_entry::operator=(const path_entry& entr) {
+	if (entr == *this)
+		return *this;
+	memcpy(this, &entr, sizeof(entr));
+	return *this;
+}
 
 path_entry::path_entry(uint32_t& id, uint32_t& pd, unsigned int& pathC, char& dir) :
 	nodeId(id), parentId(pd), pathCost(pathC), direction(dir) {}
