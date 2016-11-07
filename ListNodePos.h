@@ -3,19 +3,28 @@
 
 #include <stdint.h>
 
-class ListNodePos {
+#include <iostream>
+
+struct ListNodePos {
+
+public:
+    ListNodePos() : exists(false) {}
+    ListNodePos(const uint32_t &pos) : pos(pos), exists(true) {}
+    ~ListNodePos() {}
+    bool getExists() const {return exists;}
+    uint32_t getPos() const {return pos;}
+    void print() const {
+        if (exists) {
+            std::cout << pos << std::endl;
+        }
+        else {
+            std::cout << "none" << std::endl;
+        }
+    }
 
 private:
     uint32_t pos;
     bool exists;
-
-public:
-    ListNodePos();
-    ListNodePos(const uint32_t &pos);
-    ~ListNodePos() {}
-    bool getExists() const {return exists;}
-    uint32_t getPos() const {return pos;}
-    void print() const;
 };
 
 #endif //GRAPHSHORTESTPATHS_LISTNODEPOS_H

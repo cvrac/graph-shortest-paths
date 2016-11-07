@@ -22,9 +22,31 @@ void OperationsControl::run(const uint32_t &hashSize) {
     clock_t start = clock();
     this->buildGraph();
     clock_t end = clock();
-    cout << "took " << (static_cast<double>(end - start) /CLOCKS_PER_SEC) << " secs" << endl;
+    /*Queue q;
+
+    for (uint32_t n = 0 ; n < 20 ; n++) {
+
+        graph.getNeighbors(n, 'F', &q);
+        int elements = q.size();
+        for (int i = 0; i < elements ; i++) {
+            uint32_t tempId = q.pop();
+            cout << tempId << endl;
+        }
+        q.clear();
+        graph.getNeighbors(n, 'B', &q);
+        elements = q.size();
+        for (int i = 0; i < elements ; i++) {
+            uint32_t tempId = q.pop();
+            cout << tempId << endl;
+        }
+        q.clear();
+
+    }
+    return;*/
+    //cout << "took " << (static_cast<double>(end - start) /CLOCKS_PER_SEC) << " secs" << endl;
     sleep(1);
     this->runQueries();
+    //graph.getStatistics();
 }
 
 void OperationsControl::buildGraph() {
