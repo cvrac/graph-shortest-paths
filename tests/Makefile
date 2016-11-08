@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 OBJS =  Index.o ListNode.o Buffer.o Graph.o Check.o ListNodeCheck.o IndexCheck.o BufferCheck.o HashTable.o ListNodeCheck.o HashTableCheck.o Queue.o QueueCheck.o
 HEADER = ../Index.hpp ../ListNodePos.hpp ../ListNode.hpp ../HashTable.hpp ../Buffer.hpp ../Graph.hpp ../HashTable.hpp ../Queue.hpp
 
