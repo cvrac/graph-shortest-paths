@@ -2,8 +2,8 @@
 #define SHORTESTPATH_H
 
 #include <stdint.h>
+
 #include "HashTable.hpp"
-#include "PathEntry.hpp"
 #include "Graph.hpp"
 #include "Queue.hpp"
 

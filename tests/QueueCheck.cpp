@@ -1,19 +1,21 @@
-#include "../ListNode.hpp"
+#include "../Queue.hpp"
 #include "gtest/gtest.h"
 
 namespace {
 
 // The fixture for testing class Foo.
-    class ListNodeTest : public ::testing::Test {
+    class QueueTest : public ::testing::Test {
     protected:
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        ListNodeTest() {
+        QueueTest() {
             // You can do set-up work for each test here.
+
+
         }
 
-        virtual ~ListNodeTest() {
+        virtual ~QueueTest() {
             // You can do clean-up work that doesn't throw exceptions here.
         }
 
@@ -29,33 +31,26 @@ namespace {
             // Code here will be called immediately after each test (right
             // before the destructor).
         }
-
-        ListNode listNode;
+        uint32_t hashsize;
+        Queue q;
     };
 
 // Tests that the Foo::Bar() method does Abc.
-    TEST_F(ListNodeTest, ListNodeWorks) {
+    TEST_F(QueueTest, QueueWorks) {
+        EXPECT_TRUE(q.empty());
+        uint32_t id = 5;
+        q.push(id);
+        EXPECT_FALSE(q.empty());
+        EXPECT_FALSE(q.empty());
+        id = 10;
+        q.push(id);
+        EXPECT_TRUE(q.size() == q.maxsize());
+        EXPECT_TRUE(q.full());
+        int size = q.maxsize();
+        id = 10;
+        q.push(id);
+        EXPECT_FALSE(q.maxsize() == size);
 
-    EXPECT_FALSE(listNode.search(10));
-    EXPECT_FALSE(listNode.isFull());
-
-    listNode.insertNeighbor(10);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(10));
-
-    listNode.insertNeighbor(11);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(12));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
-
-    listNode.insertNeighbor(12);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(13));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(12));
-}
+    }
 
 }  //

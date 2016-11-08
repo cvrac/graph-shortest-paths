@@ -1,13 +1,13 @@
+#include "Queue.hpp"
+
 #include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
 #include <cstring>
-#include "Queue.hpp"
 
 using namespace std;
 
-Queue::Queue() : size_(8192), head_(0), tail_(0), elements_(0) {
-    // queueArray_ = new uint32_t[size_];
+Queue::Queue() : size_(1024), head_(0), tail_(0), elements_(0) {
     queueArray_ = (uint32_t *) malloc(size_ * sizeof(uint32_t));
 }
 
@@ -16,6 +16,9 @@ Queue::~Queue() {
     queueArray_ = NULL;
 }
 
+/* push an element to the queue, if it's not full
+ * if full, resize it, and then push
+ */
 void Queue::push(uint32_t &id) {
     if (!this->full()) {
         queueArray_[tail_] = id;
@@ -32,6 +35,7 @@ void Queue::push(uint32_t &id) {
     }
 }
 
+/* push a batch of elements to the queue */
 void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
     if (elements_ + batch_size <= size_) {
         uint32_t pushed = 0;
@@ -73,6 +77,7 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
     elements_ += batch_size;
 }
 
+/* if queue isn't empty, then pop its head */
 uint32_t Queue::pop() {
     if (!this->empty()) {
         int temp = head_;
@@ -100,41 +105,12 @@ int Queue::size() {
     return elements_;
 }
 
+int Queue::maxsize() {
+    return size_;
+}
+
 void Queue::print() {
     for (int i = 0; i < size_; i++)
         cout << queueArray_[i] << " ";
     cout << endl;
 }
-
-// main() {
-//     uint32_t x;
-//     Queue q;
-//     x = 2;
-//     q.push(x);
-//     q.print();
-//     x = 3;
-//     q.push(x);
-//     q.print();
-//     x = 4;
-//     q.push(x);
-//     q.print();
-//
-//     cout << q.pop() << endl;
-//     q.print();
-//
-//     x = 5;
-//     q.push(x);
-//     q.print();
-//
-//     x = 6;
-//     q.push(x);
-//     q.print();
-//
-//     x = 7;
-//     q.push(x);
-//     q.print();
-//
-//     cout << endl;
-//     while (!q.empty())
-//         cout << q.pop() << endl;
-// }
