@@ -22,10 +22,10 @@ void Queue::push(uint32_t &id) {
         tail_ = (tail_+1) % size_;
         ++elements_;
     } else {
-        queueArray_ = (uint32_t *) realloc(queueArray_, 2 * size_ * sizeof(uint32_t));
+        queueArray_ = (uint32_t *) realloc(queueArray_, size_ << 1 * sizeof(uint32_t));
         memcpy(queueArray_ + size_, queueArray_, tail_ * sizeof(uint32_t));
         tail_ = size_ + tail_;
-        size_ *= 2;
+        size_ <<= 1;
         queueArray_[tail_] = id;
         tail_ = (tail_+1)%size_;
         ++elements_;
@@ -60,7 +60,7 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
     else {
         int new_size = size_;
         while (elements_ + batch_size < new_size) {
-            new_size *= 2;
+            new_size <<= 1;
         }
         queueArray_ = (uint32_t *) realloc(queueArray_, new_size * sizeof(uint32_t));
         if (tail_ <= head_) {

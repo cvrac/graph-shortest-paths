@@ -32,7 +32,7 @@ Buffer::~Buffer() {
  * due to the possibility of a buffer reallocation. */
 ListNodePos Buffer::allocNewNode() {
     if (curListNodes == maxListNodes) {
-        maxListNodes *= 2;
+        maxListNodes <<= 1;
         ListNode *oldBuffer = buffer;
 //        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
 //        assert(buffer != NULL);

@@ -18,7 +18,8 @@ class HashTable {
 
 		int count;
 		int size;
-		PathEntry *entries;
+		// PathEntry *entries;
+		uint32_t *entries;
 	};
 	Bucket *table_;
 public:

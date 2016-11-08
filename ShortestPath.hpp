@@ -19,6 +19,7 @@ private:
 	Queue frontier_front_;
 	Queue frontier_back_;
 	HashTable explored_set_;
+	HashTable explored_set_x;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;

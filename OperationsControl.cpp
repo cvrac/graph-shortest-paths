@@ -1,12 +1,14 @@
+#include "OperationsControl.hpp"
+
 #include <string>
-#include <cstring>
 #include <iostream>
+
+#include <cstring>
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
 #include <iomanip>
-#include "OperationsControl.hpp"
 
 using namespace std;
 
@@ -44,7 +46,7 @@ void OperationsControl::run(const uint32_t &hashSize) {
     }
     return;*/
     //cout << "took " << (static_cast<double>(end - start) /CLOCKS_PER_SEC) << " secs" << endl;
-    sleep(1);
+    // sleep(1);
     this->runQueries();
     //graph.getStatistics();
 }
