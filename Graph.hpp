@@ -29,7 +29,7 @@ public:
     void print();
 
 private:
-    bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, bool *skip_search);
+    bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, const bool &skip_search);
     void insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id);
     void insertNode(const uint32_t node_id);
     void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer);

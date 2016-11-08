@@ -1,19 +1,19 @@
-#include "../ListNode.hpp"
+#include "../Index.hpp"
 #include "gtest/gtest.h"
 
 namespace {
 
 // The fixture for testing class Foo.
-    class ListNodeTest : public ::testing::Test {
+    class IndexTest : public ::testing::Test {
     protected:
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        ListNodeTest() {
+        IndexTest() {
             // You can do set-up work for each test here.
         }
 
-        virtual ~ListNodeTest() {
+        virtual ~IndexTest() {
             // You can do clean-up work that doesn't throw exceptions here.
         }
 
@@ -30,32 +30,22 @@ namespace {
             // before the destructor).
         }
 
-        ListNode list_node;
+        Index index;
     };
 
 // Tests that the Foo::Bar() method does Abc.
-    TEST_F(ListNodeTest, ListNodeWorks) {
+    TEST_F(IndexTest, IndexWorks) {
+    ASSERT_EQ(index.getMaxSize(), 3);
 
-    EXPECT_FALSE(list_node.search(10));
-    EXPECT_FALSE(list_node.isFull());
+    EXPECT_EQ(index.getCurSize(), 0);
+    index.insertNode(2);
+    EXPECT_EQ(index.getCurSize(), 3);
 
-    list_node.insertNeighbor(10);
-    EXPECT_FALSE(list_node.isFull());
-    EXPECT_FALSE(list_node.search(11));
-    EXPECT_TRUE(list_node.search(10));
+    index.insertNode(4);
+    EXPECT_EQ(index.getTotalReallocs(), 1);
+    EXPECT_EQ(index.getCurSize(), 5);
+    EXPECT_EQ(index.getMaxSize(), 6);
 
-    list_node.insertNeighbor(11);
-    EXPECT_FALSE(list_node.isFull());
-    EXPECT_FALSE(list_node.search(12));
-    EXPECT_TRUE(list_node.search(10));
-    EXPECT_TRUE(list_node.search(11));
-
-    list_node.insertNeighbor(12);
-    EXPECT_TRUE(list_node.isFull());
-    EXPECT_FALSE(list_node.search(13));
-    EXPECT_TRUE(list_node.search(10));
-    EXPECT_TRUE(list_node.search(11));
-    EXPECT_TRUE(list_node.search(12));
 }
 
 }  // 

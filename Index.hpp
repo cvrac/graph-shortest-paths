@@ -5,6 +5,9 @@
 
 #include "ListNodePos.hpp"
 
+// Test size: 3
+// Actual size: 1000
+
 #define INITIAL_INDEX_MAX_SIZE 1000
 
 struct ListHead {
@@ -29,6 +32,7 @@ public:
     uint32_t getListHeadNeighbors(const uint32_t &node_id) {return index_[node_id].total_neighbors;}
     uint32_t getAverageNeighbors();
     uint32_t getTotalReallocs() const {return total_reallocs_;}
+    uint32_t getMaxSize() const {return max_size_;}
     void print() const;
 
 private:

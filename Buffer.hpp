@@ -5,6 +5,9 @@
 
 #include "ListNode.hpp"
 
+// Test value: 1
+// Actual value: 10000
+
 #define INITIAL_MAX_LIST_NODES 10000
 
 struct BufferFeedback {
@@ -23,8 +26,10 @@ public:
     ~Buffer();
     ListNodePos allocNewNode();
     ListNode getListNode(const uint32_t &list_node_pos) const {return buffer_[list_node_pos];}
-    BufferFeedback insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, bool *skip_search);
+    BufferFeedback insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, const bool &skip_search);
     uint32_t getTotalReallocs() const {return total_reallocs_;}
+    uint32_t getMaxListNodes() const {return max_list_nodes_;}
+    uint32_t getCurListNodes() const {return cur_list_nodes_;}
     void print() const;
 
 private:

@@ -37,15 +37,16 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     if (outer_index_.getListHead(*node1).total_neighbors > inner_index_.getListHead(*node2).total_neighbors) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
     }
-    if (this->insertEdge(*node1, *node2, index, buffer, &skip_search)) {
+    if (this->insertEdge(*node1, *node2, index, buffer, skip_search)) {
+        skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
-        this->insertEdge(*node1, *node2, index, buffer, &skip_search);
+        this->insertEdge(*node1, *node2, index, buffer, skip_search);
     }
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, bool *skip_search) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, const bool &skip_search) {
     ListNodePos first_pos = index->getListHead(source_node_id).pos;
     if (! first_pos.exists) {
         first_pos = buffer->allocNewNode();

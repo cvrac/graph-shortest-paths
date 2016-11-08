@@ -47,18 +47,18 @@ ListNodePos Buffer::allocNewNode() {
     return ListNodePos(cur_list_nodes_++);
 }
 
-BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, bool *skip_search) {
+BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, const bool &skip_search) {
     uint32_t cur_pos = first_pos;
     ListNode *cur_node = this->getListNode(cur_pos);
 
     /* No duplicates */
-    if (! *skip_search && cur_node->search(neighbor_id)) {
+    if (! skip_search && cur_node->search(neighbor_id)) {
         return BufferFeedback(true, cur_pos);
     }
     ListNodePos next_node_pos = cur_node->getNextPos();
 
     /* Reach final list_node */
-    while (next_node_pos.exists) {
+    while (! skip_search && next_node_pos.exists) {
         cur_pos = next_node_pos.pos;
         cur_node = this->getListNode(cur_pos);
         if (cur_node->search(neighbor_id)) {
@@ -66,7 +66,6 @@ BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t 
         }
         next_node_pos = cur_node->getNextPos();
     }
-    *skip_search = true;
 
     /* Allocate new if necessary */
     if (cur_node->isFull()) {
