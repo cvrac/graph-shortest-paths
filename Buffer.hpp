@@ -10,10 +10,10 @@
 struct BufferFeedback {
 
 public:
-    BufferFeedback(const bool &edgeExists, const uint32_t &lastPos) : edgeExists(edgeExists),  lastPos(lastPos) {}
+    BufferFeedback(const bool &edge_exists, const uint32_t &last_pos) : edge_exists(edge_exists),  last_pos(last_pos) {}
 
-    bool edgeExists;
-    uint32_t lastPos;
+    bool edge_exists;
+    uint32_t last_pos;
 };
 
 class Buffer {
@@ -22,18 +22,18 @@ public:
     Buffer();
     ~Buffer();
     ListNodePos allocNewNode();
-    ListNode getListNode(const uint32_t &listNodePos) const {return buffer[listNodePos];}
-    BufferFeedback insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId, bool *skipSearch);
-    uint32_t getTotalReallocs() const {return totalReallocs;}
+    ListNode getListNode(const uint32_t &list_node_pos) const {return buffer_[list_node_pos];}
+    BufferFeedback insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, bool *skip_search);
+    uint32_t getTotalReallocs() const {return total_reallocs_;}
     void print() const;
 
 private:
-    ListNode *getListNode(const uint32_t &listNodePos) {return &buffer[listNodePos];}
+    ListNode *getListNode(const uint32_t &list_node_pos) {return &buffer_[list_node_pos];}
 
-    ListNode *buffer;
-    uint32_t curListNodes;
-    uint32_t maxListNodes;
-    uint32_t totalReallocs;
+    ListNode *buffer_;
+    uint32_t cur_list_nodes_;
+    uint32_t max_list_nodes_;
+    uint32_t total_reallocs_;
 };
 
 #endif //GRAPHSHORTESTPATHS_BUFFER_H

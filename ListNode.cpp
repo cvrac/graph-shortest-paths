@@ -4,16 +4,16 @@
 
 using namespace std;
 
-void ListNode::insertNeighbor(const uint32_t &neighborId) {
+void ListNode::insertNeighbor(const uint32_t &neighbor_id) {
     if (this->isFull()) {
         return;
     }
-    neighbor[curNeighbors++] = neighborId;
+    neighbor_[cur_neighbors_++] = neighbor_id;
 }
 
-bool ListNode::search(const uint32_t &targetId) {
-    for (uint32_t n = 0 ; n < curNeighbors ; n++) {
-        if (neighbor[n] == targetId) {
+bool ListNode::search(const uint32_t &target_id) {
+    for (uint32_t n = 0 ; n < cur_neighbors_ ; n++) {
+        if (neighbor_[n] == target_id) {
             return true;
         }
     }
@@ -21,12 +21,12 @@ bool ListNode::search(const uint32_t &targetId) {
 }
 
 void ListNode::print() const {
-    cout << "\t--- ListNode ---\n\tcurNeighbors: " << curNeighbors << ", maxNeighbors: " << MAX_NEIGHBORS
+    cout << "\t--- ListNode ---\n\tcur_neighbors_: " << cur_neighbors_ << ", maxNeighbors: " << MAX_NEIGHBORS
          << ", nextListNode: ";
-    nextPos.print();
+    next_pos_.print();
     cout << "\t";
-    for (uint32_t n = 0; n < curNeighbors ; n++) {
-        cout << neighbor[n] << " ";
+    for (uint32_t n = 0; n < cur_neighbors_ ; n++) {
+        cout << neighbor_[n] << " ";
     }
     cout << "\n" << endl;
 }

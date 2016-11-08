@@ -9,155 +9,155 @@
 
 using namespace std;
 
-void Graph::insertNode(const uint32_t nodeId) {
-    outerIndex.insertNode(nodeId);
-    innerIndex.insertNode(nodeId);
+void Graph::insertNode(const uint32_t node_id) {
+    outer_index_.insertNode(node_id);
+    inner_index_.insertNode(node_id);
 }
 
-void Graph::insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
-    uint32_t min = sourceNodeId;
-    uint32_t max = targetNodeId;
-    if (targetNodeId < min) {
-        min = targetNodeId;
-        max = sourceNodeId;
+void Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id) {
+    uint32_t min = source_node_id;
+    uint32_t max = target_node_id;
+    if (target_node_id < min) {
+        min = target_node_id;
+        max = source_node_id;
     }
     this->insertNode(max);
     this->insertNode(min);
 }
 
-void Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId) {
-    this->insertNodes(sourceNodeId, targetNodeId);
+void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id) {
+    this->insertNodes(source_node_id, target_node_id);
     // clock_t start = clock();
-    const uint32_t *node1 = &sourceNodeId;
-    const uint32_t *node2 = &targetNodeId;
-    Index *index = &outerIndex;
-    Buffer *buffer = &outerBuffer;
-    bool skipSearch = false;
+    const uint32_t *node1 = &source_node_id;
+    const uint32_t *node2 = &target_node_id;
+    Index *index = &outer_index_;
+    Buffer *buffer = &outer_buffer_;
+    bool skip_search = false;
 
-    if (outerIndex.getListHead(*node1).totalNeighbors > innerIndex.getListHead(*node2).totalNeighbors) {
-        this->toggleDirection(sourceNodeId, targetNodeId, &node1, &node2, &index, &buffer);
+    if (outer_index_.getListHead(*node1).total_neighbors > inner_index_.getListHead(*node2).total_neighbors) {
+        this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
     }
-    if (this->insertEdge(*node1, *node2, index, buffer, &skipSearch)) {
-        this->toggleDirection(sourceNodeId, targetNodeId, &node1, &node2, &index, &buffer);
-        this->insertEdge(*node1, *node2, index, buffer, &skipSearch);
+    if (this->insertEdge(*node1, *node2, index, buffer, &skip_search)) {
+        this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
+        this->insertEdge(*node1, *node2, index, buffer, &skip_search);
     }
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
 }
 
-bool Graph::insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index *index, Buffer *buffer, bool *skipSearch) {
-    ListNodePos firstPos = index->getListHead(sourceNodeId).pos;
-    if (! firstPos.getExists()) {
-        firstPos = buffer->allocNewNode();
-        index->setListHeadPos(sourceNodeId, firstPos);
-        index->setListHeadLast(sourceNodeId, firstPos.getPos());
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, bool *skip_search) {
+    ListNodePos first_pos = index->getListHead(source_node_id).pos;
+    if (! first_pos.exists) {
+        first_pos = buffer->allocNewNode();
+        index->setListHeadPos(source_node_id, first_pos);
+        index->setListHeadLast(source_node_id, first_pos.getPos());
     }
     uint32_t pos;
-    if (! skipSearch) {
-        pos = firstPos.getPos();
+    if (! skip_search) {
+        pos = first_pos.pos;
     } else {
-        pos = index->getListHead(sourceNodeId).lastPos;
+        pos = index->getListHead(source_node_id).last_pos;
     }
-    BufferFeedback feedback = buffer->insertNeighbor(pos, targetNodeId, skipSearch);
-    if (feedback.edgeExists) {
+    BufferFeedback feedback = buffer->insertNeighbor(pos, target_node_id, skip_search);
+    if (feedback.edge_exists) {
         return false;
     }
-    index->setListHeadNeighbors(sourceNodeId, index->getListHeadNeighbors(sourceNodeId) + 1);
-    index->setListHeadLast(sourceNodeId, feedback.lastPos);
-    //cout << index.getListHeadNeighbors(sourceNodeId) << endl;
+    index->setListHeadNeighbors(source_node_id, index->getListHeadNeighbors(source_node_id) + 1);
+    index->setListHeadLast(source_node_id, feedback.last_pos);
+    //cout << index.getListHeadNeighbors(source_node_id) << endl;
     return true;
 }
 
-void Graph::toggleDirection(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer) {
-    if (**node1 == sourceNodeId) {
-        *node1 = &targetNodeId;
-        *node2 = &sourceNodeId;
-        *index = &innerIndex;
-        *buffer = &innerBuffer;
+void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer) {
+    if (**node1 == source_node_id) {
+        *node1 = &target_node_id;
+        *node2 = &source_node_id;
+        *index = &inner_index_;
+        *buffer = &inner_buffer_;
     }
     else {
-        *node1 = &sourceNodeId;
-        *node2 = &targetNodeId;
-        *index = &outerIndex;
-        *buffer = &outerBuffer;
+        *node1 = &source_node_id;
+        *node2 = &target_node_id;
+        *index = &outer_index_;
+        *buffer = &outer_buffer_;
     }
 }
 
-NodeArray *Graph::getNeighbors(const uint32_t &nodeId, const char& direction) {
+NodeArray *Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
     Index *index;
     Buffer *buffer;
     if (direction == 'F') {
-        index = &outerIndex;
-        buffer = &outerBuffer;
+        index = &outer_index_;
+        buffer = &outer_buffer_;
     }
     else if (direction == 'B') {
-        index = &innerIndex;
-        buffer = &innerBuffer;
+        index = &inner_index_;
+        buffer = &inner_buffer_;
     }
     else {
         return NULL;
     }
-    return this->getNeighbors(nodeId, *index, *buffer);
+    return this->getNeighbors(node_id, *index, *buffer);
 }
 
 /* Caller should free after use */
-NodeArray *Graph::getNeighbors(const uint32_t &nodeId, const Index &index, const Buffer &buffer) {
-    NodeArray *nodeArray = new NodeArray;
-    ListHead listHead = index.getListHead(nodeId);
-    nodeArray->array = new uint32_t[listHead.totalNeighbors];
-    nodeArray->size = listHead.totalNeighbors;
+NodeArray *Graph::getNeighbors(const uint32_t &node_id, const Index &index, const Buffer &buffer) {
+    NodeArray *node_array = new NodeArray;
+    ListHead list_head = index.getListHead(node_id);
+    node_array->array = new uint32_t[list_head.total_neighbors];
+    node_array->size = list_head.total_neighbors;
 
-    uint32_t curNeighbor = 0;
-    ListNodePos listNodePos = listHead.pos;
-    if (listNodePos.getExists()) {
-        uint32_t pos = listNodePos.getPos();
+    uint32_t cur_neighbor = 0;
+    ListNodePos list_node_pos = list_head.pos;
+    if (list_node_pos.exists) {
+        uint32_t pos = list_node_pos.pos;
         do {
-            ListNode listNode = buffer.getListNode(pos);
-            uint32_t neighborsToAdd = listNode.getNeighborNumber();
-            memcpy(&nodeArray->array[curNeighbor], listNode.getNeighborArray(), neighborsToAdd * sizeof(uint32_t));
-            curNeighbor += neighborsToAdd;
+            ListNode list_node = buffer.getListNode(pos);
+            uint32_t neighbors_to_add = list_node.getNeighborNumber();
+            memcpy(&node_array->array[cur_neighbor], list_node.getNeighborArray(), neighbors_to_add * sizeof(uint32_t));
+            cur_neighbor += neighbors_to_add;
 
-            listNodePos = listNode.getNextPos();
-            if (! listNodePos.getExists()) {
+            list_node_pos = list_node.getNextPos();
+            if (! list_node_pos.exists) {
                 break;
             }
-            pos = listNodePos.getPos();
+            pos = list_node_pos.pos;
         } while (1);
     }
-    return nodeArray;
+    return node_array;
 }
 
 uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
-    outerIndex.getAverageNeighbors() << "\nAverage inner edges: " <<
-    innerIndex.getAverageNeighbors() << "\nBuffer reallocs: " <<
-    outerBuffer.getTotalReallocs() + innerBuffer.getTotalReallocs() << "\nIndex reallocs: " <<
-    outerIndex.getTotalReallocs() + outerIndex.getTotalReallocs() << endl;
+    outer_index_.getAverageNeighbors() << "\nAverage inner edges: " <<
+    inner_index_.getAverageNeighbors() << "\nBuffer reallocs: " <<
+    outer_buffer_.getTotalReallocs() + inner_buffer_.getTotalReallocs() << "\nIndex reallocs: " <<
+    outer_index_.getTotalReallocs() + outer_index_.getTotalReallocs() << endl;
 }
 
 void Graph::printAll() {
     cout << "*** OUTER ***\n";
-    this->printAll(outerIndex, outerBuffer);
+    this->printAll(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
-    this->printAll(innerIndex, innerBuffer);
+    this->printAll(inner_index_, inner_buffer_);
 }
 
 void Graph::printAll(const Index &index, const Buffer &buffer)  {
     buffer.print();
     index.print();
-    for (uint32_t nodeId = 0 ; nodeId < index.getCurSize() ; nodeId++) {
-        ListNodePos listNodePos = index.getListHead(nodeId).pos;
-        if (listNodePos.getExists()) {
-            cout << "---Node " << nodeId << " ListNodes --- " << endl;
-            uint32_t pos = listNodePos.getPos();
+    for (uint32_t node_id = 0 ; node_id < index.getCurSize() ; node_id++) {
+        ListNodePos list_node_pos = index.getListHead(node_id).pos;
+        if (list_node_pos.exists) {
+            cout << "---Node " << node_id << " ListNodes --- " << endl;
+            uint32_t pos = list_node_pos.pos;
             do {
-                ListNode listNode = buffer.getListNode(pos);
-                listNode.print();
-                listNodePos = listNode.getNextPos();
-                if (! listNodePos.getExists()) {
+                ListNode list_node = buffer.getListNode(pos);
+                list_node.print();
+                list_node_pos = list_node.getNextPos();
+                if (! list_node_pos.exists) {
                     break;
                 }
-                pos = listNodePos.getPos();
+                pos = list_node_pos.pos;
             } while (1);
         }
     }
@@ -171,9 +171,9 @@ NodeArray::~NodeArray() {
 
 void Graph::print() {
     cout << "*** OUTER ***\n";
-    this->print(outerIndex, outerBuffer);
+    this->print(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
-    this->print(innerIndex, innerBuffer);
+    this->print(inner_index_, inner_buffer_);
 }
 
 void Graph::print(const Index &index, const Buffer &buffer) {

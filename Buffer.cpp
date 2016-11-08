@@ -8,79 +8,79 @@
 
 using namespace std;
 
-Buffer::Buffer() : curListNodes(0), maxListNodes(INITIAL_MAX_LIST_NODES), totalReallocs(0) {
-    buffer = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
-//    buffer = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
-    assert(buffer != NULL);
+Buffer::Buffer() : cur_list_nodes_(0), max_list_nodes_(INITIAL_MAX_LIST_NODES), total_reallocs_(0) {
+    buffer_ = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
+//    buffer_ = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
+    assert(buffer_ != NULL);
 //    for (uint32_t i = 0 ; i < INITIAL_MAX_LIST_NODES ; i++) {
-//        new (&buffer[i]) ListNode();
+//        new (&buffer_[i]) ListNode();
 //    }
 }
 
 Buffer::~Buffer() {
-    delete[] buffer;
-//    for (uint32_t i = 0 ; i < maxListNodes ; i++) {
-//        buffer[i].~ListNode();
+    delete[] buffer_;
+//    for (uint32_t i = 0 ; i < max_list_nodes_ ; i++) {
+//        buffer_[i].~ListNode();
 //    }
-//    free(buffer);
+//    free(buffer_);
 
 }
 
-/* Get a new listNode, reallocate buffer if necessary.
+/* Get a new list_node, reallocate buffer_ if necessary.
  * Any pointers to listNodes received prior to this function call
  * should be considered invalid and must be fetched again,
- * due to the possibility of a buffer reallocation. */
+ * due to the possibility of a buffer_ reallocation. */
 ListNodePos Buffer::allocNewNode() {
-    if (curListNodes == maxListNodes) {
-        maxListNodes <<= 1;
-        ListNode *oldBuffer = buffer;
-//        buffer = (ListNode *)realloc(buffer, maxListNodes * sizeof(ListNode));
-//        assert(buffer != NULL);
-//        for (uint32_t i = curListNodes ; i < maxListNodes ; i++) {
-//            new (&buffer[i]) ListNode();
+    if (cur_list_nodes_ == max_list_nodes_) {
+        max_list_nodes_ <<= 1;
+        ListNode *old_buffer = buffer_;
+//        buffer_ = (ListNode *)realloc(buffer_, max_list_nodes_ * sizeof(ListNode));
+//        assert(buffer_ != NULL);
+//        for (uint32_t i = cur_list_nodes_ ; i < max_list_nodes_ ; i++) {
+//            new (&buffer_[i]) ListNode();
 //        }
-        buffer = new ListNode[maxListNodes];
-        memcpy(buffer, oldBuffer, curListNodes * sizeof(ListNode));
-        delete[] oldBuffer;
-        totalReallocs++;
+        buffer_ = new ListNode[max_list_nodes_];
+        memcpy(buffer_, old_buffer, cur_list_nodes_ * sizeof(ListNode));
+        delete[] old_buffer;
+        total_reallocs_++;
     }
-    return ListNodePos(curListNodes++);
+    return ListNodePos(cur_list_nodes_++);
 }
 
-BufferFeedback Buffer::insertNeighbor(const uint32_t &firstPos, const uint32_t &neighborId, bool *skipSearch) {
-    uint32_t curPos = firstPos;
-    ListNode *curNode = this->getListNode(curPos);
+BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, bool *skip_search) {
+    uint32_t cur_pos = first_pos;
+    ListNode *cur_node = this->getListNode(cur_pos);
 
     /* No duplicates */
-    if (! *skipSearch && curNode->search(neighborId)) {
-        return BufferFeedback(true, curPos);
+    if (! *skip_search && cur_node->search(neighbor_id)) {
+        return BufferFeedback(true, cur_pos);
     }
-    ListNodePos nextNodePos = curNode->getNextPos();
+    ListNodePos next_node_pos = cur_node->getNextPos();
 
-    /* Reach final listNode */
-    while (nextNodePos.getExists()) {
-        curPos = nextNodePos.getPos();
-        curNode = this->getListNode(curPos);
-        if (curNode->search(neighborId)) {
-            return BufferFeedback(true, curPos);
+    /* Reach final list_node */
+    while (next_node_pos.exists) {
+        cur_pos = next_node_pos.pos;
+        cur_node = this->getListNode(cur_pos);
+        if (cur_node->search(neighbor_id)) {
+            return BufferFeedback(true, cur_pos);
         }
-        nextNodePos = curNode->getNextPos();
+        next_node_pos = cur_node->getNextPos();
     }
-    *skipSearch = true;
+    *skip_search = true;
 
     /* Allocate new if necessary */
-    if (curNode->isFull()) {
-        nextNodePos = this->allocNewNode();
+    if (cur_node->isFull()) {
+        next_node_pos = this->allocNewNode();
 
-        curNode = this->getListNode(curPos);
-        curNode->setNextPos(nextNodePos);
-        curPos = nextNodePos.getPos();
-        curNode = this->getListNode(curPos);
+        cur_node = this->getListNode(cur_pos);
+        cur_node->setNextPos(next_node_pos);
+        cur_pos = next_node_pos.pos;
+        cur_node = this->getListNode(cur_pos);
     }
-    curNode->insertNeighbor(neighborId);
-    return BufferFeedback(false, curPos);
+    cur_node->insertNeighbor(neighbor_id);
+    return BufferFeedback(false, cur_pos);
 }
 
 void Buffer::print() const {
-    cout << "--- Buffer ---\ncurListNodes: " << curListNodes << ", maxListNodes: " << maxListNodes << "\n" << endl;
+    cout << "--- Buffer ---\ncur_list_nodes_: " << cur_list_nodes_ << ", max_list_nodes_: " << max_list_nodes_ << "\n" << endl;
 }

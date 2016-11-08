@@ -8,33 +8,34 @@
 #define INITIAL_INDEX_MAX_SIZE 1000
 
 struct ListHead {
-    ListHead() : totalNeighbors(0) {}
+    ListHead() : total_neighbors(0) {}
 
     ListNodePos pos;
-    uint32_t lastPos;
-    uint32_t totalNeighbors;};
+    uint32_t last_pos;
+    uint32_t total_neighbors;
+};
 
 class Index {
 
 public:
     Index();
     ~Index();
-    void insertNode(const uint32_t &nodeId);
-    ListHead getListHead(const uint32_t &nodeId) const {return index[nodeId];}
-    uint32_t getCurSize() const {return curSize;}
-    void setListHeadPos(const uint32_t &nodeId, const ListNodePos &head) {index[nodeId].pos = head;}
-    void setListHeadLast(const uint32_t &nodeId, const uint32_t &last) {index[nodeId].lastPos = last;}
-    void setListHeadNeighbors(const uint32_t &nodeId, const uint32_t &n) {index[nodeId].totalNeighbors = n;}
-    uint32_t getListHeadNeighbors(const uint32_t &nodeId) {return index[nodeId].totalNeighbors;}
+    void insertNode(const uint32_t &node_id);
+    ListHead getListHead(const uint32_t &node_id) const {return index_[node_id];}
+    uint32_t getCurSize() const {return cur_size_;}
+    void setListHeadPos(const uint32_t &node_id, const ListNodePos &head) {index_[node_id].pos = head;}
+    void setListHeadLast(const uint32_t &node_id, const uint32_t &last) {index_[node_id].last_pos = last;}
+    void setListHeadNeighbors(const uint32_t &node_id, const uint32_t &n) {index_[node_id].total_neighbors = n;}
+    uint32_t getListHeadNeighbors(const uint32_t &node_id) {return index_[node_id].total_neighbors;}
     uint32_t getAverageNeighbors();
-    uint32_t getTotalReallocs() const {return totalReallocs;}
+    uint32_t getTotalReallocs() const {return total_reallocs_;}
     void print() const;
 
 private:
-    ListHead *index;
-    uint32_t curSize;
-    uint32_t maxSize;
-    uint32_t totalReallocs;
+    ListHead *index_;
+    uint32_t cur_size_;
+    uint32_t max_size_;
+    uint32_t total_reallocs_;
 };
 
 

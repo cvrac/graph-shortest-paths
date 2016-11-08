@@ -20,28 +20,28 @@ class Graph {
 public:
     Graph() {}
     ~Graph() {}
-    void insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
-    void getNeighbors(const uint32_t &nodeId, const char &direction, Queue *neighbors);
-    NodeArray *getNeighbors(const uint32_t &nodeId, const char &direction);
-    uint32_t getNodes() {return innerIndex.getCurSize();}
+    void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id);
+    void getNeighbors(const uint32_t &node_id, const char &direction, Queue *neighbors);
+    NodeArray *getNeighbors(const uint32_t &node_id, const char &direction);
+    uint32_t getNodes() {return inner_index_.getCurSize();}
     uint32_t getStatistics();
     void printAll();
     void print();
 
 private:
-    bool insertEdge(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, Index *index, Buffer *buffer, bool *skipSearch);
-    void insertNodes(const uint32_t &sourceNodeId, const uint32_t &targetNodeId);
-    void insertNode(const uint32_t nodeId);
-    void toggleDirection(const uint32_t &sourceNodeId, const uint32_t &targetNodeId, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer);
-    void getNeighbors(const uint32_t &nodeId, const Index &index, const Buffer &buffer, Queue *neighbors);
-    NodeArray *getNeighbors(const uint32_t &nodeId, const Index &index, const Buffer &buffer);
+    bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, bool *skip_search);
+    void insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id);
+    void insertNode(const uint32_t node_id);
+    void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer);
+    void getNeighbors(const uint32_t &node_id, const Index &index, const Buffer &buffer, Queue *neighbors);
+    NodeArray *getNeighbors(const uint32_t &node_id, const Index &index, const Buffer &buffer);
     void printAll(const Index &index, const Buffer &buffer);
     void print(const Index &index, const Buffer &buffer);
 
-    Index outerIndex;
-    Buffer outerBuffer;
-    Index innerIndex;
-    Buffer innerBuffer;
+    Index outer_index_;
+    Buffer outer_buffer_;
+    Index inner_index_;
+    Buffer inner_buffer_;
 };
 
 

@@ -22,7 +22,6 @@ public:
         }
     }
 
-private:
     uint32_t pos;
     bool exists;
 };

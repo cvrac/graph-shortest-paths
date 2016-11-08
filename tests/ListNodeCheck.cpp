@@ -30,31 +30,31 @@ namespace {
             // before the destructor).
         }
 
-        ListNode listNode;
+        ListNode list_node;
     };
 
 // Tests that the Foo::Bar() method does Abc.
     TEST_F(ListNodeTest, ListNodeWorks) {
-    EXPECT_FALSE(listNode.search(10));
-    EXPECT_FALSE(listNode.isFull());
+    EXPECT_FALSE(list_node.search(10));
+    EXPECT_FALSE(list_node.isFull());
 
-    listNode.insertNeighbor(10);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(10));
+    list_node.insertNeighbor(10);
+    EXPECT_FALSE(list_node.isFull());
+    EXPECT_FALSE(list_node.search(11));
+    EXPECT_TRUE(list_node.search(10));
 
-    listNode.insertNeighbor(11);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(12));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
+    list_node.insertNeighbor(11);
+    EXPECT_FALSE(list_node.isFull());
+    EXPECT_FALSE(list_node.search(12));
+    EXPECT_TRUE(list_node.search(10));
+    EXPECT_TRUE(list_node.search(11));
 
-    listNode.insertNeighbor(12);
-    EXPECT_TRUE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(13));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(12));
+    list_node.insertNeighbor(12);
+    EXPECT_TRUE(list_node.isFull());
+    EXPECT_FALSE(list_node.search(13));
+    EXPECT_TRUE(list_node.search(10));
+    EXPECT_TRUE(list_node.search(11));
+    EXPECT_TRUE(list_node.search(12));
 }
 
 }  // 

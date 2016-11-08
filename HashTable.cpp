@@ -56,10 +56,10 @@ uint32_t HashTable::hash(uint32_t& id) {
 }
 
 
-void HashTable::insert(uint32_t &nodeId, uint32_t &parentId, unsigned int &pathCost, char &direction) {
+void HashTable::insert(uint32_t &node_id, uint32_t &parentId, unsigned int &pathCost, char &direction) {
 
-	int pos = this->hash(nodeId);
-	// PathEntry qq(nodeId, parentId, pathCost, direction);
+	int pos = this->hash(node_id);
+	// PathEntry qq(node_id, parentId, pathCost, direction);
 	if (table_[pos].count == table_[pos].size - 1) {
 		uint32_t *old = table_[pos].entries;
 		// table_[pos].entries = new PathEntry[table_[pos].size * 2];
@@ -69,7 +69,7 @@ void HashTable::insert(uint32_t &nodeId, uint32_t &parentId, unsigned int &pathC
 		table_[pos].count = table_[pos].size;
 		table_[pos].size *= 2;
 	}
-	table_[pos].entries[table_[pos].count] = nodeId;
+	table_[pos].entries[table_[pos].count] = node_id;
 	table_[pos].count++;
 	elements_++;
 

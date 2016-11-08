@@ -8,22 +8,22 @@
 class ListNode {
 
 public:
-    ListNode() : curNeighbors(0) {}
+    ListNode() : cur_neighbors_(0) {}
     ~ListNode() {}
-    void insertNeighbor(const uint32_t &neighborId);
-    bool isFull() const {return curNeighbors == MAX_NEIGHBORS;}
-    void setNextPos(const ListNodePos &nextPos) {this->nextPos = nextPos;}
-    ListNodePos getNextPos() {return nextPos;}
-    bool search(const uint32_t &targetId);
-    uint32_t *getNeighborArray() {return neighbor;}
-    uint32_t getNeighborNumber() {return curNeighbors;}
+    void insertNeighbor(const uint32_t &neighbor_id);
+    bool isFull() const {return cur_neighbors_ == MAX_NEIGHBORS;}
+    void setNextPos(const ListNodePos &next_pos) {next_pos_ = next_pos;}
+    ListNodePos getNextPos() {return next_pos_;}
+    bool search(const uint32_t &target_id);
+    uint32_t *getNeighborArray() {return neighbor_;}
+    uint32_t getNeighborNumber() {return cur_neighbors_;}
     void print() const;
 
 private:
-    uint32_t curNeighbors;
-    uint32_t neighbor[MAX_NEIGHBORS];
-    uint32_t edgeProperty[MAX_NEIGHBORS];
-    ListNodePos nextPos;
+    uint32_t cur_neighbors_;
+    uint32_t neighbor_[MAX_NEIGHBORS];
+    uint32_t edge_property_[MAX_NEIGHBORS];
+    ListNodePos next_pos_;
 };
 
 #endif //GRAPHSHORTESTPATHS_LISTNODE_H
