@@ -20,6 +20,7 @@ public:
     void push(uint32_t &temp);
     void pushBatch(const uint32_t *batch, const uint32_t &batch_size);
     int size();
+    int maxsize();
     void print();
 };
 

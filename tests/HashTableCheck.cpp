@@ -1,19 +1,21 @@
-#include "../ListNode.hpp"
+#include "../HashTable.hpp"
 #include "gtest/gtest.h"
 
 namespace {
 
 // The fixture for testing class Foo.
-    class ListNodeTest : public ::testing::Test {
+    class HashTableTest : public ::testing::Test {
     protected:
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        ListNodeTest() {
+        HashTableTest() : hashsize(2), ht(hashsize) {
             // You can do set-up work for each test here.
+
+
         }
 
-        virtual ~ListNodeTest() {
+        virtual ~HashTableTest() {
             // You can do clean-up work that doesn't throw exceptions here.
         }
 
@@ -29,32 +31,25 @@ namespace {
             // Code here will be called immediately after each test (right
             // before the destructor).
         }
-
-        ListNode listNode;
+        uint32_t hashsize;
+        HashTable ht;
     };
 
 // Tests that the Foo::Bar() method does Abc.
-    TEST_F(ListNodeTest, ListNodeWorks) {
-    EXPECT_FALSE(listNode.search(10));
-    EXPECT_FALSE(listNode.isFull());
+    TEST_F(HashTableTest, HashTableWorks) {
+        uint32_t id = 5;
+    EXPECT_FALSE(ht.search(id));
+    EXPECT_FALSE(ht.size() == 5);
 
-    listNode.insertNeighbor(10);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(10));
-
-    listNode.insertNeighbor(11);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(12));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
-
-    listNode.insertNeighbor(12);
-    EXPECT_FALSE(listNode.isFull());
-    EXPECT_FALSE(listNode.search(13));
-    EXPECT_TRUE(listNode.search(10));
-    EXPECT_TRUE(listNode.search(11));
-    EXPECT_TRUE(listNode.search(12));
-}
+    ht.insert(id);
+    id = 10;
+    EXPECT_FALSE(ht.search(id));
+    id = 5;
+    EXPECT_TRUE(ht.search(id));
+    EXPECT_TRUE(ht.size() == 1);
+    ht.clear();
+    EXPECT_FALSE(ht.search(id));
+    EXPECT_TRUE(ht.size() == 0);
+    }
 
 }  //

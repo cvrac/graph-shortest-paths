@@ -1,15 +1,16 @@
-//
-// entries = new uint32_t[size];#include <iostream>
+#include "HashTable.hpp"
+
+#include <iostream>
 #include <cassert>
 #include <cstring>
-#include "HashTable.hpp"
 
 using namespace std;
 
 HashTable::Bucket::Bucket() : count(0), size(16) {
-	// entries = new PathEntry[size];
+
 	entries = new uint32_t[size];
 	assert(entries != NULL);
+
 }
 
 HashTable::Bucket::~Bucket() {
@@ -56,39 +57,35 @@ uint32_t HashTable::hash(uint32_t& id) {
 }
 
 
-void HashTable::insert(uint32_t &node_id, uint32_t &parentId, unsigned int &pathCost, char &direction) {
+void HashTable::insert(uint32_t &node_id) {
 
 	int pos = this->hash(node_id);
-	// PathEntry qq(node_id, parentId, pathCost, direction);
+
 	if (table_[pos].count == table_[pos].size - 1) {
 		uint32_t *old = table_[pos].entries;
-		// table_[pos].entries = new PathEntry[table_[pos].size * 2];
 		table_[pos].entries = new uint32_t[table_[pos].size * 2];
 		memcpy(table_[pos].entries, old, table_[pos].size);
 		delete[] old;
 		table_[pos].count = table_[pos].size;
 		table_[pos].size *= 2;
 	}
+
 	table_[pos].entries[table_[pos].count] = node_id;
 	table_[pos].count++;
 	elements_++;
 
 }
 
-bool HashTable::search(uint32_t& entry_id, PathEntry **data) {
+bool HashTable::search(uint32_t& entry_id) {
 
 	int pos = this->hash(entry_id);
-	char f = 'f';
-	unsigned int d = 0;
-	// PathEntry qq(entry_id, entry_id, d, f);
 	Bucket *temp = &table_[pos];
+
 	for (int i = 0; i < temp->count; i++) {
-		// if (qq.node_id == temp->entries[i].node_id) {
-		if (entry_id == temp->entries[i]) {
-			// *data = &(temp->entries[i]);
+		if (entry_id == temp->entries[i])
 			return true;
-		}
 	}
+
 	return false;
 
 }
@@ -96,11 +93,12 @@ bool HashTable::search(uint32_t& entry_id, PathEntry **data) {
 void HashTable::print() {
 
 	Bucket *temp;
-	// for (unsigned int i = 0; i < hashentries_; i++) {
-	// 	cout << "bucket[" << i << "]:" << endl;
-	// 	temp = &table_[i];
-	// 	for (int i = 0; i < temp->count; i++)
-	// 		cout << temp->entries[i] << endl;
-	// }
+	
+	for (unsigned int i = 0; i < hashentries_; i++) {
+		cout << "bucket[" << i << "]:" << endl;
+		temp = &table_[i];
+		for (int i = 0; i < temp->count; i++)
+			cout << temp->entries[i] << endl;
+	}
 
 }

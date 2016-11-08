@@ -7,11 +7,10 @@
 #include <string>
 #include <stdint.h>
 
-#include "PathEntry.hpp"
-
 class HashTable {
 	uint32_t hashentries_;
 	uint32_t elements_;
+
 	struct Bucket {
 		Bucket();
 		~Bucket();
@@ -21,13 +20,14 @@ class HashTable {
 		// PathEntry *entries;
 		uint32_t *entries;
 	};
+
 	Bucket *table_;
 public:
 	HashTable(const uint32_t &numofbucks);
 	~HashTable();
 	int size();
-	void insert(uint32_t &nodeid, uint32_t &parentid, unsigned int &pathcost, char &direction);
-	bool search(uint32_t &entry_id, PathEntry **data);
+	void insert(uint32_t &nodeid);
+	bool search(uint32_t &entry_id);
 	void print();
 	void clear();
 	uint32_t hash(uint32_t &id);
