@@ -1,9 +1,9 @@
 #ifndef GRAPHSHORTESTPATHS_GRAPH_H
 #define GRAPHSHORTESTPATHS_GRAPH_H
 
-#include "Index.h"
-#include "Buffer.h"
-#include "Queue.h"
+#include "Index.hpp"
+#include "Buffer.hpp"
+#include "Queue.hpp"
 
 struct NodeArray {
 public:

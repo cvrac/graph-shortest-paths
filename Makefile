@@ -1,13 +1,13 @@
 OBJS =  Index.o ListNode.o HashTable.o PathEntry.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o Queue.o
-HEADER = Index.h ListNodePos.h ListNode.h HashTable.h PathEntry.h ShortestPath.h Buffer.h Graph.h OperationsControl.h Queue.h
+HEADER = Index.hpp ListNodePos.hpp ListNode.hpp HashTable.hpp PathEntry.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Queue.hpp
 
 all: gsp
 
 CC 	= g++
-FLAGS	= -c
+FLAGS	= -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -o gsp $(OBJS)
+	$(CC) -O2 -o gsp $(OBJS)
 
 Queue.o: Queue.cpp
 	$(CC) $(FLAGS) Queue.cpp
@@ -43,4 +43,4 @@ clean:
 	rm -f gsp $(OBJS)
 
 count:
-	wc -l *.cpp *.h
+	wc -l *.cpp $(HEADER)

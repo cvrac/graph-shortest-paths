@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stdint.h>
-#include "Graph.h"
-#include "ShortestPath.h"
-#include "OperationsControl.h"
+#include "Graph.hpp"
+#include "ShortestPath.hpp"
+#include "OperationsControl.hpp"
 
 using namespace std;
 

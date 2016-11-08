@@ -2,108 +2,107 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <cstring>
-#include "Queue.h"
+#include "Queue.hpp"
 
 using namespace std;
 
-Queue::Queue() : size_(8192), head(0), tail(0), elements(0) {
-    // queueArray = new uint32_t[size_];
-    queueArray = (uint32_t *) malloc(size_ * sizeof(uint32_t));
+Queue::Queue() : size_(8192), head_(0), tail_(0), elements_(0) {
+    // queueArray_ = new uint32_t[size_];
+    queueArray_ = (uint32_t *) malloc(size_ * sizeof(uint32_t));
 }
 
 Queue::~Queue() {
-    free(queueArray);
-    queueArray = NULL;
+    free(queueArray_);
+    queueArray_ = NULL;
 }
 
 void Queue::push(uint32_t &id) {
     if (!this->full()) {
-        queueArray[tail] = id;
-        tail = (tail+1) % size_;
-        ++elements;
+        queueArray_[tail_] = id;
+        tail_ = (tail_+1) % size_;
+        ++elements_;
     } else {
-        tail = (tail-1) % size_;
-        queueArray = (uint32_t *) realloc(queueArray, 2 * size_ * sizeof(uint32_t));
-        memcpy(queueArray + size_, queueArray, tail * sizeof(uint32_t));
-        tail = size_ + tail;
+        queueArray_ = (uint32_t *) realloc(queueArray_, 2 * size_ * sizeof(uint32_t));
+        memcpy(queueArray_ + size_, queueArray_, tail_ * sizeof(uint32_t));
+        tail_ = size_ + tail_;
         size_ *= 2;
-        queueArray[tail] = id;
-        tail = (tail+1)%size_;
-        ++elements;
+        queueArray_[tail_] = id;
+        tail_ = (tail_+1)%size_;
+        ++elements_;
     }
 }
 
 void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
-    if (elements + batch_size <= size_) {
+    if (elements_ + batch_size <= size_) {
         uint32_t pushed = 0;
-        if (head <= tail) {
-            uint32_t right_space = size_ - tail;
+        if (head_ <= tail_) {
+            uint32_t right_space = size_ - tail_;
             if (right_space >= batch_size) {
-                memcpy(queueArray + tail, batch, batch_size * sizeof(uint32_t));
+                memcpy(queueArray_ + tail_, batch, batch_size * sizeof(uint32_t));
                 pushed += batch_size;
-                tail += batch_size;
-                if (tail == size_) {
-                    tail = 0;
+                tail_ += batch_size;
+                if (tail_ == size_) {
+                    tail_ = 0;
                 }
             }
             else {
-                memcpy(queueArray + tail, batch, right_space * sizeof(uint32_t));
+                memcpy(queueArray_ + tail_, batch, right_space * sizeof(uint32_t));
                 pushed += right_space;
-                tail = 0;
+                tail_ = 0;
             }
         }
-        if (tail <= head && pushed != batch_size) {
-            memcpy(queueArray + tail, batch + pushed, (batch_size - pushed) * sizeof(uint32_t));
+        if (tail_ <= head_ && pushed != batch_size) {
+            memcpy(queueArray_ + tail_, batch + pushed, (batch_size - pushed) * sizeof(uint32_t));
             pushed += (batch_size - pushed);
-            tail += pushed;
+            tail_ += pushed;
         }
     }
     else {
         int new_size = size_;
-        while (elements + batch_size < new_size) {
+        while (elements_ + batch_size < new_size) {
             new_size *= 2;
         }
-        queueArray = (uint32_t *) realloc(queueArray, new_size * sizeof(uint32_t));
-        if (tail <= head) {
-            memcpy(queueArray + size_, queueArray, tail * sizeof(uint32_t));
-            tail = size_ + tail;
+        queueArray_ = (uint32_t *) realloc(queueArray_, new_size * sizeof(uint32_t));
+        if (tail_ <= head_) {
+            memcpy(queueArray_ + size_, queueArray_, tail_ * sizeof(uint32_t));
+            tail_ = size_ + tail_;
         }
-        memcpy(queueArray + tail, batch, batch_size * sizeof(uint32_t));
+        memcpy(queueArray_ + tail_, batch, batch_size * sizeof(uint32_t));
         size_ = new_size;
     }
-    elements += batch_size;
+    elements_ += batch_size;
 }
 
 uint32_t Queue::pop() {
     if (!this->empty()) {
-        int temp = head;
-        head = (head+1) % size_;
-        --elements;
-        return queueArray[temp];
+        int temp = head_;
+        head_ = (head_+1) % size_;
+        --elements_;
+        return queueArray_[temp];
     }
 }
 
 bool Queue::empty() {
-    return (elements == 0);
+    return (elements_ == 0);
 }
 
 bool Queue::full() {
-    return (elements == size_);
+    return (elements_ == size_);
 }
 
 void Queue::clear() {
-    head = 0;
-    tail = 0;
-    elements = 0;
+    head_ = 0;
+    tail_ = 0;
+    elements_ = 0;
 }
 
 int Queue::size() {
-    return elements;
+    return elements_;
 }
 
 void Queue::print() {
     for (int i = 0; i < size_; i++)
-        cout << queueArray[i] << " ";
+        cout << queueArray_[i] << " ";
     cout << endl;
 }
 

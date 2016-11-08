@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "ListNodePos.h"
+#include "ListNodePos.hpp"
 
 #define INITIAL_INDEX_MAX_SIZE 1000
 

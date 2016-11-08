@@ -5,11 +5,11 @@
 
 class Queue {
 private:
-    uint32_t *queueArray;
+    uint32_t *queueArray_;
     int size_;
-    int head;
-    int tail;
-    int elements;
+    int head_;
+    int tail_;
+    int elements_;
 public:
     Queue();
     ~Queue();

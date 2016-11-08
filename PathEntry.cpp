@@ -1,42 +1,41 @@
 #include <iostream>
 #include <cstring>
-#include "PathEntry.h"
+#include "PathEntry.hpp"
 
 using namespace std;
 
-path_entry::path_entry() : nodeId(0), parentId(0), pathCost(0), direction('-') { }
+PathEntry::PathEntry() : node_id(0), parent_id(0), path_cost(0), direction('-') { }
 
-path_entry::path_entry(const path_entry &entr) : nodeId(entr.nodeId), parentId(entr.parentId), pathCost(entr.pathCost), direction(entr.direction) {
-	cout << "created man" << endl;
-}
+PathEntry::PathEntry(const PathEntry &entr) : node_id(entr.node_id), parent_id(entr.parent_id),
+	path_cost(entr.path_cost), direction(entr.direction) { }
 
-path_entry& path_entry::operator=(const path_entry& entr) {
+PathEntry& PathEntry::operator=(const PathEntry& entr) {
 	if (entr == *this)
 		return *this;
 	memcpy(this, &entr, sizeof(entr));
 	return *this;
 }
 
-path_entry::path_entry(uint32_t& id, uint32_t& pd, unsigned int& pathC, char& dir) :
-	nodeId(id), parentId(pd), pathCost(pathC), direction(dir) {}
+PathEntry::PathEntry(uint32_t& id, uint32_t& pd, unsigned int& pathc, char& dir) :
+	node_id(id), parent_id(pd), path_cost(pathc), direction(dir) { }
 
 
-ostream& operator<<(ostream& out, const path_entry& d) {
-	out << d.nodeId << " " << d.parentId << " " << d.pathCost << " " << d.direction << endl;;
-	// out << "neti" << endl;
+ostream& operator<<(ostream& out, const PathEntry& d) {
+	out << d.node_id << " " << d.parent_id << " " << d.path_cost << " "
+	<< d.direction << endl;;
 	return out;
 }
 
-bool operator== (const path_entry& e1, const path_entry& e2) {
-	if (e1.nodeId == e2.nodeId && e1.parentId == e2.parentId && e1.pathCost == e2.pathCost && e1.direction == e2.direction)
+bool operator== (const PathEntry& e1, const PathEntry& e2) {
+	if (e1.node_id == e2.node_id && e1.parent_id == e2.parent_id && e1.path_cost == e2.path_cost && e1.direction == e2.direction)
 		return true;
 	else
 		return false;
 }
 
-void path_entry::update(uint32_t& id, uint32_t &pd, unsigned int &pathC, char &dir) {
-	this->nodeId = id;
-	this->parentId = pd;
-	this->pathCost = pathC;
+void PathEntry::update(uint32_t& id, uint32_t &pd, unsigned int &pathc, char &dir) {
+	this->node_id = id;
+	this->parent_id = pd;
+	this->path_cost = pathc;
 	this->direction = dir;
 }

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "ListNode.h"
+#include "ListNode.hpp"
 
 #define INITIAL_MAX_LIST_NODES 10000
 

@@ -1,41 +1,39 @@
 #include <iostream>
 #include <stdint.h>
-#include "ShortestPath.h"
+#include "ShortestPath.hpp"
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : hash_size(hashSize), dirF('F'), dirB('B'),
-										distanceFront(0), distanceBack(0), clevelB(0), clevelF(0), clevelF1(0), clevelB1(0), exploredSet(hash_size), prGraph(gr) {
+ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : hash_size(hashSize), dirf_('F'), dirb_('B'),
+										distance_front_(0), distance_back_(0), clevelb_(0), clevelf_(0), clevelf1_(0), clevelb1_(0), explored_set_(hash_size), pr_graph_(gr) {
 }
 
 ShortestPath::~ShortestPath() { }
 
-int ShortestPath::expand(uint32_t& nodeId, Queue &frontier, char& dir) {
+int ShortestPath::expand(uint32_t& node_id, Queue &frontier, char& dir) {
 	/*Expand a node, adding its neighbors to the frontier and marking them as visited,
 	or return solution cost, if we reached a node already visited from the other side*/
 
 	uint32_t tempId;
 	unsigned int dist;
-	path_entry *data;
-	NodeArray *neighbors = prGraph.getNeighbors(nodeId, dir);
+	PathEntry *data;
+	NodeArray *neighbors = pr_graph_.getNeighbors(node_id, dir);
 
 	for (int i = 0; i < neighbors->size; i++) {
 		tempId = neighbors->array[i];
-		// if (exploredSet[tempId] != NULL) {
-		if (exploredSet.search(tempId, &data)) {
+		if (explored_set_.search(tempId, &data)) {
 			if (data->direction != dir) {
 				delete neighbors;
-				return data->pathCost + ((dir == 'F') ? distanceFront : distanceBack) + 1;
+				return data->path_cost + ((dir == 'F') ? distance_front_ : distance_back_) + 1;
 			}
 		} else {
-			dist = ((dir == 'F') ? distanceFront : distanceBack) + 1;
-			exploredSet.insert(tempId, nodeId, dist, dir);
-			// exploredSet[tempId] = new path_entry(tempId, nodeId, dist, dir);
+			dist = ((dir == 'F') ? distance_front_ : distance_back_) + 1;
+			explored_set_.insert(tempId, node_id, dist, dir);
 			frontier.push(tempId);
 			if (dir == 'F')
-				clevelF1++;
+				clevelf1_++;
 			else
-				clevelB1++;
+				clevelb1_++;
 		}
 	}
 	delete neighbors;
@@ -43,12 +41,12 @@ int ShortestPath::expand(uint32_t& nodeId, Queue &frontier, char& dir) {
 }
 
 int ShortestPath::step(Queue &frontier, char& dir) {
-	uint32_t nodeId = frontier.pop();
+	uint32_t node_id = frontier.pop();
 	if (dir == 'F')
-		clevelF--;
+		clevelf_--;
 	else
-		clevelB--;
-	return expand(nodeId, frontier, dir);
+		clevelb_--;
+	return expand(node_id, frontier, dir);
 }
 
 int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
@@ -59,37 +57,37 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	//initilizations of structures
 	int res = 0;
 	unsigned int dist;
-	frontierFront.push(source);
-	clevelF = 1;
-	frontierBack.push(target);
-	clevelB = 1;
-	exploredSet.insert(source, source, distanceFront, dirF);
-	exploredSet.insert(target, target, distanceBack, dirB);
+	frontier_front_.push(source);
+	clevelf_ = 1;
+	frontier_back_.push(target);
+	clevelb_ = 1;
+	explored_set_.insert(source, source, distance_front_, dirf_);
+	explored_set_.insert(target, target, distance_back_, dirb_);
 
 	while (true) {
 
 		//no solution, return failure
-		if (frontierFront.empty() || frontierBack.empty())
+		if (frontier_front_.empty() || frontier_back_.empty())
 			return -1;
 
-		if (clevelF <= clevelB) {
+		if (clevelf_ <= clevelb_) {
 			res = -3;
-			res = step(frontierFront, dirF);
+			res = step(frontier_front_, dirf_);
 			if (res != -3)
 				return res;
-			if (clevelF == 0) {
-				++distanceFront;
-				clevelF = clevelF1;
-				clevelF1 = 0;
+			if (clevelf_ == 0) {
+				++distance_front_;
+				clevelf_ = clevelf1_;
+				clevelf1_ = 0;
 			}
-		} else if (clevelF > clevelB) {
-			res = step(frontierBack, dirB);
+		} else if (clevelf_ > clevelb_) {
+			res = step(frontier_back_, dirb_);
 			if (res != -3)
 				return res;
-			if (clevelB == 0) {
-				++distanceBack;
-				clevelB = clevelB1;
-				clevelB1 = 0;
+			if (clevelb_ == 0) {
+				++distance_back_;
+				clevelb_ = clevelb1_;
+				clevelb1_ = 0;
 			}
 		}
 	}
@@ -99,13 +97,13 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 
 void ShortestPath::reset() {
 	//clear structures for next queries
-	distanceFront = 0;
-	distanceBack = 0;
-	clevelB = 0;
-	clevelB1 = 0;
-	clevelF = 0;
-	clevelF1 = 0;
-	frontierFront.clear();
-	frontierBack.clear();
-	exploredSet.clear();
+	distance_front_ = 0;
+	distance_back_ = 0;
+	clevelb_ = 0;
+	clevelb1_ = 0;
+	clevelf_ = 0;
+	clevelf1_ = 0;
+	frontier_front_.clear();
+	frontier_back_.clear();
+	explored_set_.clear();
 }

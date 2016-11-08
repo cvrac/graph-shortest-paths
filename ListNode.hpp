@@ -2,7 +2,7 @@
 #define GRAPHSHORTESTPATHS_LISTNODE_H
 
 #include <stdint.h>
-#include "ListNodePos.h"
+#include "ListNodePos.hpp"
 
 #define MAX_NEIGHBORS 20
 class ListNode {

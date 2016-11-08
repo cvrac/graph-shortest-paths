@@ -1,11 +1,11 @@
-#include "Graph.h"
+#include "Graph.hpp"
 
 #include <cstring>
 #include <time.h>
 
 #include <iostream>
 
-#include "Queue.h"
+#include "Queue.hpp"
 
 using namespace std;
 

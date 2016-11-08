@@ -1,4 +1,4 @@
-#include "ListNode.h"
+#include "ListNode.hpp"
 
 #include <iostream>
 
@@ -30,4 +30,3 @@ void ListNode::print() const {
     }
     cout << "\n" << endl;
 }
-
