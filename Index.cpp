@@ -8,8 +8,8 @@
 
 using namespace std;
 
-Index::Index() : cur_size_(0), max_size_(INITIAL_INDEX_MAX_SIZE), total_reallocs_(0) {
-    index_ = new ListHead[INITIAL_INDEX_MAX_SIZE];
+Index::Index() : index_(new ListHead[INITIAL_INDEX_MAX_SIZE]), cur_size_(0),
+    max_size_(INITIAL_INDEX_MAX_SIZE), total_reallocs_(0) {
 //    index_ = (ListHead *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListHead));
     assert(index_ != NULL);
 //    for (uint32_t i = 0 ; i < INITIAL_INDEX_MAX_SIZE ; i++) {

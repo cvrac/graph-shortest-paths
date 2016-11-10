@@ -6,9 +6,8 @@
 
 using namespace std;
 
-HashTable::Bucket::Bucket() : count(0), size(16) {
+HashTable::Bucket::Bucket() : entries(new uint32_t[16]), count(0), size(16) {
 
-	entries = new uint32_t[size];
 	assert(entries != NULL);
 
 }
@@ -21,9 +20,8 @@ HashTable::Bucket::~Bucket() {
 }
 
 
-HashTable::HashTable(const uint32_t& numofbucks) : hashentries_(numofbucks), elements_(0) {
-
-	table_ = new Bucket[hashentries_];
+HashTable::HashTable(const uint32_t& numofbucks) : hashentries_(numofbucks), elements_(0),
+	table_(new Bucket[hashentries_]) {
 	assert(table_ != NULL);
 
 }
@@ -48,7 +46,7 @@ void HashTable::clear() {
 
 }
 
-int HashTable::size() {
+uint32_t HashTable::size() {
 	return elements_;
 }
 
@@ -93,7 +91,7 @@ bool HashTable::search(uint32_t& entry_id) {
 void HashTable::print() {
 
 	Bucket *temp;
-	
+
 	for (unsigned int i = 0; i < hashentries_; i++) {
 		cout << "bucket[" << i << "]:" << endl;
 		temp = &table_[i];

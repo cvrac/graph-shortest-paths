@@ -23,11 +23,11 @@ public:
     void print() const;
 
 private:
-    uint32_t cur_neighbors_;
     uint32_t neighbor_[MAX_NEIGHBORS];
-    uint32_t edge_property_[MAX_NEIGHBORS];
-    //ListNodePos next_pos_;
+    uint32_t cur_neighbors_;
     long next_pos_;
+    // uint32_t edge_property_[MAX_NEIGHBORS];
+    //ListNodePos next_pos_;
 };
 
 #endif //GRAPHSHORTESTPATHS_LISTNODE_H

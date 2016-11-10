@@ -7,8 +7,9 @@
 
 using namespace std;
 
-Queue::Queue() : size_(1024), head_(0), tail_(0), elements_(0) {
-    queueArray_ = (uint32_t *) malloc(size_ * sizeof(uint32_t));
+Queue::Queue() : queueArray_((uint32_t *) malloc(1024 * sizeof(uint32_t))),
+    size_(1024), head_(0), tail_(0), elements_(0) {
+
 }
 
 Queue::~Queue() {

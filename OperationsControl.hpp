@@ -6,16 +6,17 @@
 
 class OperationsControl {
 
-private:
-    Graph graph;
-    ShortestPath path;
-    void buildGraph();
-    void runQueries();
-
 public:
     OperationsControl(uint32_t &hashSize);
     ~OperationsControl();
     void run(const uint32_t &hashSize);
+
+private:
+    void buildGraph();
+    void runQueries();
+
+    Graph graph;
+    ShortestPath path;
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

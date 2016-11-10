@@ -8,29 +8,32 @@
 #include <stdint.h>
 
 class HashTable {
-	uint32_t hashentries_;
-	uint32_t elements_;
 
-	struct Bucket {
-		Bucket();
-		~Bucket();
-
-		int count;
-		int size;
-		// PathEntry *entries;
-		uint32_t *entries;
-	};
-
-	Bucket *table_;
 public:
 	HashTable(const uint32_t &numofbucks);
+	HashTable() : hashentries_(23), elements_(0), table_(NULL), table2(NULL) {}
 	~HashTable();
-	int size();
+	inline uint32_t size();
 	void insert(uint32_t &nodeid);
 	bool search(uint32_t &entry_id);
 	void print();
 	void clear();
-	uint32_t hash(uint32_t &id);
+	inline uint32_t hash(uint32_t &id);
+
+private:
+	struct Bucket {
+		Bucket();
+		~Bucket();
+
+		uint32_t *entries;
+		int count;
+		int size;
+	};
+
+	uint32_t hashentries_;
+	uint32_t elements_;
+	Bucket *table_;
+	HashTable *table2;
 };
 
 #endif

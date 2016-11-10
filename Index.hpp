@@ -33,7 +33,7 @@ public:
 
 private:
     struct ListHead {
-        ListHead() : total_neighbors(0), pos(-1), last_pos(-1) {}
+        ListHead() : pos(-1), last_pos(-1), total_neighbors(0) {}
 
         long pos;
         long last_pos;
