@@ -63,7 +63,7 @@ void Queue::pushBatch(const uint32_t *batch, const uint32_t &batch_size) {
     }
     else {
         int new_size = size_;
-        while (elements_ + batch_size < new_size) {
+        while (elements_ + batch_size > new_size) {
             new_size <<= 1;
         }
         queueArray_ = (uint32_t *) realloc(queueArray_, new_size * sizeof(uint32_t));

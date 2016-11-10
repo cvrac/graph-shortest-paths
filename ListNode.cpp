@@ -22,8 +22,7 @@ bool ListNode::search(const uint32_t &target_id) {
 
 void ListNode::print() const {
     cout << "\t--- ListNode ---\n\tcur_neighbors_: " << cur_neighbors_ << ", maxNeighbors: " << MAX_NEIGHBORS
-         << ", nextListNode: ";
-    next_pos_.print();
+         << ", nextListNode: " << next_pos_;
     cout << "\t";
     for (uint32_t n = 0; n < cur_neighbors_ ; n++) {
         cout << neighbor_[n] << " ";

@@ -62,10 +62,7 @@ void Index::print() const {
     cout << "--- Index ---\ncur_size_: " << cur_size_ << ", max_size_: " << max_size_ << endl;
     for (uint32_t node = 0; node < cur_size_; node++) {
         cout << node << " with " << index_[node].total_neighbors << " neighbors: ";
-        index_[node].pos.print();
-        if (index_[node].pos.getExists()) {
-            cout << "Last pos is " << index_[node].last_pos << endl;
+        cout << "\nFirst pos is " << index_[node].pos << "Last pos is " << index_[node].last_pos << endl;
         }
-    }
     cout << endl;
 }

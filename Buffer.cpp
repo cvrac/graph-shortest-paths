@@ -30,7 +30,7 @@ Buffer::~Buffer() {
  * Any pointers to listNodes received prior to this function call
  * should be considered invalid and must be fetched again,
  * due to the possibility of a buffer_ reallocation. */
-ListNodePos Buffer::allocNewNode() {
+long Buffer::allocNewNode() {
     if (cur_list_nodes_ == max_list_nodes_) {
         max_list_nodes_ <<= 1;
         ListNode *old_buffer = buffer_;
@@ -44,22 +44,22 @@ ListNodePos Buffer::allocNewNode() {
         delete[] old_buffer;
         total_reallocs_++;
     }
-    return ListNodePos(cur_list_nodes_++);
+    return cur_list_nodes_++;
 }
 
-BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, const bool &skip_search) {
-    uint32_t cur_pos = first_pos;
+BufferFeedback Buffer::insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const bool &skip_search) {
+    long cur_pos = first_pos;
     ListNode *cur_node = this->getListNode(cur_pos);
 
     /* No duplicates */
     if (! skip_search && cur_node->search(neighbor_id)) {
         return BufferFeedback(true, cur_pos);
     }
-    ListNodePos next_node_pos = cur_node->getNextPos();
+    long next_node_pos = cur_node->getNextPos();
 
     /* Reach final list_node */
-    while (! skip_search && next_node_pos.exists) {
-        cur_pos = next_node_pos.pos;
+    while (! skip_search && next_node_pos != -1) {
+        cur_pos = next_node_pos;
         cur_node = this->getListNode(cur_pos);
         if (cur_node->search(neighbor_id)) {
             return BufferFeedback(true, cur_pos);
@@ -73,7 +73,7 @@ BufferFeedback Buffer::insertNeighbor(const uint32_t &first_pos, const uint32_t 
 
         cur_node = this->getListNode(cur_pos);
         cur_node->setNextPos(next_node_pos);
-        cur_pos = next_node_pos.pos;
+        cur_pos = next_node_pos;
         cur_node = this->getListNode(cur_pos);
     }
     cur_node->insertNeighbor(neighbor_id);
