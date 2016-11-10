@@ -13,10 +13,10 @@
 struct BufferFeedback {
 
 public:
-    BufferFeedback(const bool &edge_exists, const uint32_t &last_pos) : edge_exists(edge_exists),  last_pos(last_pos) {}
+    BufferFeedback(const bool &edge_exists, const long &last_pos) : edge_exists(edge_exists),  last_pos(last_pos) {}
 
     bool edge_exists;
-    uint32_t last_pos;
+    long last_pos;
 };
 
 class Buffer {
@@ -24,20 +24,20 @@ class Buffer {
 public:
     Buffer();
     ~Buffer();
-    ListNodePos allocNewNode();
-    ListNode getListNode(const uint32_t &list_node_pos) const {return buffer_[list_node_pos];}
-    BufferFeedback insertNeighbor(const uint32_t &first_pos, const uint32_t &neighbor_id, const bool &skip_search);
+    long allocNewNode();
+    ListNode *getListNode(const long &list_node_pos) const {return &buffer_[list_node_pos];}
+    BufferFeedback insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const bool &skip_search);
     uint32_t getTotalReallocs() const {return total_reallocs_;}
-    uint32_t getMaxListNodes() const {return max_list_nodes_;}
-    uint32_t getCurListNodes() const {return cur_list_nodes_;}
+    long getMaxListNodes() const {return max_list_nodes_;}
+    long getCurListNodes() const {return cur_list_nodes_;}
     void print() const;
 
 private:
-    ListNode *getListNode(const uint32_t &list_node_pos) {return &buffer_[list_node_pos];}
+    //ListNode *getListNode(const long &list_node_pos) {return &buffer_[list_node_pos];}
 
     ListNode *buffer_;
-    uint32_t cur_list_nodes_;
-    uint32_t max_list_nodes_;
+    long cur_list_nodes_;
+    long max_list_nodes_;
     uint32_t total_reallocs_;
 };
 
