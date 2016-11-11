@@ -50,6 +50,20 @@ void Index::insertNode(const uint32_t &node_id) {
     }
 }
 
+void Index::insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id) {
+    if (index_[node_id].neighbors_hash_ == NULL) {
+        index_[node_id].neighbors_hash_ = new HashTable(HASH_SIZE);
+    }
+    index_[node_id].neighbors_hash_->insert(neighbor_id);
+}
+
+bool Index::searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id) {
+    if (index_[node_id].neighbors_hash_ == NULL) {
+        return false;
+    }
+    return index_[node_id].neighbors_hash_->search(neighbor_id);
+}
+
 uint32_t Index::getAverageNeighbors() {
     long long sum = 0;
     for (uint32_t node = 0; node < cur_size_; node++) {
@@ -65,4 +79,18 @@ void Index::print() const {
         cout << "\nFirst pos is " << index_[node].pos << "Last pos is " << index_[node].last_pos << endl;
         }
     cout << endl;
+}
+
+void Index::printNeighborsHash(const uint32_t &node_id) const {
+    if (index_[node_id].neighbors_hash_ != NULL) {
+        index_[node_id].neighbors_hash_->print();
+    }
+}
+
+void Index::deleteNeigborsHash() {
+    for (uint32_t node = 0; node < cur_size_; node++) {
+        if (index_[node].neighbors_hash_ != NULL) {
+            delete index_[node].neighbors_hash_;
+        }
+    }
 }

@@ -3,6 +3,7 @@
 
 #include "Index.hpp"
 #include "Buffer.hpp"
+#include "HashTable.hpp"
 #include "Queue.hpp"
 
 struct NodeArray {
@@ -19,7 +20,7 @@ class Graph {
 
 public:
     Graph() {}
-    ~Graph() {}
+    ~Graph();
     void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id);
     void getNeighbors(const uint32_t &node_id, const char &direction, Queue *neighbors);
     NodeArray *getNeighbors(const uint32_t &node_id, const char &direction);
@@ -42,6 +43,7 @@ private:
     Buffer outer_buffer_;
     Index inner_index_;
     Buffer inner_buffer_;
+
 };
 
 

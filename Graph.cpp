@@ -9,6 +9,11 @@
 
 using namespace std;
 
+Graph::~Graph() {
+    outer_index_.deleteNeigborsHash();
+    inner_index_.deleteNeigborsHash();
+}
+
 void Graph::insertNode(const uint32_t node_id) {
     outer_index_.insertNode(node_id);
     inner_index_.insertNode(node_id);
@@ -55,17 +60,15 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     }
     long pos;
     if (! skip_search) {
-        pos = first_pos;
-    } else {
-        pos = index->getListHead(source_node_id)->last_pos;
+        if (index->searchNeighborInHash(source_node_id, target_node_id)) {
+            return false;
+        }
     }
-    BufferFeedback feedback = buffer->insertNeighbor(pos, target_node_id, skip_search);
-    if (feedback.edge_exists) {
-        return false;
-    }
+    pos = index->getListHead(source_node_id)->last_pos;
+    BufferFeedback feedback = buffer->insertNeighbor(pos, target_node_id, true);
     index->setListHeadNeighbors(source_node_id, index->getListHeadNeighbors(source_node_id) + 1);
     index->setListHeadLast(source_node_id, feedback.last_pos);
-    //cout << index.getListHeadNeighbors(source_node_id) << endl;
+    index->insertNeighborInHash(source_node_id, target_node_id);
     return true;
 }
 
@@ -186,13 +189,14 @@ void Graph::print(const Index &index, const Buffer &buffer) {
             delete neighbors;
         }
         cout << "\n";
+        index.printNeighborsHash(node);
     }
     cout << endl;
 }
 
 void NodeArray::print() {
     //cout << "--- NodeArray ---\n" << "size: " << size << endl;
-    for (unsigned int n = 0 ; n < size ; n++) {
+    for (uint32_t n = 0 ; n < size ; n++) {
         cout << array[n] << " ";
     }
     cout << endl;

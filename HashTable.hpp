@@ -14,11 +14,11 @@ public:
 	HashTable() : hashentries_(23), elements_(0), table_(NULL), table2(NULL) {}
 	~HashTable();
 	inline uint32_t size();
-	void insert(uint32_t &nodeid);
-	bool search(uint32_t &entry_id);
+	void insert(const uint32_t &nodeid);
+	bool search(const uint32_t &entry_id);
 	void print();
 	void clear();
-	inline uint32_t hash(uint32_t &id);
+	inline uint32_t hash(const uint32_t &id);
 
 private:
 	struct Bucket {
@@ -26,8 +26,8 @@ private:
 		~Bucket();
 
 		uint32_t *entries;
-		int count;
-		int size;
+		uint32_t count;
+		uint32_t size;
 	};
 
 	uint32_t hashentries_;

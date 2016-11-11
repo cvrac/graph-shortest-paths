@@ -23,6 +23,8 @@ OperationsControl::~OperationsControl() {
 void OperationsControl::run(const uint32_t &hashSize) {
     clock_t start = clock();
     this->buildGraph();
+    //graph.print();
+    //return;
     clock_t end = clock();
     /*Queue q;
 
