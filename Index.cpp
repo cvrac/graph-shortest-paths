@@ -64,6 +64,22 @@ bool Index::searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighb
     return index_[node_id].neighbors_hash_->search(neighbor_id);
 }
 
+bool Index::searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id) {
+    if (index_[node_id].neighbors_hash_ == NULL) {
+        index_[node_id].neighbors_hash_ = new HashTable(HASH_SIZE);
+        index_[node_id].neighbors_hash_->insert(neighbor_id);
+        return true;
+    }
+    return index_[node_id].neighbors_hash_->searchInsert(neighbor_id);
+}
+
+uint32_t Index::getHashNeighbors(const uint32_t &source, const uint32_t &target) const {
+    if (index_[source].neighbors_hash_ == NULL) {
+        return 0;
+    }
+    return index_[source].neighbors_hash_->getBucketCount(target);
+}
+
 uint32_t Index::getAverageNeighbors() {
     long long sum = 0;
     for (uint32_t node = 0; node < cur_size_; node++) {

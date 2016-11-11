@@ -16,9 +16,11 @@ public:
 	inline uint32_t size();
 	void insert(const uint32_t &nodeid);
 	bool search(const uint32_t &entry_id);
+    bool searchInsert(const uint32_t &entry_id);
 	void print();
 	void clear();
-	inline uint32_t hash(const uint32_t &id);
+    uint32_t hash(const uint32_t &id) {return id % hashentries_;}
+    uint32_t getBucketCount(const uint32_t &pos) {return table_[hash(pos)].count;}
 
 private:
 	struct Bucket {

@@ -26,7 +26,9 @@ public:
     void setListHeadNeighbors(const uint32_t &node_id, const uint32_t &n) {index_[node_id].total_neighbors = n;}
     void insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
     bool searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
+    bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id);
     uint32_t getListHeadNeighbors(const uint32_t &node_id) const {return index_[node_id].total_neighbors;}
+    uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const;
     long getListHeadPos(const uint32_t &node_id) const {return index_[node_id].pos;}
     uint32_t getAverageNeighbors();
     uint32_t getTotalReallocs() const {return total_reallocs_;}

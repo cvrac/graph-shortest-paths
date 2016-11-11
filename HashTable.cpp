@@ -50,11 +50,6 @@ uint32_t HashTable::size() {
 	return elements_;
 }
 
-uint32_t HashTable::hash(const uint32_t& id) {
-	return id % hashentries_;
-}
-
-
 void HashTable::insert(const uint32_t &node_id) {
 
 	int pos = this->hash(node_id);
@@ -86,6 +81,30 @@ bool HashTable::search(const uint32_t& entry_id) {
 
 	return false;
 
+}
+
+bool HashTable::searchInsert(const uint32_t &entry_id) {
+    int pos = this->hash(entry_id);
+    Bucket *temp = &table_[pos];
+
+    for (int i = 0; i < temp->count; i++) {
+        if (entry_id == temp->entries[i])
+            return false;
+    }
+    if (temp->count == temp->size) {
+        uint32_t *old = temp->entries;
+        temp->entries = new uint32_t[temp->size * 2];
+        memcpy(temp->entries, old, temp->size * sizeof(uint32_t));
+        delete[] old;
+        temp->count = temp->size;
+        temp->size *= 2;
+    }
+
+    temp->entries[temp->count] = entry_id;
+    temp->count++;
+    elements_++;
+
+    return true;
 }
 
 void HashTable::print() {

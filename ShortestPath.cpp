@@ -52,8 +52,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 					delete neighbors;
 					neighbors = NULL;
 					return distance_front_ + distance_back_ + 1;
-				} else if (!explored_set_.search(tempId)) {
-					explored_set_.insert(tempId);
+				} else if (explored_set_.searchInsert(tempId)) {
+					//explored_set_.insert(tempId);
 					frontier_front_.push(tempId);
 					++clevelf1_;
 				}
@@ -79,8 +79,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				if (explored_set_.search(tempId))  {
 					delete neighbors;
 					return distance_front_ + distance_back_ + 1;
-				} else if (!explored_set_x.search(tempId)) {
-					explored_set_x.insert(tempId);
+				} else if (explored_set_x.searchInsert(tempId)) {
+					//explored_set_x.insert(tempId);
 					frontier_back_.push(tempId);
 					++clevelb1_;
 				}

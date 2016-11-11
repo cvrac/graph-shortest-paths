@@ -39,7 +39,7 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     Buffer *buffer = &outer_buffer_;
     bool skip_search = false;
 
-    if (outer_index_.getListHeadNeighbors(*node1) > inner_index_.getListHeadNeighbors(*node2)) {
+    if (outer_index_.getHashNeighbors(*node1, *node2) > inner_index_.getHashNeighbors(*node2, *node1)) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
     }
     if (this->insertEdge(*node1, *node2, index, buffer, skip_search)) {
@@ -60,15 +60,15 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     }
     long pos;
     if (! skip_search) {
-        if (index->searchNeighborInHash(source_node_id, target_node_id)) {
+        if (! index->searchInsertHash(source_node_id, target_node_id)) {
             return false;
         }
     }
     pos = index->getListHead(source_node_id)->last_pos;
-    BufferFeedback feedback = buffer->insertNeighbor(pos, target_node_id, true);
+    long feedback = buffer->insertNeighbor(pos, target_node_id, true);
     index->setListHeadNeighbors(source_node_id, index->getListHeadNeighbors(source_node_id) + 1);
-    index->setListHeadLast(source_node_id, feedback.last_pos);
-    index->insertNeighborInHash(source_node_id, target_node_id);
+    index->setListHeadLast(source_node_id, feedback);
+    //index->insertNeighborInHash(source_node_id, target_node_id);
     return true;
 }
 
