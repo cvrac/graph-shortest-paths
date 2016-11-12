@@ -1,19 +1,21 @@
-#ifndef GRAPHSHORTESTPATHS_QUEUE_H
-#define GRAPHSHORTESTPATHS_QUEUE_H
+#ifndef GRAPHSHORTESTPATHS_Array_H
+#define GRAPHSHORTESTPATHS_Array_H
 
 #include <stdint.h>
 
-class Queue {
+class Array {
 
 public:
-    Queue();
-    ~Queue();
+    Array();
+    ~Array();
     void clear();
     bool empty();
     inline bool full();
-    uint32_t pop();
+    uint32_t pop_back();
+    uint32_t pop_front();
+    void enqueue(uint32_t &temp);
     void push(uint32_t &temp);
-    void pushBatch(const uint32_t *batch, const uint32_t &batch_size);
+    void enqueueBatch(const uint32_t *batch, const uint32_t &batch_size);
     inline int size();
     inline int maxsize();
     void print();

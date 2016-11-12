@@ -25,8 +25,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	clevelf_ = 1;
 	clevelb_ = 1;
 
-	frontier_front_.push(source);
-	frontier_back_.push(target);
+	frontier_front_.enqueue(source);
+	frontier_back_.enqueue(target);
 
 	explored_set_.insert(source);
 	explored_set_x.insert(target);
@@ -42,7 +42,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 
 			c1 = 0;
 			while (clevelf_ > 0) {
-				node_id = frontier_front_.pop();
+				node_id = frontier_front_.pop_front();
 				--clevelf_;
 				// c1++;
 
@@ -54,7 +54,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_.searchInsert(tempId)) {
 						//explored_set_.insert(tempId);
-						frontier_front_.push(tempId);
+						frontier_front_.enqueue(tempId);
 						++clevelf1_;
 						c1 += pr_graph_.getNeighborsCount(tempId, dirf_);
 					}
@@ -67,7 +67,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 
 			c2 = 0;
 			while (clevelb_ > 0) {
-				node_id = frontier_back_.pop();
+				node_id = frontier_back_.pop_front();
 				--clevelb_;
 				// c2++;
 				//expand node
@@ -78,7 +78,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_x.searchInsert(tempId)) {
 						//explored_set_x.insert(tempId);
-						frontier_back_.push(tempId);
+						frontier_back_.enqueue(tempId);
 						++clevelb1_;
 						c2 += pr_graph_.getNeighborsCount(tempId, dirb_);
 					}

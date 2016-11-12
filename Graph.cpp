@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include "Queue.hpp"
+#include "Array.hpp"
 
 using namespace std;
 

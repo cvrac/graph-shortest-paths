@@ -5,7 +5,7 @@
 
 #include "HashTable.hpp"
 #include "Graph.hpp"
-#include "Queue.hpp"
+#include "Array.hpp"
 
 class ShortestPath {
 
@@ -22,8 +22,8 @@ private:
 	unsigned int clevelf_, clevelf1_;
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;
-	Queue frontier_front_;
-	Queue frontier_back_;
+	Array frontier_front_;
+	Array frontier_back_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;
