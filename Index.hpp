@@ -9,7 +9,7 @@
 // Actual size: 1000
 
 #define INITIAL_INDEX_MAX_SIZE 1000
-#define HASH_SIZE 11
+#define HASH_SIZE 3
 
 class Index {
 

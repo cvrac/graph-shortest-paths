@@ -12,78 +12,28 @@
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize) {
-    // path = new ShortestPath(graph, hashSize);
-}
+OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize) { }
 
-OperationsControl::~OperationsControl() {
-    // delete path;
-}
+OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
-    clock_t start = clock();
     this->buildGraph();
-    //graph.print();
-    //return;
-    clock_t end = clock();
-    /*Queue q;
-
-    for (uint32_t n = 0 ; n < 20 ; n++) {
-
-        graph.getNeighbors(n, 'F', &q);
-        int elements = q.size();
-        for (int i = 0; i < elements ; i++) {
-            uint32_t tempId = q.pop();
-            cout << tempId << endl;
-        }
-        q.clear();
-        graph.getNeighbors(n, 'B', &q);
-        elements = q.size();
-        for (int i = 0; i < elements ; i++) {
-            uint32_t tempId = q.pop();
-            cout << tempId << endl;
-        }
-        q.clear();
-
-    }
-    return;*/
-    //cout << "took " << (static_cast<double>(end - start) /CLOCKS_PER_SEC) << " secs" << endl;
-    // sleep(1);
     this->runQueries();
-    //graph.getStatistics();
 }
 
 void OperationsControl::buildGraph() {
     string line;
     char cLine[100];
     while (getline(cin, line)) {
-        //char *cLine;
-        //try {
-        //    cLine = new char[line.length()+1];
-        //}
-        //catch (bad_alloc& ba) {
-        //    cout << "bad_alloc caught: " << ba.what() << endl;
-        //    return;
-        //}
         strcpy(cLine, line.c_str());
         char *n1;
         n1 = strtok(cLine, " \t\n\0");
-        if (n1 == NULL) {
-            //delete[] cLine;
-            continue;
-        }
-        if (n1[0] == 'S') {
-            //delete[] cLine;
-            break;
-        }
+        if (n1 == NULL) continue;
+        if (n1[0] == 'S') break;
         uint32_t sourceNode = atol(n1);
         char *n2 = strtok(NULL, " \t\n\0");
-        if (n2 == NULL) {
-            //delete[] cLine;
-            continue;
-        }
+        if (n2 == NULL) continue;
         uint32_t targetNode = atol(n2);
-        //delete[] cLine;
         graph.insertEdge(sourceNode, targetNode);
     }
 }
@@ -91,62 +41,65 @@ void OperationsControl::buildGraph() {
 void OperationsControl::runQueries() {
     string line;
     char cLine[100];
+    // uint32_t size = 60;
+    // uint32_t *batch = new uint32_t[size];
+    // uint32_t counter = 0;
     while (getline(cin, line)) {
-        //char *cLine;
-        //try {
-        //    cLine = new char[line.length()+1];
-        //}
-        //catch (bad_alloc& ba) {
-        //    cout << "bad_alloc caught: " << ba.what() << endl;
-        //    return;
-        //}
         strcpy(cLine, line.c_str());
         char *op;
         op = strtok(cLine, " \t\n\0");
-        if (op == NULL) {
-            //delete[] cLine;
-            continue;
-        }
+        if (op == NULL) continue;
         if (!strcmp(op, "A")) {
             char *node = strtok(NULL, " \t\n\0");
-            if (node == NULL) {
-                //delete[] cLine;
-                continue;
-            }
+            if (node == NULL) continue;
             uint32_t sourceNode = atol(node);
             node = strtok(NULL, " \t\n\0");
-            if (node == NULL) {
-                //delete[] cLine;
-                continue;
-            }
+            if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            //delete[] cLine;
             graph.insertEdge(sourceNode, targetNode);
-        }
-        else if (!strcmp(op, "Q")) {
+            // if (counter == size) {
+            //     uint32_t *old = batch;
+            //     batch = new uint32_t[size * 2];
+            //     memcpy(batch, old, sizeof(uint32_t) * size);
+            //     size *= 2;
+            //     delete[] old;
+            // }
+            // batch[counter] = 0;
+            // batch[counter + 1] = sourceNode;
+            // batch[counter + 2] = targetNode;
+            // counter += 3;
+            // graph.insertEdge(sourceNode, targetNode);
+        } else if (!strcmp(op, "Q")) {
             char *node = strtok(NULL, " \t\n\0");
-            if (node == NULL) {
-                //delete[] cLine;
-                continue;
-            }
+            if (node == NULL) continue;
             uint32_t sourceNode = atol(node);
             node = strtok(NULL, " \t\n\0");
-            if (node == NULL) {
-                //delete[] cLine;
-                continue;
-            }
+            if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            //delete[] cLine;
-            // clock_t start = clock();
             cout << path.shortestPath(sourceNode, targetNode) << endl;
-            // clock_t end = clock();
             path.reset();
-            // cout << "path find took ";
-            // cout.precision(5);
-            // cout << setprecision(15) << fixed << ((end - start) / static_cast<double>(CLOCKS_PER_SEC)) << " secs" << endl;
+            // if (counter == size) {
+            //     uint32_t *old = batch;
+            //     batch = new uint32_t[size * 2];
+            //     memcpy(batch, old, sizeof(uint32_t) * size);
+            //     size *= 2;
+            //     delete[] old;
+            // }
+            // batch[counter] = 1;
+            // batch[counter + 1] = sourceNode;
+            // batch[counter + 2] = targetNode;
+            // counter += 3;
         }
-        else {
-            //delete[] cLine;
-        }
+        // } else if (!strcmp(op, "F")) {
+            // for (uint32_t i = 0; i < counter; i += 3) {
+            //     if (batch[i] == 0) {
+            //         graph.insertEdge(batch[i + 1], batch[i + 2]);
+            //     } else {
+            //         cout << path.shortestPath(batch[i + 1], batch[i + 2]) << endl;
+            //         path.reset();
+            //     }
+            // }
+            // counter = 0;
     }
+    // delete[] batch;
 }

@@ -63,7 +63,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 		 	++distance_front_;
 		 	clevelf_ = clevelf1_;
 		 	clevelf1_ = 0;
-		} else if (clevelf_ + c1 > clevelb_ + c2){
+		} else {
 
 			c2 = 0;
 			while (clevelb_ > 0) {
