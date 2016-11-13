@@ -11,13 +11,13 @@
 #define INITIAL_INDEX_MAX_SIZE 1000
 #define HASH_SIZE 3
 
-class Index {
+class NodeIndex {
 
     struct ListHead;
 
 public:
-    Index();
-    ~Index();
+    NodeIndex();
+    ~NodeIndex();
     void insertNode(const uint32_t &node_id);
     ListHead *getListHead(const uint32_t &node_id) const {return &index_[node_id];}
     uint32_t getCurSize() const {return cur_size_;}

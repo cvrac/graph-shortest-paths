@@ -35,7 +35,7 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;
-    Index *index = &outer_index_;
+    NodeIndex *index = &outer_index_;
     Buffer *buffer = &outer_buffer_;
     bool skip_search = false;
 
@@ -51,7 +51,7 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, Index *index, Buffer *buffer, const bool &skip_search) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const bool &skip_search) {
     long first_pos = index->getListHead(source_node_id)->pos;
     if (first_pos == -1) {
         first_pos = buffer->allocNewNode();
@@ -72,7 +72,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     return true;
 }
 
-void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, Index **index, Buffer **buffer) {
+void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer) {
     if (**node1 == source_node_id) {
         *node1 = &target_node_id;
         *node2 = &source_node_id;
@@ -88,7 +88,7 @@ void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &targ
 }
 
 uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction) {
-    Index *index;
+    NodeIndex *index;
     Buffer *buffer;
     if (direction == 'F') {
         index = &outer_index_;
@@ -102,7 +102,7 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
 
 
 NodeArray &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
-    Index *index;
+    NodeIndex *index;
     Buffer *buffer;
     if (direction == 'F') {
         index = &outer_index_;
@@ -117,7 +117,7 @@ NodeArray &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
 }
 
 /* Caller should free after use */
-NodeArray &Graph::getNeighbors(const uint32_t &node_id, const Index &index, const Buffer &buffer) {
+NodeArray &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {
     uint32_t total_neighbors = index.getListHeadNeighbors(node_id);
 
     if (node_array_.size < total_neighbors) {
@@ -155,7 +155,7 @@ uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
     outer_index_.getAverageNeighbors() << "\nAverage inner edges: " <<
     inner_index_.getAverageNeighbors() << "\nBuffer reallocs: " <<
-    outer_buffer_.getTotalReallocs() + inner_buffer_.getTotalReallocs() << "\nIndex reallocs: " <<
+    outer_buffer_.getTotalReallocs() + inner_buffer_.getTotalReallocs() << "\nNodeIndex reallocs: " <<
     outer_index_.getTotalReallocs() + outer_index_.getTotalReallocs() << endl;
 }
 
@@ -166,7 +166,7 @@ void Graph::printAll() {
     this->printAll(inner_index_, inner_buffer_);
 }
 
-void Graph::printAll(const Index &index, const Buffer &buffer)  {
+void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
     buffer.print();
     index.print();
     for (uint32_t node_id = 0 ; node_id < index.getCurSize() ; node_id++) {
@@ -200,7 +200,7 @@ void Graph::print() {
     this->print(inner_index_, inner_buffer_);
 }
 
-void Graph::print(const Index &index, const Buffer &buffer) {
+void Graph::print(const NodeIndex &index, const Buffer &buffer) {
     for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
         NodeArray &neighbors = this->getNeighbors(node, index, buffer);
         // cout << "Node " << node << " has " << (neighbors == NULL ? 0 : neighbors.count) << " neighbors:\n";
