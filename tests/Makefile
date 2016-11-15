@@ -1,5 +1,5 @@
-OBJS =  Index.o ListNode.o Buffer.o Graph.o Check.o ListNodeCheck.o IndexCheck.o BufferCheck.o HashTable.o ListNodeCheck.o HashTableCheck.o Queue.o QueueCheck.o
-HEADER = ../Index.hpp ../ListNodePos.hpp ../ListNode.hpp ../HashTable.hpp ../Buffer.hpp ../Graph.hpp ../HashTable.hpp ../Queue.hpp
+OBJS =   ArrayTest.o
+HEADER =  ../Garray.hpp
 
 all: check
 
@@ -12,8 +12,8 @@ LINK_FLAGS  = -L $(GTEST_LIBDIR) -l gtest_main -lpthread
 check: $(OBJS) $(HEADER)
 	$(CC) $(OBJS) $(LINK_FLAGS) -o check
 
-Index.o: ../Index.cpp
-	$(CC) $(COMP_FLAGS) ../Index.cpp
+NodeIndex.o: ../NodeIndex.cpp
+	$(CC) $(COMP_FLAGS) ../NodeIndex.cpp
 
 ListNode.o: ../ListNode.cpp
 	$(CC) $(COMP_FLAGS) ../ListNode.cpp
@@ -27,8 +27,8 @@ Graph.o: ../Graph.cpp
 ListNodeCheck.o: ListNodeCheck.cpp
 	$(CC) $(COMP_FLAGS) ListNodeCheck.cpp
 
-IndexCheck.o: IndexCheck.cpp
-	$(CC) $(COMP_FLAGS) IndexCheck.cpp
+NodeIndexCheck.o: NodeIndexCheck.cpp
+	$(CC) $(COMP_FLAGS) NodeIndexCheck.cpp
 
 BufferCheck.o: BufferCheck.cpp
 	$(CC) $(COMP_FLAGS) BufferCheck.cpp
@@ -48,6 +48,8 @@ QueueCheck.o: QueueCheck.cpp
 Check.o: Check.cpp
 	$(CC) $(COMP_FLAGS) Check.cpp
 
+ArrayTest.o: ArrayTest.cpp
+	$(CC) $(COMP_FLAGS) ArrayTest.cpp
+
 clean:
 	rm -f check $(OBJS)
-

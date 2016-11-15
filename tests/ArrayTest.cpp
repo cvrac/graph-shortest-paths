@@ -1,19 +1,22 @@
-#include "../Index.hpp"
+#include "../Garray.hpp"
 #include "gtest/gtest.h"
+
+using namespace std;
 
 namespace {
 
 // The fixture for testing class Foo.
-    class IndexTest : public ::testing::Test {
+    class ArrayTest : public ::testing::Test {
     protected:
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        IndexTest() {
+        ArrayTest() {
             // You can do set-up work for each test here.
+            array = new Array<int>('s', 's', 2, 4);
         }
 
-        virtual ~IndexTest() {
+        virtual ~ArrayTest() {
             // You can do clean-up work that doesn't throw exceptions here.
         }
 
@@ -30,22 +33,25 @@ namespace {
             // before the destructor).
         }
 
-        Index index;
+        Array<int> *array;
     };
 
 // Tests that the Foo::Bar() method does Abc.
-    TEST_F(IndexTest, IndexWorks) {
-    ASSERT_EQ(index.getMaxSize(), 3);
+    TEST_F(ArrayTest, ArrayWorks) {
+        EXPECT_EQ(array->maxsize(), 2);
+        EXPECT_FALSE(array->size() == 2);
 
-    EXPECT_EQ(index.getCurSize(), 0);
-    index.insertNode(2);
-    EXPECT_EQ(index.getCurSize(), 3);
-
-    index.insertNode(4);
-    EXPECT_EQ(index.getTotalReallocs(), 1);
-    EXPECT_EQ(index.getCurSize(), 5);
-    EXPECT_EQ(index.getMaxSize(), 6);
+        int i = 5;
+        array->push(i);
+        i = 10;
+        array->push(i);
+        EXPECT_FALSE(array->size() == array->maxsize());
+        i = 1;
+        array->push(i);
+        EXPECT_EQ(array->maxsize(), 4);
+        // EXPECT_TRUE(array->maxsize() == 4);
+        EXPECT_TRUE(array->size() < array->maxsize());
 
 }
 
-}  // 
+}  //
