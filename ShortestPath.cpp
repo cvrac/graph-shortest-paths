@@ -3,13 +3,15 @@
 #include <iostream>
 #include <stdint.h>
 
+#define INITIAL_FRONTIER_ARRAY_SIZE 131
+
 using namespace std;
 
 ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : hash_size(hashSize),
 	explored_set_(hash_size), explored_set_x(hash_size),
 	clevelf_(0), clevelf1_(0),	clevelb_(0), clevelb1_(0), pr_graph_(gr),
-	distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B') {
-}
+	distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
+    frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE), frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
 
 ShortestPath::~ShortestPath() { }
 
@@ -47,9 +49,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				// c1++;
 
 				//expand node
-				NodeArray &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
-				for (int i = 0; i < neighbors.count; i++) {
-					tempId = neighbors.array[i];
+				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
+				for (int i = 0; i < neighbors.getElements(); i++) {
+					tempId = neighbors[i];
 					if (explored_set_x.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_.searchInsert(tempId)) {
@@ -71,9 +73,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				--clevelb_;
 				// c2++;
 				//expand node
-				NodeArray &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
-				for (int i = 0; i < neighbors.count; i++) {
-					tempId = neighbors.array[i];
+                Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
+				for (int i = 0; i < neighbors.getElements(); i++) {
+					tempId = neighbors[i];
 					if (explored_set_.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_x.searchInsert(tempId)) {

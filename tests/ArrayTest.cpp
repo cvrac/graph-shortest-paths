@@ -11,9 +11,8 @@ namespace {
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        ArrayTest() {
+        ArrayTest() : queue(2), stack(2) {
             // You can do set-up work for each test here.
-           // queue = new queue<int>('s', 's', 2, 4);
         }
 
         virtual ~ArrayTest() {

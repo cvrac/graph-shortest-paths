@@ -5,8 +5,6 @@
 
 #include <iostream>
 
-#include "Array.hpp"
-
 using namespace std;
 
 Graph::~Graph() {
@@ -68,7 +66,6 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     long feedback = buffer->insertNeighbor(pos, target_node_id, true);
     index->setListHeadNeighbors(source_node_id, index->getListHeadNeighbors(source_node_id) + 1);
     index->setListHeadLast(source_node_id, feedback);
-    //index->insertNeighborInHash(source_node_id, target_node_id);
     return true;
 }
 
@@ -101,7 +98,7 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
 }
 
 
-NodeArray &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
+Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
     NodeIndex *index;
     Buffer *buffer;
     if (direction == 'F') {
@@ -117,30 +114,16 @@ NodeArray &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
 }
 
 /* Caller should free after use */
-NodeArray &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {
+Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {
+    neighbors_array_.clear();
     uint32_t total_neighbors = index.getListHeadNeighbors(node_id);
-
-    if (node_array_.size < total_neighbors) {
-        node_array_.size = (node_array_.size == 0) ? 1 : node_array_.size;
-        while (node_array_.size <= total_neighbors) {
-            node_array_.size *= 2;
-        }
-        uint32_t *old_array = node_array_.array;
-        node_array_.array = new uint32_t[node_array_.size];
-        delete[] old_array;
-    }
-    node_array_.count = total_neighbors;
-
-    uint32_t cur_neighbor = 0;
+    neighbors_array_.increaseSize(total_neighbors);
     long list_node_pos = index.getListHeadPos(node_id);
     if (list_node_pos != -1) {
         long pos = list_node_pos;
         do {
             ListNode *list_node = buffer.getListNode(pos);
-            uint32_t neighbors_to_add = list_node->getNeighborNumber();
-            memcpy(&node_array_.array[cur_neighbor], list_node->getNeighborArray(), neighbors_to_add * sizeof(uint32_t));
-            cur_neighbor += neighbors_to_add;
-
+            neighbors_array_.pushBatch(list_node->getNeighborArray(), list_node->getNeighborNumber());
             list_node_pos = list_node->getNextPos();
             if (list_node_pos == -1) {
                 break;
@@ -148,7 +131,7 @@ NodeArray &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, 
             pos = list_node_pos;
         } while (1);
     }
-    return node_array_;
+    return neighbors_array_;
 }
 
 uint32_t Graph::getStatistics() {
@@ -187,12 +170,6 @@ void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
     }
 }
 
-NodeArray::~NodeArray() {
-    if (array != NULL) {
-        delete[] array;
-    }
-}
-
 void Graph::print() {
     cout << "*** OUTER ***\n";
     this->print(outer_index_, outer_buffer_);
@@ -202,19 +179,11 @@ void Graph::print() {
 
 void Graph::print(const NodeIndex &index, const Buffer &buffer) {
     for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
-        NodeArray &neighbors = this->getNeighbors(node, index, buffer);
+        Garray<uint32_t > &neighbors = this->getNeighbors(node, index, buffer);
         // cout << "Node " << node << " has " << (neighbors == NULL ? 0 : neighbors.count) << " neighbors:\n";
         neighbors.print();
         cout << "\n";
         index.printNeighborsHash(node);
-    }
-    cout << endl;
-}
-
-void NodeArray::print() {
-    //cout << "--- NodeArray ---\n" << "size: " << size << endl;
-    for (uint32_t n = 0 ; n < size ; n++) {
-        cout << array[n] << " ";
     }
     cout << endl;
 }

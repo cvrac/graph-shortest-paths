@@ -4,27 +4,17 @@
 #include "NodeIndex.hpp"
 #include "Buffer.hpp"
 #include "HashTable.hpp"
-#include "Array.hpp"
+#include "Garray.hpp"
 
-struct NodeArray {
-public:
-    NodeArray() : array(NULL), size(0), count(0) {}
-    ~NodeArray();
-    void print();
-
-    uint32_t *array;
-    uint32_t size;
-    uint32_t count;
-};
+#define INITIAL_NEIGHBORS_ARRAY_SIZE 131
 
 class Graph {
 
 public:
-    Graph() {}
+    Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
     ~Graph();
     void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id);
-    void getNeighbors(const uint32_t &node_id, const char &direction, Array *neighbors);
-    NodeArray &getNeighbors(const uint32_t &node_id, const char &direction);
+    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
     uint32_t getNodes() {return inner_index_.getCurSize();}
     uint32_t getStatistics();
@@ -36,12 +26,11 @@ private:
     void insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id);
     void insertNode(const uint32_t node_id);
     void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer);
-    void getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Array *neighbors);
-    NodeArray &getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer);
+    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer);
     void printAll(const NodeIndex &index, const Buffer &buffer);
     void print(const NodeIndex &index, const Buffer &buffer);
 
-    NodeArray node_array_;
+    Garray<uint32_t > neighbors_array_;
     NodeIndex outer_index_;
     Buffer outer_buffer_;
     NodeIndex inner_index_;
