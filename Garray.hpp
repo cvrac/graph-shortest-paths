@@ -74,12 +74,15 @@ void Garray<T>::push(const T &element, const char &mode) {
         delete[] old_array;
         if (mode == 'Q') {
             memcpy(array_ + size_, array_, tail_ * sizeof(T));
+            tail_ = size_ + tail_;
         }
-        tail_ = size_ + tail_;
         size_ *= 2 ;
     }
     array_[tail_] = element;
-    tail_ = (tail_ + 1) % size_;
+    if (mode == 'Q')
+        tail_ = (tail_ + 1) % size_;
+    else
+        ++tail_;
     elements_++;
 }
 
@@ -100,6 +103,10 @@ T Garray<T>::popBack() {
     if (! this->isEmpty()) {
         --elements_;
         return array_[--tail_];
+        // int temp = tail_;
+        // --tail_;
+        // --elements_;
+        // return array_[temp];
     }
 }
 
@@ -128,6 +135,10 @@ inline void Garray<T>::pushBatch(T *batch, const uint32_t &batchSize) {
 
 template <class T>
 T &Garray<T>::operator[](uint32_t i) {
+    if (i >= this->size_) {
+        uint32_t newsize = 2 * size_;
+        this->increaseSize(newsize);
+    }
     assert(i < this->size_);
     return this->array_[i];
 }

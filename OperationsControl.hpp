@@ -3,6 +3,7 @@
 
 #include "Graph.hpp"
 #include "ShortestPath.hpp"
+#include "SCC.hpp"
 
 class OperationsControl {
 
@@ -17,6 +18,7 @@ private:
 
     Graph graph;
     ShortestPath path;
+    SCC stronglyConn;
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

@@ -11,11 +11,15 @@
 #define INITIAL_INDEX_MAX_SIZE 1000
 #define HASH_SIZE 3
 
+class SCC;
+
 class NodeIndex {
 
     struct ListHead;
 
 public:
+    friend class SCC;
+
     NodeIndex();
     ~NodeIndex();
     void insertNode(const uint32_t &node_id);
@@ -39,6 +43,8 @@ public:
 
 private:
     struct ListHead {
+        friend class SCC;
+
         ListHead() : pos(-1), last_pos(-1), total_neighbors(0), neighbors_hash_(NULL) {
             //neighbors_hash_ = new HashTable(HASH_SIZE);
         }

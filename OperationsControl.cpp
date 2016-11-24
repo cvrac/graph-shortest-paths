@@ -12,13 +12,16 @@
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize) { }
+OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize), stronglyConn(hashSize, graph) { }
 
 OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
-    this->runQueries();
+    // this->runQueries();
+    this->stronglyConn.init();
+    this->stronglyConn.estimateStronglyConnectedComponents();
+    // this->stronglyConn.print();
 }
 
 void OperationsControl::buildGraph() {

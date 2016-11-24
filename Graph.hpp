@@ -11,6 +11,7 @@
 class Graph {
 
 public:
+    friend class SCC;
     Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
     ~Graph();
     void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id);

@@ -1,5 +1,5 @@
-#ifndef GRAPHSHORTESTPATHS_Array_H
-#define GRAPHSHORTESTPATHS_Array_H
+#ifndef GRAPHSHORTESTPATHS_ARRAY_H
+#define GRAPHSHORTESTPATHS_ARRAY_H
 
 #include <stdint.h>
 
