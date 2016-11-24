@@ -1,5 +1,5 @@
 OBJS =  NodeIndex.o ListNode.o HashTable.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o Array.o
-HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Array.hpp
+HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Array.hpp Garray.hpp
 
 all: gsp
 

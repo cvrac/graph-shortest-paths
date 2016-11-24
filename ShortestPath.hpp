@@ -6,6 +6,7 @@
 #include "HashTable.hpp"
 #include "Graph.hpp"
 #include "Array.hpp"
+#include "Garray.hpp"
 
 class ShortestPath {
 
@@ -22,8 +23,8 @@ private:
 	unsigned int clevelf_, clevelf1_;
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;
-	Array frontier_front_;
-	Array frontier_back_;
+	Garray<uint32_t > frontier_front_;
+	Garray<uint32_t > frontier_back_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;

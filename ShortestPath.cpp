@@ -35,14 +35,14 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 	while (true) {
 
 		//no solution, return failure
-		if (frontier_front_.empty() || frontier_back_.empty())
+		if (frontier_front_.isEmpty() || frontier_back_.isEmpty())
 			return -1;
 
 		if (clevelf_ + c1 <= clevelb_ + c2) {
 
 			c1 = 0;
 			while (clevelf_ > 0) {
-				node_id = frontier_front_.pop_front();
+				node_id = frontier_front_.popFront();
 				--clevelf_;
 				// c1++;
 
@@ -67,7 +67,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 
 			c2 = 0;
 			while (clevelb_ > 0) {
-				node_id = frontier_back_.pop_front();
+				node_id = frontier_back_.popFront();
 				--clevelb_;
 				// c2++;
 				//expand node

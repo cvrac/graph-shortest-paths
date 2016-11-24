@@ -13,7 +13,7 @@ namespace {
 
         ArrayTest() {
             // You can do set-up work for each test here.
-            array = new Array<int>('s', 's', 2, 4);
+           // queue = new queue<int>('s', 's', 2, 4);
         }
 
         virtual ~ArrayTest() {
@@ -33,25 +33,279 @@ namespace {
             // before the destructor).
         }
 
-        Array<int> *array;
+        Garray<int> queue;
+        Garray<int> stack;
     };
 
 // Tests that the Foo::Bar() method does Abc.
-    TEST_F(ArrayTest, ArrayWorks) {
-        EXPECT_EQ(array->maxsize(), 2);
-        EXPECT_FALSE(array->size() == 2);
+    TEST_F(ArrayTest, QueueWorks) {
+    ASSERT_EQ(queue.getSize(), 2);
+    EXPECT_TRUE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getHead(), 0);
+    EXPECT_EQ(queue.getTail(), 0);
+    EXPECT_EQ(queue.getElements(), 0);
 
-        int i = 5;
-        array->push(i);
-        i = 10;
-        array->push(i);
-        EXPECT_FALSE(array->size() == array->maxsize());
-        i = 1;
-        array->push(i);
-        EXPECT_EQ(array->maxsize(), 4);
-        // EXPECT_TRUE(array->maxsize() == 4);
-        EXPECT_TRUE(array->size() < array->maxsize());
+
+    queue.enqueue(10);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 2);
+    EXPECT_EQ(queue.getHead(), 0);
+    EXPECT_EQ(queue.getTail(), 1);
+    EXPECT_EQ(queue.getElements(), 1);
+
+    queue.enqueue(20);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_TRUE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 2);
+    EXPECT_EQ(queue.getHead(), 0);
+    EXPECT_EQ(queue.getTail(), 0);
+    EXPECT_EQ(queue.getElements(), 2);
+
+
+    queue.enqueue(30);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    ASSERT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 0);
+    EXPECT_EQ(queue.getTail(), 3);
+    EXPECT_EQ(queue.getElements(), 3);
+
+
+    int n = queue.popFront();
+    EXPECT_EQ(n, 10);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 1);
+    EXPECT_EQ(queue.getTail(), 3);
+    EXPECT_EQ(queue.getElements(), 2);
+
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 20);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 2);
+    EXPECT_EQ(queue.getTail(), 3);
+    EXPECT_EQ(queue.getElements(), 1);
+
+    queue.enqueue(40);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 2);
+    EXPECT_EQ(queue.getTail(), 0);
+    EXPECT_EQ(queue.getElements(), 2);
+
+    queue.enqueue(50);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 2);
+    EXPECT_EQ(queue.getTail(), 1);
+    EXPECT_EQ(queue.getElements(), 3);
+
+    queue.enqueue(60);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_TRUE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 4);
+    EXPECT_EQ(queue.getHead(), 2);
+    EXPECT_EQ(queue.getTail(), 2);
+    EXPECT_EQ(queue.getElements(), 4);
+
+
+    queue.enqueue(70);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 2);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 5);
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 30);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 3);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 4);
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 40);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 4);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 3);
+
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 50);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 5);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 2);
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 60);
+    EXPECT_FALSE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 6);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 1);
+
+    n = queue.popFront();
+    EXPECT_EQ(n, 70);
+    EXPECT_TRUE(queue.isEmpty());
+    EXPECT_FALSE(queue.isFull());
+    EXPECT_EQ(queue.getSize(), 8);
+    EXPECT_EQ(queue.getHead(), 7);
+    EXPECT_EQ(queue.getTail(), 7);
+    EXPECT_EQ(queue.getElements(), 0);
 
 }
+
+    TEST_F(ArrayTest, StackWorks) {
+    ASSERT_EQ(stack.getSize(), 2);
+    EXPECT_TRUE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getElements(), 0);
+    
+    
+    stack.enstack(10);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 2);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 1);
+    EXPECT_EQ(stack.getElements(), 1);
+    
+    stack.enstack(20);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_TRUE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 2);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getElements(), 2);
+    
+    
+    stack.enstack(30);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    ASSERT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 3);
+    EXPECT_EQ(stack.getElements(), 3);
+    
+    
+    int n = stack.popBack();
+    EXPECT_EQ(n, 30);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 2);
+    EXPECT_EQ(stack.getElements(), 2);
+    
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 20);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 1);
+    EXPECT_EQ(stack.getElements(), 1);
+    
+    stack.enstack(40);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 2);
+    EXPECT_EQ(stack.getElements(), 2);
+    
+    stack.enstack(50);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 3);
+    EXPECT_EQ(stack.getElements(), 3);
+    
+    stack.enstack(60);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_TRUE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 4);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getElements(), 4);
+    
+    
+    stack.enstack(70);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 5);
+    EXPECT_EQ(stack.getElements(), 5);
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 70);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 4);
+    EXPECT_EQ(stack.getElements(), 4);
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 60);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 3);
+    EXPECT_EQ(stack.getElements(), 3);
+    
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 50);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 2);
+    EXPECT_EQ(stack.getElements(), 2);
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 40);
+    EXPECT_FALSE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 1);
+    EXPECT_EQ(stack.getElements(), 1);
+    
+    n = stack.popBack();
+    EXPECT_EQ(n, 10);
+    EXPECT_TRUE(stack.isEmpty());
+    EXPECT_FALSE(stack.isFull());
+    EXPECT_EQ(stack.getSize(), 8);
+    EXPECT_EQ(stack.getHead(), 0);
+    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getElements(), 0);
+    
+    }
 
 }  //
