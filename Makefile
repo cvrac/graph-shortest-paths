@@ -1,4 +1,4 @@
-OBJS =  NodeIndex.o ListNode.o HashTable.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o Array.o
+OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o Array.o
 HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Array.hpp Garray.hpp
 
 all: gsp
@@ -18,8 +18,8 @@ NodeIndex.o: NodeIndex.cpp
 ListNode.o: ListNode.cpp
 	$(CC) $(FLAGS) ListNode.cpp
 
-HashTable.o: HashTable.cpp
-	$(CC) $(FLAGS) HashTable.cpp
+#HashTable.o: HashTable.cpp
+#	$(CC) $(FLAGS) HashTable.cpp
 
 ShortestPath.o: ShortestPath.cpp
 	$(CC) $(FLAGS) ShortestPath.cpp

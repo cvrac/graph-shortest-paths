@@ -4,7 +4,7 @@
 #include <cstring>
 #include <iostream>
 
-#define INITIAL_ARRAY_SIZE 1024
+#define INITIAL_ARRAY_SIZE 131
 
 template <class T>
 class Garray {
@@ -22,6 +22,7 @@ public:
     int getHead() const {return head_;}
     int getTail() const {return tail_;}
     int getElements() const {return elements_;}
+    T &operator[](int i);
     void print() const;
 
 private:
@@ -97,6 +98,12 @@ void Garray<T>::print() const {
         }
     }
     std::cout << std::endl;
+}
+
+template <class T>
+T &Garray<T>::operator[](int i) {
+    assert(i < this->size_);
+    return this->array_[i];
 }
 
 #endif //GRAPHSHORTESTPATHS_GARRAY_H

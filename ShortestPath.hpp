@@ -18,8 +18,8 @@ public:
 
 private:
 	int hash_size;
-	HashTable explored_set_;
-	HashTable explored_set_x;
+	HashTable<uint32_t> explored_set_;
+	HashTable<uint32_t> explored_set_x;
 	unsigned int clevelf_, clevelf1_;
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;

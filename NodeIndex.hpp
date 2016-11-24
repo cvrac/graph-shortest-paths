@@ -46,7 +46,7 @@ private:
         long pos;
         long last_pos;
         uint32_t total_neighbors;
-        HashTable *neighbors_hash_;
+        HashTable<uint32_t> *neighbors_hash_;
     };
 
     ListHead *index_;

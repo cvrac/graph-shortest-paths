@@ -52,7 +52,7 @@ void NodeIndex::insertNode(const uint32_t &node_id) {
 
 void NodeIndex::insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id) {
     if (index_[node_id].neighbors_hash_ == NULL) {
-        index_[node_id].neighbors_hash_ = new HashTable(HASH_SIZE);
+        index_[node_id].neighbors_hash_ = new HashTable<uint32_t>(HASH_SIZE);
     }
     index_[node_id].neighbors_hash_->insert(neighbor_id);
 }
@@ -66,7 +66,7 @@ bool NodeIndex::searchNeighborInHash(const uint32_t &node_id, const uint32_t &ne
 
 bool NodeIndex::searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id) {
     if (index_[node_id].neighbors_hash_ == NULL) {
-        index_[node_id].neighbors_hash_ = new HashTable(HASH_SIZE);
+        index_[node_id].neighbors_hash_ = new HashTable<uint32_t>(HASH_SIZE);
         index_[node_id].neighbors_hash_->insert(neighbor_id);
         return true;
     }

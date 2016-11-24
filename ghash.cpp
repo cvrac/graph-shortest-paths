@@ -6,7 +6,7 @@
 
 using namespace std;
 
-HashTable::Bucket::Bucket() : entries(new uint32_t[16]), count(0), size(16) {
+HashTable::Bucket::Bucket() : entries(new T[16]), count(0), size(16) {
 
 	assert(entries != NULL);
 
@@ -50,20 +50,21 @@ uint32_t HashTable::size() {
 	return elements_;
 }
 
-void HashTable::insert(const uint32_t &node_id) {
+void HashTable::insert(const T &node_id) {
 
 	int pos = this->hash(node_id);
 
-	if (table_[pos].count == table_[pos].size) {
-		uint32_t *old = table_[pos].entries;
-		table_[pos].entries = new uint32_t[table_[pos].size * 2];
-		memcpy(table_[pos].entries, old, table_[pos].size * sizeof(uint32_t));
-		delete[] old;
-		table_[pos].count = table_[pos].size;
-		table_[pos].size *= 2;
-	}
+	// if (table_[pos].count == table_[pos].size) {
+	// 	uint32_t *old = table_[pos].entries;
+	// 	table_[pos].entries = new uint32_t[table_[pos].size * 2];
+	// 	memcpy(table_[pos].entries, old, table_[pos].size * sizeof(uint32_t));
+	// 	delete[] old;
+	// 	table_[pos].count = table_[pos].size;
+	// 	table_[pos].size *= 2;
+	// }
 
-	table_[pos].entries[table_[pos].count] = node_id;
+	// table_[pos].entries[table_[pos].count] = node_id;
+	table_[pos].entries->enstack(node_id);
 	table_[pos].count++;
 	elements_++;
 
@@ -83,7 +84,7 @@ bool HashTable::search(const uint32_t& entry_id) {
 
 }
 
-bool HashTable::searchInsert(const uint32_t &entry_id) {
+bool HashTable::searchInsert(const T &entry_id) {
     int pos = this->hash(entry_id);
     Bucket *temp = &table_[pos];
 
@@ -91,16 +92,17 @@ bool HashTable::searchInsert(const uint32_t &entry_id) {
         if (entry_id == temp->entries[i])
             return false;
     }
-    if (temp->count == temp->size) {
-        uint32_t *old = temp->entries;
-        temp->entries = new uint32_t[temp->size * 2];
-        memcpy(temp->entries, old, temp->size * sizeof(uint32_t));
-        delete[] old;
-        temp->count = temp->size;
-        temp->size *= 2;
-    }
-
-    temp->entries[temp->count] = entry_id;
+    // if (temp->count == temp->size) {
+    //     uint32_t *old = temp->entries;
+    //     temp->entries = new uint32_t[temp->size * 2];
+    //     memcpy(temp->entries, old, temp->size * sizeof(uint32_t));
+    //     delete[] old;
+    //     temp->count = temp->size;
+    //     temp->size *= 2;
+    // }
+	//
+    // temp->entries[temp->count] = entry_id;
+	temp->enstack(entry_id);
     temp->count++;
     elements_++;
 
