@@ -10,6 +10,7 @@ template <class T>
 class Garray {
 public:
     Garray();
+    Garray(const uint32_t &size);
     ~Garray();
     void enqueue(const T &element) {this->push(element, 'Q');}
     void enstack(const T &element) {this->push(element, 'S');}
@@ -38,6 +39,11 @@ private:
 template <class T>
 Garray<T>::Garray() : array_(new T[INITIAL_ARRAY_SIZE]), size_(INITIAL_ARRAY_SIZE), head_(0), tail_(0), elements_(0) {
 }
+
+template <class T>
+Garray<T>::Garray(const uint32_t &size) : array_(new T[size]), size_(INITIAL_ARRAY_SIZE), head_(0), tail_(0), elements_(0) {
+}
+
 
 template <class T>
 Garray<T>::~Garray() {

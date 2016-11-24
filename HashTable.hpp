@@ -7,8 +7,7 @@
 #include <string>
 #include <stdint.h>
 #include <assert.h>
-
-#include "Garray.hpp"
+#include <string.h>
 
 template <class T>
 class HashTable {
