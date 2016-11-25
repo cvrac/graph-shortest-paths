@@ -21,7 +21,7 @@ void OperationsControl::run(const uint32_t &hashSize) {
     // this->runQueries();
     this->stronglyConn.init();
     this->stronglyConn.estimateStronglyConnectedComponents();
-    // this->stronglyConn.print();
+    this->stronglyConn.print();
 }
 
 void OperationsControl::buildGraph() {
