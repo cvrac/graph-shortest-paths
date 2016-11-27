@@ -11,10 +11,11 @@
 class Graph {
 
 public:
+    friend class CC;
     friend class SCC;
     Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
     ~Graph();
-    void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id);
+    void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional);
     Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
     uint32_t getNodes() {return inner_index_.getCurSize();}
@@ -24,7 +25,7 @@ public:
 
 private:
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const bool &skip_search);
-    void insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id);
+    uint32_t insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional);
     void insertNode(const uint32_t node_id);
     void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer);
     Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer);
@@ -36,6 +37,8 @@ private:
     Buffer outer_buffer_;
     NodeIndex inner_index_;
     Buffer inner_buffer_;
+    NodeIndex bidirectional_index_;
+    Buffer bidirectional_buffer_;
 
 };
 

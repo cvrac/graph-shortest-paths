@@ -10,6 +10,8 @@
 #include <time.h>
 #include <iomanip>
 
+bool bidirectional_insert = false; // temp
+
 using namespace std;
 
 OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize), stronglyConn(hashSize, graph) { }
@@ -18,7 +20,8 @@ OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
-    // this->runQueries();
+    //this->runQueries();
+    //graph.print();
     this->stronglyConn.init();
     this->stronglyConn.estimateStronglyConnectedComponents();
     this->stronglyConn.print();
@@ -37,7 +40,7 @@ void OperationsControl::buildGraph() {
         char *n2 = strtok(NULL, " \t\n\0");
         if (n2 == NULL) continue;
         uint32_t targetNode = atol(n2);
-        graph.insertEdge(sourceNode, targetNode);
+        graph.insertEdge(sourceNode, targetNode, bidirectional_insert);
     }
 }
 
@@ -59,7 +62,7 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            graph.insertEdge(sourceNode, targetNode);
+            graph.insertEdge(sourceNode, targetNode, bidirectional_insert);
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];

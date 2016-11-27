@@ -12,12 +12,12 @@ Graph::~Graph() {
     inner_index_.deleteNeigborsHash();
 }
 
-void Graph::insertNode(const uint32_t node_id) {
+inline void Graph::insertNode(const uint32_t node_id) {
     outer_index_.insertNode(node_id);
     inner_index_.insertNode(node_id);
 }
 
-void Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id) {
+uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
     uint32_t min = source_node_id;
     uint32_t max = target_node_id;
     if (target_node_id < min) {
@@ -26,10 +26,14 @@ void Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_n
     }
     this->insertNode(max);
     this->insertNode(min);
+    if (bidirectional) {
+       bidirectional_index_.insertNode(min);
+    }
+    return min;
 }
 
-void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id) {
-    this->insertNodes(source_node_id, target_node_id);
+void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
+    const uint32_t min = this->insertNodes(source_node_id, target_node_id, bidirectional);
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;
@@ -44,6 +48,13 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
         this->insertEdge(*node1, *node2, index, buffer, skip_search);
+    }
+    if (bidirectional) {
+        uint32_t max = target_node_id;
+        if (min == target_node_id) {
+            max = source_node_id;
+        }
+        this->insertEdge(min, max, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
     }
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
@@ -69,7 +80,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     return true;
 }
 
-void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer) {
+inline void Graph::toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer) {
     if (**node1 == source_node_id) {
         *node1 = &target_node_id;
         *node2 = &source_node_id;
@@ -175,6 +186,9 @@ void Graph::print() {
     this->print(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
     this->print(inner_index_, inner_buffer_);
+    cout << "\n*** BIDIRECTIONAL ***\n";
+    this->print(bidirectional_index_, bidirectional_buffer_);
+
 }
 
 void Graph::print(const NodeIndex &index, const Buffer &buffer) {
@@ -183,7 +197,7 @@ void Graph::print(const NodeIndex &index, const Buffer &buffer) {
         // cout << "Node " << node << " has " << (neighbors == NULL ? 0 : neighbors.count) << " neighbors:\n";
         neighbors.print();
         cout << "\n";
-        index.printNeighborsHash(node);
+        //index.printNeighborsHash(node);
     }
     cout << endl;
 }
