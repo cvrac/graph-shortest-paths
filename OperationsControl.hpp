@@ -4,6 +4,7 @@
 #include "Graph.hpp"
 #include "ShortestPath.hpp"
 #include "SCC.hpp"
+#include "CC.hpp"
 
 class OperationsControl {
 
@@ -16,9 +17,10 @@ private:
     void buildGraph();
     void runQueries();
 
-    Graph graph;
-    ShortestPath path;
-    SCC stronglyConn;
+    Graph graph_;
+    ShortestPath path_;
+    SCC strongly_conn_;
+    CC connected_components_;
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

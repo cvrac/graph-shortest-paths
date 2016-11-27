@@ -14,17 +14,19 @@ bool bidirectional_insert = false; // temp
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) : path(graph, hashSize), stronglyConn(hashSize, graph) { }
+OperationsControl::OperationsControl(uint32_t &hashSize) : path_(graph_, hashSize), strongly_conn_(hashSize, graph_), connected_components_(graph_, hashSize) { }
 
 OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
-    //this->runQueries();
-    //graph.print();
-    this->stronglyConn.init();
-    this->stronglyConn.estimateStronglyConnectedComponents();
-    this->stronglyConn.print();
+    //connected_components_.estimateConnectedComponents();
+    this->runQueries();
+    //connected_components_.print();
+    //graph_.print();
+    this->strongly_conn_.init();
+    this->strongly_conn_.estimateStronglyConnectedComponents();
+    this->strongly_conn_.print();
 }
 
 void OperationsControl::buildGraph() {
@@ -40,7 +42,7 @@ void OperationsControl::buildGraph() {
         char *n2 = strtok(NULL, " \t\n\0");
         if (n2 == NULL) continue;
         uint32_t targetNode = atol(n2);
-        graph.insertEdge(sourceNode, targetNode, bidirectional_insert);
+        graph_.insertEdge(sourceNode, targetNode, bidirectional_insert);
     }
 }
 
@@ -62,7 +64,9 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            graph.insertEdge(sourceNode, targetNode, bidirectional_insert);
+            if (graph_.insertEdge(sourceNode, targetNode, bidirectional_insert)) {
+                //connected_components_.insertNewEdge(sourceNode, targetNode);
+            }
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];
@@ -74,7 +78,7 @@ void OperationsControl::runQueries() {
             // batch[counter + 1] = sourceNode;
             // batch[counter + 2] = targetNode;
             // counter += 3;
-            // graph.insertEdge(sourceNode, targetNode);
+            // graph_.insertEdge(sourceNode, targetNode);
         } else if (!strcmp(op, "Q")) {
             char *node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
@@ -82,8 +86,8 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            cout << path.shortestPath(sourceNode, targetNode) << endl;
-            path.reset();
+            cout << path_.shortestPath(sourceNode, targetNode) << endl;
+            path_.reset();
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];
@@ -99,13 +103,14 @@ void OperationsControl::runQueries() {
         // } else if (!strcmp(op, "F")) {
             // for (uint32_t i = 0; i < counter; i += 3) {
             //     if (batch[i] == 0) {
-            //         graph.insertEdge(batch[i + 1], batch[i + 2]);
+            //         graph_.insertEdge(batch[i + 1], batch[i + 2]);
             //     } else {
-            //         cout << path.shortestPath(batch[i + 1], batch[i + 2]) << endl;
-            //         path.reset();
+            //         cout << path_.shortestPath(batch[i + 1], batch[i + 2]) << endl;
+            //         path_.reset();
             //     }
             // }
             // counter = 0;
+        //connected_components_.print();
     }
     // delete[] batch;
 }

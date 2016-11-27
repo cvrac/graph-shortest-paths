@@ -16,6 +16,7 @@ public:
     Garray();
     Garray(const uint32_t &size);
     ~Garray();
+    void init(const uint32_t &size);
     void enqueue(const T &element) {this->push(element, 'Q');}
     void enstack(const T &element) {this->push(element, 'S');}
     void increaseSize(const uint32_t &min_size);
@@ -29,6 +30,7 @@ public:
     uint32_t getHead() const {return head_;}
     uint32_t getTail() const {return tail_;}
     uint32_t getElements() const {return elements_;}
+    void setElements(const uint32_t &elements) {elements_ = elements;}
     T &operator[](uint32_t i);
     void print() const;
 
@@ -64,8 +66,7 @@ Garray<T>::~Garray() {
 template <class T>
 void Garray<T>::push(const T &element, const char &mode) {
     if (array_ == NULL) {
-        array_ = new T[INITIAL_ARRAY_SIZE];
-        size_ = INITIAL_ARRAY_SIZE;
+        this->init(INITIAL_ARRAY_SIZE);
     }
     if (this->isFull()) {
         T *old_array = array_;
@@ -110,7 +111,7 @@ T Garray<T>::popBack() {
     }
 }
 
-/* For array/stack use */
+/* For array/stack use. Increase size to at least min_size, copy old elements */
 template <class T>
 inline void Garray<T>::increaseSize(const uint32_t &min_size) {
     if (size_ < min_size) {
@@ -120,17 +121,30 @@ inline void Garray<T>::increaseSize(const uint32_t &min_size) {
         }
         T *old_array = array_;
         array_ = new T[size_];
-        delete[] old_array;
+        memcpy(array_, old_array, elements_ * sizeof(T));
+        if (old_array != NULL) {
+            delete[] old_array;
+        }
     }
 }
 
 /* For array/stack use */
 template <class T>
 inline void Garray<T>::pushBatch(T *batch, const uint32_t &batchSize) {
-    this->increaseSize(batchSize);
+    this->increaseSize(elements_ + batchSize);
     memcpy(&array_[tail_], batch, batchSize * sizeof(T));
     elements_ += batchSize;
     tail_ += batchSize;
+}
+
+/* Init size to an exact value, do not copy previous elements */
+template <class T>
+void inline Garray<T>::init(const uint32_t &size) {
+    if (array_ != NULL) {
+        delete[] array_;
+    }
+    array_ = new T[size];
+    size_ = size;
 }
 
 template <class T>

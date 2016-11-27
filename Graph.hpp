@@ -15,11 +15,12 @@ public:
     friend class SCC;
     Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
     ~Graph();
-    void insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional);
+    bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional);
     Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
-    uint32_t getNodes() {return inner_index_.getCurSize();}
+    uint32_t getNodes() {return outer_index_.getCurSize();}
     uint32_t getStatistics();
+    bool markVisitedNode(const uint32_t &node_id, const bool &visited_flag) { return bidirectional_index_.setListHeadVisitedFlag(node_id, visited_flag);}
     void printAll();
     void print();
 

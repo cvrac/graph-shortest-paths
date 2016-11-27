@@ -27,12 +27,13 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     this->insertNode(max);
     this->insertNode(min);
     if (bidirectional) {
-       bidirectional_index_.insertNode(min);
+        bidirectional_index_.insertNode(min);
+        //bidirectional_index_.insertNode(max);
     }
     return min;
 }
 
-void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
     const uint32_t min = this->insertNodes(source_node_id, target_node_id, bidirectional);
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
@@ -48,6 +49,8 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
         this->insertEdge(*node1, *node2, index, buffer, skip_search);
+    } else {
+        return false;
     }
     if (bidirectional) {
         uint32_t max = target_node_id;
@@ -58,6 +61,7 @@ void Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     }
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
+    return true;
 }
 
 bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const bool &skip_search) {
@@ -100,9 +104,10 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
     Buffer *buffer;
     if (direction == 'F') {
         index = &outer_index_;
-    }
-    else if (direction == 'B') {
+    } else if (direction == 'B') {
         index = &inner_index_;
+    } else if (direction == 'A') {
+        index = &bidirectional_index_;
     }
 
     return index->getListHeadNeighbors(source);
@@ -115,10 +120,12 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direc
     if (direction == 'F') {
         index = &outer_index_;
         buffer = &outer_buffer_;
-    }
-    else if (direction == 'B') {
+    } else if (direction == 'B') {
         index = &inner_index_;
         buffer = &inner_buffer_;
+    } else if (direction == 'A') {
+        index = &bidirectional_index_;
+        buffer = &bidirectional_buffer_;
     }
 
     return this->getNeighbors(node_id, *index, *buffer);
@@ -194,10 +201,10 @@ void Graph::print() {
 void Graph::print(const NodeIndex &index, const Buffer &buffer) {
     for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
         Garray<uint32_t > &neighbors = this->getNeighbors(node, index, buffer);
-        // cout << "Node " << node << " has " << (neighbors == NULL ? 0 : neighbors.count) << " neighbors:\n";
+         cout << "Node " << node << " has " << neighbors.getElements() << " neighbors:\n";
         neighbors.print();
         cout << "\n";
-        //index.printNeighborsHash(node);
+        index.printNeighborsHash(node);
     }
     cout << endl;
 }

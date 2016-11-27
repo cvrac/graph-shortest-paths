@@ -88,6 +88,15 @@ uint32_t NodeIndex::getAverageNeighbors() {
     return (uint32_t) (sum / cur_size_);
 }
 
+/* Return false if flags are the same, otherwise set and return true */
+bool NodeIndex::setListHeadVisitedFlag(const uint32_t &node_id, const bool &visited_flag) {
+    if (index_[node_id].visited_flag_ == visited_flag) {
+        return false;
+    }
+    index_[node_id].visited_flag_ = visited_flag;
+    return true;
+}
+
 void NodeIndex::print() const {
     cout << "--- NodeIndex ---\ncur_size_: " << cur_size_ << ", max_size_: " << max_size_ << endl;
     for (uint32_t node = 0; node < cur_size_; node++) {

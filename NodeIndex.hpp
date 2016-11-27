@@ -8,7 +8,7 @@
 // Test size: 3
 // Actual size: 1000
 
-#define INITIAL_INDEX_MAX_SIZE 1000
+#define INITIAL_INDEX_MAX_SIZE 100000
 #define HASH_SIZE 3
 
 class SCC;
@@ -32,6 +32,7 @@ public:
     bool searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
     bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id);
     uint32_t getListHeadNeighbors(const uint32_t &node_id) const {return index_[node_id].total_neighbors;}
+    bool setListHeadVisitedFlag(const uint32_t &node_id, const bool &visited_flag);
     uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const;
     long getListHeadPos(const uint32_t &node_id) const {return index_[node_id].pos;}
     uint32_t getAverageNeighbors();
@@ -45,14 +46,18 @@ private:
     struct ListHead {
         friend class SCC;
 
-        ListHead() : pos(-1), last_pos(-1), total_neighbors(0), neighbors_hash_(NULL) {
+        ListHead() : pos(-1), last_pos(-1), total_neighbors(0), neighbors_hash_(NULL), visited_flag_(false) {
             //neighbors_hash_ = new HashTable(HASH_SIZE);
         }
 
         long pos;
         long last_pos;
         uint32_t total_neighbors;
-        HashTable<uint32_t> *neighbors_hash_;
+        HashTable<uint32_t> *neighbors_hash_; // Allocate only when needed
+
+        /* Used by normal bfs for finding CC.
+         * Instead of resetting the flags at the end, assume 'true' means false */
+        bool visited_flag_;
     };
 
     ListHead *index_;
