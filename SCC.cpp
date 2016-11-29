@@ -125,7 +125,6 @@ int SCC::findNodeStronglyConnectedComponentID(uint32_t &node_id) {
 }
 
 int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
-    path.reset();
     return (id_belongs_to_component_[source] == id_belongs_to_component_[target]) ? path.shortestPath(source, target, 'S') : -1;
 }
 

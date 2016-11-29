@@ -117,7 +117,11 @@ void OperationsControl::runQueries() {
 
 int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
-    if (ret == -1)
+    path_.reset();
+    if (ret != -1) {
+        cout << "same component " << source << " " << target << endl;
+        return ret;
+    } else if (ret == -1)
         ret = path_.shortestPath(source, target, 'A');
     path_.reset();
     return ret;
