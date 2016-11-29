@@ -5,19 +5,22 @@
 
 #include "Graph.hpp"
 #include "Garray.hpp"
+#include "ShortestPath.hpp"
+
+class ShortestPath;
 
 class Graph;
 
 class SCC {
 
 public:
-    SCC(const uint32_t &size, Graph &prgraph);
+    SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz);
     ~SCC();
     void estimateStronglyConnectedComponents();
     int findNodeStronglyConnectedComponentID(uint32_t &node_id);
     void iterateStronglyConnectedComponentID();
     bool nextStronglyConnectedComponentID();
-    int estimateShortestPathStronglyConnectedComponents(Graph &graph, uint32_t &source, uint32_t &target);
+    int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
     void init();
     void print();
 
@@ -54,6 +57,7 @@ private:
     void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
 
     Graph &graph;
+    ShortestPath &path;
     Garray<Component> components_;
     uint32_t components_count_;
     uint32_t inverted_index_size_;

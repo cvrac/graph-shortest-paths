@@ -23,6 +23,7 @@ public:
     void pushBatch(T *batch, const uint32_t &batchSize);
     T popFront();
     T popBack();
+    T &top();
     bool isFull() const {return elements_ == size_;}
     bool isEmpty() const {return !elements_;}
     void clear() {head_ = tail_ = elements_ = 0;}
@@ -112,6 +113,13 @@ T Garray<T>::popBack() {
     }
 }
 
+/*returns the element on the top of the stack*/
+template <class T>
+T &Garray<T>::top() {
+    return this->array_[tail_];
+}
+
+
 /* For array/stack use. Increase size to at least min_size, copy old elements */
 template <class T>
 inline void Garray<T>::increaseSize(const uint32_t &min_size) {
@@ -150,10 +158,6 @@ void inline Garray<T>::init(const uint32_t &size) {
 
 template <class T>
 T &Garray<T>::operator[](uint32_t i) {
-    if (i >= this->size_) {
-        uint32_t newsize = size_ == 0 ? 1 : size_ * 2;
-        this->increaseSize(newsize);
-    }
     assert(i < this->size_);
     return this->array_[i];
 }

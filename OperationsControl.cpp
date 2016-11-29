@@ -14,18 +14,19 @@ bool bidirectional_insert = false; // temp
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) : path_(graph_, hashSize), strongly_conn_(hashSize, graph_), connected_components_(graph_, hashSize) { }
+OperationsControl::OperationsControl(uint32_t &hashSize) : path_(graph_, strongly_conn_, hashSize),
+ strongly_conn_(hashSize, graph_, path_), connected_components_(graph_, hashSize) { }
 
 OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
     //connected_components_.estimateConnectedComponents();
-    // this->runQueries();
     //connected_components_.print();
     //graph_.print();
     this->strongly_conn_.init();
     this->strongly_conn_.estimateStronglyConnectedComponents();
+    this->runQueries();
     // this->strongly_conn_.print();
 }
 
@@ -86,8 +87,7 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            cout << path_.shortestPath(sourceNode, targetNode) << endl;
-            path_.reset();
+            cout << this->estimateShortestPath(sourceNode, targetNode) << endl;
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];
@@ -113,4 +113,12 @@ void OperationsControl::runQueries() {
         //connected_components_.print();
     }
     // delete[] batch;
+}
+
+int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
+    int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
+    if (ret == -1)
+        ret = path_.shortestPath(source, target, 'A');
+    path_.reset();
+    return ret;
 }

@@ -12,6 +12,7 @@ public:
     OperationsControl(uint32_t &hashSize);
     ~OperationsControl();
     void run(const uint32_t &hashSize);
+    int estimateShortestPath(uint32_t &source, uint32_t &target);
 
 private:
     void buildGraph();

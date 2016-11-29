@@ -16,11 +16,14 @@ SCC::Component::Component() : component_id(0), included_nodes_count(0) {
 
 SCC::Component::~Component() { }
 
-SCC::SCC(const uint32_t &size, Graph &prgraph) : graph(prgraph), components_(size),
-    components_count_(0), inverted_index_size_(0),
+SCC::SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz),
+    components_(size), components_count_(0), inverted_index_size_(0),
     id_belongs_to_component_(NULL) { }
 
-SCC::~SCC() { }
+SCC::~SCC() {
+    delete[] id_belongs_to_component_;
+    id_belongs_to_component_ = NULL;
+}
 
 void SCC::init() {
     inverted_index_size_ = graph.getNodes();
@@ -117,13 +120,19 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTa
     tarj_stack.clear();
 }
 
+int SCC::findNodeStronglyConnectedComponentID(uint32_t &node_id) {
+    return id_belongs_to_component_[node_id];
+}
+
+int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
+    path.reset();
+    return (id_belongs_to_component_[source] == id_belongs_to_component_[target]) ? path.shortestPath(source, target, 'S') : -1;
+}
+
 void SCC::print() {
     for (int i = 0; i < components_count_; i++) {
         cout << "Component " << i << endl;
-        cout << "count = " << components_[i].included_nodes_count << endl;
-        for (int j = 0; j < components_[i].included_nodes_count; j++) {
-            cout << components_[i].included_node_ids[j] << " ";
-        }
+        components_[i].included_node_ids.print();
         cout << "-------------------------------" << endl;
     }
 }
