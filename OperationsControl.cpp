@@ -21,12 +21,12 @@ OperationsControl::~OperationsControl() { }
 void OperationsControl::run(const uint32_t &hashSize) {
     this->buildGraph();
     //connected_components_.estimateConnectedComponents();
-    this->runQueries();
+    // this->runQueries();
     //connected_components_.print();
     //graph_.print();
     this->strongly_conn_.init();
     this->strongly_conn_.estimateStronglyConnectedComponents();
-    this->strongly_conn_.print();
+    // this->strongly_conn_.print();
 }
 
 void OperationsControl::buildGraph() {

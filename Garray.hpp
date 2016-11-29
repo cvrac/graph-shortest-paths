@@ -32,6 +32,7 @@ public:
     uint32_t getElements() const {return elements_;}
     void setElements(const uint32_t &elements) {elements_ = elements;}
     T &operator[](uint32_t i);
+    T *retVal() { return this->array_; }
     void print() const;
 
 private:
@@ -150,7 +151,7 @@ void inline Garray<T>::init(const uint32_t &size) {
 template <class T>
 T &Garray<T>::operator[](uint32_t i) {
     if (i >= this->size_) {
-        uint32_t newsize = 2 * size_;
+        uint32_t newsize = size_ == 0 ? 1 : size_ * 2;
         this->increaseSize(newsize);
     }
     assert(i < this->size_);

@@ -26,10 +26,12 @@ private:
         Component(uint32_t &id);
         Component();
         ~Component();
+        void increaseSize(uint32_t &size) { this->included_node_ids.increaseSize(size); }
 
         uint32_t component_id;
         uint32_t included_nodes_count;
         Garray<uint32_t> included_node_ids;
+        // Component& operator= (const Component &comp);
     };
 
     class ComponentCursor {
@@ -37,10 +39,14 @@ private:
     };
 
     struct Vertex {
+        Vertex() : node_id_(0), parent_id_(0), index_(0), lowlink_(0), last_neighbor_(0), onStack(false), neighbors(NULL), total(0) { }
         uint32_t node_id_;
         uint32_t parent_id_;
         uint32_t index_;
         uint32_t lowlink_;
+        long last_neighbor_;
+        uint32_t *neighbors;
+        uint32_t total;
         bool onStack;
     };
 
