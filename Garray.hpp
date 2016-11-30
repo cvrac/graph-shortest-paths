@@ -8,7 +8,7 @@
 
 /* The array can be initialised with 0 size to avoid memory allocation (no arguments constructor).
  * The value below refers to the size the array will acquire on the first insertion if it was initialised with 0 size. */
-#define INITIAL_ARRAY_SIZE 16
+#define INITIAL_ARRAY_SIZE 2
 
 template <class T>
 class Garray {
@@ -25,11 +25,13 @@ public:
     T popBack();
     bool isFull() const {return elements_ == size_;}
     bool isEmpty() const {return !elements_;}
+    bool search(const T &element);
     void clear() {head_ = tail_ = elements_ = 0;}
     uint32_t getSize() const {return size_;}
     uint32_t getHead() const {return head_;}
     uint32_t getTail() const {return tail_;}
     uint32_t getElements() const {return elements_;}
+    T *getArray() {return array_;}
     void setElements(const uint32_t &elements) {elements_ = elements;}
     T &operator[](uint32_t i);
     void print() const;
@@ -59,7 +61,7 @@ Garray<T>::Garray(const uint32_t &size) : size_(size), head_(0), tail_(0), eleme
 template <class T>
 Garray<T>::~Garray() {
     if (array_ != NULL) {
-        delete[] array_;
+       delete[] array_;
     }
 }
 
@@ -145,6 +147,17 @@ void inline Garray<T>::init(const uint32_t &size) {
     }
     array_ = new T[size];
     size_ = size;
+}
+
+/* For array/stack use. Can be easily modified to work for queue as well if needed */
+template <class T>
+bool Garray<T>::search(const T &element) {
+    for (uint32_t n = 0 ; n < elements_ ; n++) {
+        if (array_[n] == element) {
+            return true;
+        }
+    }
+    return false;
 }
 
 template <class T>

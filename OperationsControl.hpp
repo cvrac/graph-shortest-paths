@@ -9,7 +9,7 @@
 class OperationsControl {
 
 public:
-    OperationsControl(uint32_t &hashSize);
+    OperationsControl(uint32_t &hashSize, const float &cc_threshold);
     ~OperationsControl();
     void run(const uint32_t &hashSize);
 

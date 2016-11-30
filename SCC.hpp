@@ -45,7 +45,7 @@ private:
     };
 
     void tarjanAlgorithm();
-    void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
+    void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
 
     Graph &graph;
     Garray<Component> components_;
