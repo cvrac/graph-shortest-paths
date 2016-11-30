@@ -27,8 +27,8 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     this->insertNode(max);
     this->insertNode(min);
     if (bidirectional) {
-        bidirectional_index_.insertNode(min);
-        //bidirectional_index_.insertNode(max);
+        //bidirectional_index_.insertNode(min);
+        bidirectional_index_.insertNode(max);
     }
     return min;
 }
@@ -53,11 +53,12 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         return false;
     }
     if (bidirectional) {
-        uint32_t max = target_node_id;
-        if (min == target_node_id) {
-            max = source_node_id;
-        }
-        this->insertEdge(min, max, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
+       // uint32_t max = target_node_id;
+      //  if (min == target_node_id) {
+       //     max = source_node_id;
+       // }
+        this->insertEdge(source_node_id, target_node_id, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
+        this->insertEdge(target_node_id, source_node_id, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
     }
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
@@ -204,7 +205,7 @@ void Graph::print(const NodeIndex &index, const Buffer &buffer) {
          cout << "Node " << node << " has " << neighbors.getElements() << " neighbors:\n";
         neighbors.print();
         cout << "\n";
-        index.printNeighborsHash(node);
+        //index.printNeighborsHash(node);
     }
     cout << endl;
 }

@@ -7,11 +7,16 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    uint32_t hashSize = 171;
-    if (argc > 1)
-        hashSize = (uint32_t ) atol(argv[1]);
+    uint32_t hashSize = 131;
+    float cc_threshold = 0.49;
+    if (argc > 1) {
+        hashSize = (uint32_t) atol(argv[1]);
+    }
+    if (argc > 2) {
+        cc_threshold = atof(argv[2]);
+    }
 
-    OperationsControl operationsControl(hashSize);
+    OperationsControl operationsControl(hashSize, cc_threshold);
     operationsControl.run(hashSize);
 
     return 0;

@@ -10,23 +10,34 @@
 #include <time.h>
 #include <iomanip>
 
-bool bidirectional_insert = false; // temp
+bool bidirectional_insert = true; // temp
+
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize) : path_(graph_, hashSize), strongly_conn_(hashSize, graph_), connected_components_(graph_, hashSize) { }
+OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, hashSize),
+                                                                                      strongly_conn_(hashSize, graph_),
+                                                                                      connected_components_(graph_, hashSize, cc_threshold) { }
 
 OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const uint32_t &hashSize) {
+    //clock_t start = clock();
     this->buildGraph();
-    //connected_components_.estimateConnectedComponents();
+    //cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    //start = clock();
+    connected_components_.estimateConnectedComponents();
+    //cout << "estimateConnectedComponents: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    //connected_components_.print(); cout << "q" << endl;
+    //start = clock();
     this->runQueries();
+    //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    //cout << "total CC rebuilds: " << connected_components_.getTotalRebuilds();
     //connected_components_.print();
     //graph_.print();
-    this->strongly_conn_.init();
-    this->strongly_conn_.estimateStronglyConnectedComponents();
-    this->strongly_conn_.print();
+    //this->strongly_conn_.init();
+    //this->strongly_conn_.estimateStronglyConnectedComponents();
+    //this->strongly_conn_.print();
 }
 
 void OperationsControl::buildGraph() {
@@ -65,7 +76,7 @@ void OperationsControl::runQueries() {
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
             if (graph_.insertEdge(sourceNode, targetNode, bidirectional_insert)) {
-                //connected_components_.insertNewEdge(sourceNode, targetNode);
+                connected_components_.insertNewEdge(sourceNode, targetNode);
             }
             // if (counter == size) {
             //     uint32_t *old = batch;
@@ -86,8 +97,13 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            cout << path_.shortestPath(sourceNode, targetNode) << endl;
-            path_.reset();
+            if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
+                cout << path_.shortestPath(sourceNode, targetNode) << "\n";
+                path_.reset();
+            }
+            else {
+                cout << -1 << endl;
+            }
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];
@@ -99,8 +115,10 @@ void OperationsControl::runQueries() {
             // batch[counter + 1] = sourceNode;
             // batch[counter + 2] = targetNode;
             // counter += 3;
-        }
-        // } else if (!strcmp(op, "F")) {
+         } else if (!strcmp(op, "F")) {
+            if (connected_components_.needRebuilding()) {
+                connected_components_.rebuildIndexes();
+            }
             // for (uint32_t i = 0; i < counter; i += 3) {
             //     if (batch[i] == 0) {
             //         graph_.insertEdge(batch[i + 1], batch[i + 2]);
@@ -110,7 +128,7 @@ void OperationsControl::runQueries() {
             //     }
             // }
             // counter = 0;
-        //connected_components_.print();
+        }
     }
     // delete[] batch;
 }
