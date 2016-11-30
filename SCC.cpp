@@ -6,9 +6,9 @@
 using namespace std;
 
 SCC::Component::Component(uint32_t &id) : component_id(id),
-                                          included_nodes_count(0) {
+ included_nodes_count(0) {
     //  included_nodes_count = 0;
-}
+ }
 
 SCC::Component::Component() : component_id(0), included_nodes_count(0) {
     // included_nodes_count = 0;
@@ -17,8 +17,8 @@ SCC::Component::Component() : component_id(0), included_nodes_count(0) {
 SCC::Component::~Component() { }
 
 SCC::SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz),
-                                                                      components_(size), components_count_(0), inverted_index_size_(0),
-                                                                      id_belongs_to_component_(NULL) { }
+    components_(size), components_count_(0), inverted_index_size_(0),
+    id_belongs_to_component_(NULL) { }
 
 SCC::~SCC() {
     delete[] id_belongs_to_component_;
@@ -46,13 +46,13 @@ void SCC::tarjanAlgorithm() {
     components_.increaseSize(graph.getNodes());
     NodeIndex::ListHead *node = NULL;
 
-/*    for (uint32_t i = 0; i < graph.getNodes(); i++) {
+    for (uint32_t i = 0; i < graph.getNodes(); i++) {
         Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F');
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
-*/
+
     for (uint32_t i = 0; i < graph.getNodes(); i++) {
         if ((node = graph.outer_index_.getListHead(i)) != NULL) {
             if (vertices[i].visited == false)
@@ -61,11 +61,11 @@ void SCC::tarjanAlgorithm() {
         }
     }
 
-    /*  for (uint32_t i = 0; i < graph.getNodes(); i++) {
-          delete[] vertices[i].neighbors;
-          vertices[i].neighbors = NULL;
-      }
-  */
+  for (uint32_t i = 0; i < graph.getNodes(); i++) {
+        delete[] vertices[i].neighbors;
+        vertices[i].neighbors = NULL;
+    }
+
     delete[] vertices;
     vertices = NULL;
 }
@@ -126,6 +126,7 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
 
     while (dfs_stack.isEmpty() == false) {
         v = dfs_stack.top();
+        // cout << dfs_stack.getSize() << endl;
         // cout << dfs_stack.getElements() << endl;
         // cout << graph.getNodes() << endl;
         // cout << "v = " << v << endl;
@@ -138,27 +139,28 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
             ++(*index);
             tarj_stack.enstack(v);
             vertices[v].onStack = true;
-
-            Garray<uint32_t> &neighbors = graph.getNeighbors(v, 'F');
-            vertices[v].total = neighbors.getElements();
-            for (uint32_t i = 0; i < vertices[v].total; i++) {
-                w = neighbors[i];
-                // cout << "w = " << w << endl;
-                if (vertices[w].visited == false) {
-                    vertices[w].parent_id_ = v;
-                    ++vertices[v].childrenvisited;
-                    dfs_stack.enstack(w);
-                    // cout << w << " not visited" << endl;
-                } else if (vertices[w].onStack == true) {
-                    vertices[v].lowlink_ = (vertices[v].lowlink_ < vertices[w].index_)
-                                           ? vertices[v].lowlink_ : vertices[w].index_;
-                    ++vertices[v].childrenvisited;
-                    // cout << w << " visited " << endl;
-                } else if (vertices[w].visited == true) {
-                    // cout << w << " visited " << endl;
-                    ++vertices[v].childrenvisited;
-                }
+        }
+        // Garray<uint32_t> &neighbors = graph.getNeighbors(v, 'F');
+        // vertices[v].total = neighbors.getElements();
+        if (vertices[v].childrenvisited < vertices[v].total) {
+            // for (uint32_t i = verti; i < vertices[v].total; i++) {
+            w = vertices[v].neighbors[vertices[v].childrenvisited];
+            // cout << "w = " << w << endl;
+            if (vertices[w].visited == false) {
+                vertices[w].parent_id_ = v;
+                ++vertices[v].childrenvisited;
+                dfs_stack.enstack(w);
+                // cout << w << " not visited" << endl;
+            } else if (vertices[w].onStack == true) {
+                vertices[v].lowlink_ = (vertices[v].lowlink_ < vertices[w].index_)
+                    ? vertices[v].lowlink_ : vertices[w].index_;
+                ++vertices[v].childrenvisited;
+                // cout << w << " visited " << endl;
+            } else if (vertices[w].visited == true) {
+                // cout << w << " visited " << endl;
+                ++vertices[v].childrenvisited;
             }
+            // }
         } else {
             v = dfs_stack.popBack();
             if (vertices[v].childrenvisited == vertices[v].total) {
@@ -176,7 +178,7 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
                 uint32_t parent_id_ = vertices[v].parent_id_;
                 if (parent_id_ != v) {
                     vertices[parent_id_].lowlink_ = (vertices[parent_id_].lowlink_ < vertices[v].lowlink_)
-                                                    ? vertices[parent_id_].lowlink_ : vertices[v].lowlink_;
+                        ? vertices[parent_id_].lowlink_ : vertices[v].lowlink_;
                 }
             }
 

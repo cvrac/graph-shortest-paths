@@ -34,11 +34,11 @@ void OperationsControl::run(const uint32_t &hashSize, const char &mode) {
         this->strongly_conn_.estimateStronglyConnectedComponents();
     }
     //start = clock();
-    this->runQueries(mode);
+    // this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    if (mode == 's') {
-        this->strongly_conn_.print();
-    }
+    // if (mode == 's') {
+    //     this->strongly_conn_.print();
+    // }
 }
 
 void OperationsControl::buildGraph(const char &mode) {
