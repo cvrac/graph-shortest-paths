@@ -116,7 +116,7 @@ T Garray<T>::popBack() {
 /*returns the element on the top of the stack*/
 template <class T>
 T &Garray<T>::top() {
-    return this->array_[tail_];
+    return this->array_[tail_ - 1];
 }
 
 

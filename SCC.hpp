@@ -42,19 +42,21 @@ private:
     };
 
     struct Vertex {
-        Vertex() : node_id_(0), parent_id_(0), index_(0), lowlink_(0), last_neighbor_(0), onStack(false), neighbors(NULL), total(0) { }
+        Vertex() : node_id_(0), parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), onStack(false), total(0), visited(false) { }
         uint32_t node_id_;
         uint32_t parent_id_;
         uint32_t index_;
         uint32_t lowlink_;
-        long last_neighbor_;
-        uint32_t *neighbors;
+        uint32_t childrenvisited;
+        // uint32_t *neighbors;
         uint32_t total;
         bool onStack;
+        bool visited;
     };
 
     void tarjanAlgorithm();
-    void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
+    // void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
+    void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index);
 
     Graph &graph;
     ShortestPath &path;

@@ -27,7 +27,7 @@ void OperationsControl::run(const uint32_t &hashSize) {
     this->strongly_conn_.init();
     this->strongly_conn_.estimateStronglyConnectedComponents();
     this->runQueries();
-    // this->strongly_conn_.print();
+    this->strongly_conn_.print();
 }
 
 void OperationsControl::buildGraph() {
@@ -119,7 +119,7 @@ int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) 
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
     path_.reset();
     if (ret != -1) {
-        cout << "same component " << source << " " << target << endl;
+        // cout << "same component " << source << " " << target << endl;
         return ret;
     } else if (ret == -1)
         ret = path_.shortestPath(source, target, 'A');
