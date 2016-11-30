@@ -5,15 +5,16 @@
 
 #include "HashTable.hpp"
 #include "Graph.hpp"
-#include "Array.hpp"
 #include "Garray.hpp"
+#include "SCC.hpp"
 
 class ShortestPath {
 
 public:
-	ShortestPath(Graph &gr, uint32_t &hashsize);
+	friend class SCC;
+	ShortestPath(Graph &gr, SCC &comp, uint32_t &hashsize);
 	~ShortestPath();
-	int shortestPath(uint32_t &source, uint32_t &target);
+	int shortestPath(uint32_t &source, uint32_t &target, char mode);
 	void reset();
 
 private:
@@ -23,12 +24,14 @@ private:
 	unsigned int clevelf_, clevelf1_;
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;
+	SCC &strongly_conn_;
 	Garray<uint32_t> frontier_front_;
 	Garray<uint32_t> frontier_back_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;
 	char dirb_;
+
 };
 
 #endif

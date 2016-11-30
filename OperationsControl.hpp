@@ -11,11 +11,12 @@ class OperationsControl {
 public:
     OperationsControl(uint32_t &hashSize, const float &cc_threshold);
     ~OperationsControl();
-    void run(const uint32_t &hashSize);
+    void run(const uint32_t &hashSize, const char &mode);
+    int estimateShortestPath(uint32_t &source, uint32_t &target);
 
 private:
-    void buildGraph();
-    void runQueries();
+    void buildGraph(const char &mode);
+    void runQueries(const char &mode);
 
     Graph graph_;
     ShortestPath path_;

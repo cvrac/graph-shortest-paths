@@ -5,19 +5,22 @@
 
 #include "Graph.hpp"
 #include "Garray.hpp"
+#include "ShortestPath.hpp"
+
+class ShortestPath;
 
 class Graph;
 
 class SCC {
 
 public:
-    SCC(const uint32_t &size, Graph &prgraph);
+    SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz);
     ~SCC();
     void estimateStronglyConnectedComponents();
     int findNodeStronglyConnectedComponentID(uint32_t &node_id);
     void iterateStronglyConnectedComponentID();
     bool nextStronglyConnectedComponentID();
-    int estimateShortestPathStronglyConnectedComponents(Graph &graph, uint32_t &source, uint32_t &target);
+    int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
     void init();
     void print();
 
@@ -26,10 +29,12 @@ private:
         Component(uint32_t &id);
         Component();
         ~Component();
+        void increaseSize(uint32_t &size) { this->included_node_ids.increaseSize(size); }
 
         uint32_t component_id;
         uint32_t included_nodes_count;
         Garray<uint32_t> included_node_ids;
+        // Component& operator= (const Component &comp);
     };
 
     class ComponentCursor {
@@ -37,17 +42,24 @@ private:
     };
 
     struct Vertex {
+        Vertex() : node_id_(0), parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), onStack(false), total(0), visited(false) { }
         uint32_t node_id_;
         uint32_t parent_id_;
         uint32_t index_;
         uint32_t lowlink_;
+        uint32_t childrenvisited;
+        // uint32_t *neighbors;
+        uint32_t total;
         bool onStack;
+        bool visited;
     };
 
     void tarjanAlgorithm();
-    void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
+    // void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
+    void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index);
 
     Graph &graph;
+    ShortestPath &path;
     Garray<Component> components_;
     uint32_t components_count_;
     uint32_t inverted_index_size_;

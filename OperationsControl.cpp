@@ -10,39 +10,41 @@
 #include <time.h>
 #include <iomanip>
 
-bool bidirectional_insert = true; // temp
-
-
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, hashSize),
-                                                                                      strongly_conn_(hashSize, graph_),
-                                                                                      connected_components_(graph_, hashSize, cc_threshold) { }
+OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_, hashSize),
+ strongly_conn_(hashSize, graph_, path_), connected_components_(graph_, hashSize, cc_threshold) { }
 
 OperationsControl::~OperationsControl() { }
 
-void OperationsControl::run(const uint32_t &hashSize) {
+void OperationsControl::run(const uint32_t &hashSize, const char &mode) {
     //clock_t start = clock();
-    this->buildGraph();
+    this->buildGraph(mode);
     //cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
     //start = clock();
-    connected_components_.estimateConnectedComponents();
-    //cout << "estimateConnectedComponents: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    //connected_components_.print(); cout << "q" << endl;
+    if (mode == 'c') {
+        connected_components_.estimateConnectedComponents();
+        //cout << "estimateConnectedComponents: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+        //connected_components_.print();
+        //cout << "total CC rebuilds: " << connected_components_.getTotalRebuilds();
+        //connected_components_.print();
+    }
+    if (mode == 's') {
+        this->strongly_conn_.init();
+        this->strongly_conn_.estimateStronglyConnectedComponents();
+    }
     //start = clock();
-    this->runQueries();
+    this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    //cout << "total CC rebuilds: " << connected_components_.getTotalRebuilds();
-    //connected_components_.print();
-    //graph_.print();
-    //this->strongly_conn_.init();
-    //this->strongly_conn_.estimateStronglyConnectedComponents();
-    //this->strongly_conn_.print();
+    if (mode == 's') {
+        this->strongly_conn_.print();
+    }
 }
 
-void OperationsControl::buildGraph() {
+void OperationsControl::buildGraph(const char &mode) {
     string line;
     char cLine[100];
+    bool bidirectional_insert = (mode == 'c');
     while (getline(cin, line)) {
         strcpy(cLine, line.c_str());
         char *n1;
@@ -57,9 +59,10 @@ void OperationsControl::buildGraph() {
     }
 }
 
-void OperationsControl::runQueries() {
+void OperationsControl::runQueries(const char &mode) {
     string line;
     char cLine[100];
+    bool bidirectional_insert = (mode == 'c');
     // uint32_t size = 60;
     // uint32_t *batch = new uint32_t[size];
     // uint32_t counter = 0;
@@ -75,7 +78,7 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            if (graph_.insertEdge(sourceNode, targetNode, bidirectional_insert)) {
+            if (graph_.insertEdge(sourceNode, targetNode, bidirectional_insert) && mode == 'c') {
                 connected_components_.insertNewEdge(sourceNode, targetNode);
             }
             // if (counter == size) {
@@ -97,12 +100,20 @@ void OperationsControl::runQueries() {
             node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t targetNode = atol(node);
-            if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
-                cout << path_.shortestPath(sourceNode, targetNode) << "\n";
+
+            if (mode == 's') {
+                cout << this->estimateShortestPath(sourceNode, targetNode) << endl;
+            } else if (mode == 'c') {
+                if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
+                    cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
+                    path_.reset();
+                }
+                else {
+                    cout << -1 << endl;
+                }
+            } else if (mode == 'n') {
+                cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
                 path_.reset();
-            }
-            else {
-                cout << -1 << endl;
             }
             // if (counter == size) {
             //     uint32_t *old = batch;
@@ -116,7 +127,7 @@ void OperationsControl::runQueries() {
             // batch[counter + 2] = targetNode;
             // counter += 3;
          } else if (!strcmp(op, "F")) {
-            if (connected_components_.needRebuilding()) {
+            if (mode == 'c' && connected_components_.needRebuilding()) {
                 connected_components_.rebuildIndexes();
             }
             // for (uint32_t i = 0; i < counter; i += 3) {
@@ -131,4 +142,16 @@ void OperationsControl::runQueries() {
         }
     }
     // delete[] batch;
+}
+
+int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
+    int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
+    path_.reset();
+    if (ret != -1) {
+        // cout << "same component " << source << " " << target << endl;
+        return ret;
+    } else if (ret == -1)
+        ret = path_.shortestPath(source, target, 'A');
+    path_.reset();
+    return ret;
 }

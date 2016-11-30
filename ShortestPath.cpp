@@ -7,21 +7,25 @@
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph& gr, uint32_t &hashSize) : hash_size(hashSize),
+ShortestPath::ShortestPath(Graph &gr, SCC &comp, uint32_t &hashSize) : hash_size(hashSize),
 	explored_set_(hash_size), explored_set_x(hash_size),
-	clevelf_(0), clevelf1_(0),	clevelb_(0), clevelb1_(0), pr_graph_(gr),
+	clevelf_(0), clevelf1_(0),	clevelb_(0), clevelb1_(0), pr_graph_(gr), strongly_conn_(comp),
 	distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
     frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE), frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
 
 ShortestPath::~ShortestPath() { }
 
-int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
+int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 	if (source == target)
 		return 0;
 
 	//initilizations of structures
-	uint32_t tempId, node_id;
+	uint32_t tempId, node_id, comp1, comp2;
+	if (mode == 'S') {
+		strongly_conn_.findNodeStronglyConnectedComponentID(source);
+		strongly_conn_.findNodeStronglyConnectedComponentID(target);
+	}
 	short int child_check;
 
 	clevelf_ = 1;
@@ -52,6 +56,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
+					if (mode == 'S')
+						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
+							continue;
 					if (explored_set_x.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_.searchInsert(tempId)) {
@@ -76,6 +83,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target) {
                 Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
+					if (mode == 'S')
+						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
+							continue;
 					if (explored_set_.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_x.searchInsert(tempId)) {

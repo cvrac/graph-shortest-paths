@@ -1,13 +1,13 @@
 OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o
-HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Array.hpp Garray.hpp CC.hpp
+HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Garray.hpp CC.hpp
 
 all: gsp
 
 CC 	= g++
-FLAGS	= -O2 -c
+FLAGS	= -g3 -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -O2 -o gsp $(OBJS)
+	$(CC) -g3 -O2 -o gsp $(OBJS)
 
 Array.o: Array.cpp
 	$(CC) $(FLAGS) Array.cpp
