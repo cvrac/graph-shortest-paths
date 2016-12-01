@@ -63,10 +63,11 @@ void OperationsControl::runQueries(const char &mode) {
     string line;
     char cLine[100];
     bool bidirectional_insert = (mode == 'c');
+    uint32_t search_skips = 0;
     // uint32_t size = 60;
     // uint32_t *batch = new uint32_t[size];
     // uint32_t counter = 0;
-    while (getline(cin, line)) {
+    while (getline(cin, line)) { //cout << line << endl;
         strcpy(cLine, line.c_str());
         char *op;
         op = strtok(cLine, " \t\n\0");
@@ -109,6 +110,7 @@ void OperationsControl::runQueries(const char &mode) {
                     path_.reset();
                 }
                 else {
+                    search_skips++;
                     cout << -1 << endl;
                 }
             } else if (mode == 'n') {
@@ -141,6 +143,8 @@ void OperationsControl::runQueries(const char &mode) {
             // counter = 0;
         }
     }
+    //cout << "Search skips: " << search_skips << endl;
+    //connected_components_.print();
     // delete[] batch;
 }
 
