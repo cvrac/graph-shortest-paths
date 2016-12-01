@@ -153,6 +153,30 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &
     return neighbors_array_;
 }
 
+bool Graph::checkMarkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version) {
+    NodeIndex *index;
+    if (direction == 'F') {
+        index = &outer_index_;
+    } else if (direction == 'B') {
+        index = &inner_index_;
+    } else if (direction == 'A') {
+        index = &bidirectional_index_;
+    }
+    return index->checkSetListHeadVisitedVersion(node_id, visit_version);
+}
+
+bool Graph::checkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version) {
+    NodeIndex *index;
+    if (direction == 'F') {
+        index = &outer_index_;
+    } else if (direction == 'B') {
+        index = &inner_index_;
+    } else if (direction == 'A') {
+        index = &bidirectional_index_;
+    }
+    return index->checkListHeadVisitedVersion(node_id, visit_version);
+}
+
 uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
     outer_index_.getAverageNeighbors() << "\nAverage inner edges: " <<

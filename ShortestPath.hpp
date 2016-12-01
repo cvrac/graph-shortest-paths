@@ -12,15 +12,12 @@ class ShortestPath {
 
 public:
 	friend class SCC;
-	ShortestPath(Graph &gr, SCC &comp, uint32_t &hashsize);
+	ShortestPath(Graph &gr, SCC &comp);
 	~ShortestPath();
 	int shortestPath(uint32_t &source, uint32_t &target, char mode);
 	void reset();
 
 private:
-	int hash_size;
-	HashTable<uint32_t> explored_set_;
-	HashTable<uint32_t> explored_set_x;
 	unsigned int clevelf_, clevelf1_;
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;
@@ -31,6 +28,7 @@ private:
 	unsigned int distance_back_;
 	char dirf_;
 	char dirb_;
+	unsigned long long visit_version_;
 
 };
 

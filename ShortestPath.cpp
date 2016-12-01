@@ -7,11 +7,9 @@
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph &gr, SCC &comp, uint32_t &hashSize) : hash_size(hashSize),
-	explored_set_(hash_size), explored_set_x(hash_size),
-	clevelf_(0), clevelf1_(0),	clevelb_(0), clevelb1_(0), pr_graph_(gr), strongly_conn_(comp),
-	distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
-    frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE), frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
+ShortestPath::ShortestPath(Graph &gr, SCC &comp) : visit_version_(1), clevelf_(0), clevelf1_(0), clevelb_(0), clevelb1_(0), pr_graph_(gr), strongly_conn_(comp),
+												   distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
+												   frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE), frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
 
 ShortestPath::~ShortestPath() { }
 
@@ -23,8 +21,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 	//initilizations of structures
 	uint32_t tempId, node_id, comp1, comp2;
 	if (mode == 'S') {
-		strongly_conn_.findNodeStronglyConnectedComponentID(source);
-		strongly_conn_.findNodeStronglyConnectedComponentID(target);
+		comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(source);
+		comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(target);
 	}
 	short int child_check;
 
@@ -34,8 +32,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 	frontier_front_.enqueue(source);
 	frontier_back_.enqueue(target);
 
-	explored_set_.insert(source);
-	explored_set_x.insert(target);
+	pr_graph_.checkMarkVisitedNode(source, dirf_, visit_version_);
+	pr_graph_.checkMarkVisitedNode(target, dirb_, visit_version_);
 
 	uint32_t c1 = pr_graph_.getNeighborsCount(source, dirf_), c2 = pr_graph_.getNeighborsCount(target, dirb_);
 	while (true) {
@@ -56,12 +54,11 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
-					if (mode == 'S')
-						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
-							continue;
-					if (explored_set_x.search(tempId))  {
+					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
+						continue;
+					if (pr_graph_.checkVisitedNode(tempId, dirb_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
-					} else if (explored_set_.searchInsert(tempId)) {
+					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirf_, visit_version_)) {
 						//explored_set_.insert(tempId);
 						frontier_front_.enqueue(tempId);
 						++clevelf1_;
@@ -69,9 +66,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					}
 				}
 			}
-		 	++distance_front_;
-		 	clevelf_ = clevelf1_;
-		 	clevelf1_ = 0;
+			++distance_front_;
+			clevelf_ = clevelf1_;
+			clevelf1_ = 0;
 		} else {
 
 			c2 = 0;
@@ -80,15 +77,14 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				--clevelb_;
 				// c2++;
 				//expand node
-                Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
+				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
-					if (mode == 'S')
-						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
-							continue;
-					if (explored_set_.search(tempId))  {
+					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
+						continue;
+					if (pr_graph_.checkVisitedNode(tempId, dirf_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
-					} else if (explored_set_x.searchInsert(tempId)) {
+					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirb_, visit_version_)) {
 						//explored_set_x.insert(tempId);
 						frontier_back_.enqueue(tempId);
 						++clevelb1_;
@@ -115,6 +111,6 @@ void ShortestPath::reset() {
 	clevelf1_ = 0;
 	frontier_front_.clear();
 	frontier_back_.clear();
-	explored_set_.clear();
-	explored_set_x.clear();
+	visit_version_++;
+	//cout << visit_version_ << "\n";
 }

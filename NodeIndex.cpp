@@ -89,11 +89,11 @@ uint32_t NodeIndex::getAverageNeighbors() {
 }
 
 /* Return false if flags are the same, otherwise set and return true */
-bool NodeIndex::setListHeadVisitedFlag(const uint32_t &node_id, const bool &visited_flag) {
-    if (index_[node_id].visited_flag_ == visited_flag) {
+bool NodeIndex::checkSetListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version) {
+    if (index_[node_id].visit_version_ == visit_version) {
         return false;
     }
-    index_[node_id].visited_flag_ = visited_flag;
+    index_[node_id].visit_version_ = visit_version;
     return true;
 }
 

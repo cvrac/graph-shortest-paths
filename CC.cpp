@@ -18,7 +18,7 @@ void CC::estimateConnectedComponents() {
 
     bool first = true;
     for (uint32_t start_node = 0, cc_id = 0 ; start_node < total_nodes ; start_node++) {
-        if (! graph_.markVisitedNode(start_node, visited_flag_)) {
+        if (! graph_.checkMarkVisitedNode(start_node, 'A', visit_version_)) {
             continue;
         }
         if (!first) {
@@ -31,7 +31,7 @@ void CC::estimateConnectedComponents() {
             Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A');
             for (int i = 0; i < neighbors.getElements(); i++) {
                 node = neighbors[i];
-                if (graph_.markVisitedNode(node, visited_flag_)) {
+                if (graph_.checkMarkVisitedNode(node, 'A', visit_version_)) {
                     frontier_.enqueue(node);
                     ccindex_[node] = cc_id;
                 }
@@ -104,12 +104,7 @@ void CC::reset() {
     update_index_.setElements(total_nodes);
     queries_count_ = 0;
     update_index_use_count_ = 0;
-    if (visited_flag_) {
-        visited_flag_ = false;
-    }
-    else {
-        visited_flag_ = true;
-    }
+    visit_version_++;
 }
 
 void CC::print() {

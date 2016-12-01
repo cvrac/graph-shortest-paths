@@ -20,7 +20,8 @@ public:
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
     uint32_t getNodes() {return outer_index_.getCurSize();}
     uint32_t getStatistics();
-    bool markVisitedNode(const uint32_t &node_id, const bool &visited_flag) { return bidirectional_index_.setListHeadVisitedFlag(node_id, visited_flag);}
+    bool checkMarkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version);
+    bool checkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version);
     void printAll();
     void print();
 

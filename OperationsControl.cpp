@@ -12,8 +12,8 @@
 
 using namespace std;
 
-OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_, hashSize),
- strongly_conn_(hashSize, graph_, path_), connected_components_(graph_, hashSize, cc_threshold) { }
+OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_),
+ strongly_conn_(hashSize, graph_, path_), connected_components_(graph_, cc_threshold) { }
 
 OperationsControl::~OperationsControl() { }
 
@@ -34,7 +34,7 @@ void OperationsControl::run(const uint32_t &hashSize, const char &mode) {
         this->strongly_conn_.estimateStronglyConnectedComponents();
     }
     //start = clock();
-    // this->runQueries(mode);
+     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
     // if (mode == 's') {
     //     this->strongly_conn_.print();
