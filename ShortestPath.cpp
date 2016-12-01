@@ -23,8 +23,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 	//initilizations of structures
 	uint32_t tempId, node_id, comp1, comp2;
 	if (mode == 'S') {
-		strongly_conn_.findNodeStronglyConnectedComponentID(source);
-		strongly_conn_.findNodeStronglyConnectedComponentID(target);
+		comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(source);
+		comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(target);
 	}
 	short int child_check;
 
@@ -56,9 +56,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
-					if (mode == 'S')
-						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
-							continue;
+					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
+						continue;
 					if (explored_set_x.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_.searchInsert(tempId)) {
@@ -83,9 +82,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
                 Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
-					if (mode == 'S')
-						if (strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
-							continue;
+					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
+						continue;
 					if (explored_set_.search(tempId))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (explored_set_x.searchInsert(tempId)) {

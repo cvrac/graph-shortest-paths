@@ -57,7 +57,6 @@ void SCC::tarjanAlgorithm() {
         if ((node = graph.outer_index_.getListHead(i)) != NULL) {
             if (vertices[i].visited == false)
                 stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
-            // if (!visited.search(i))
         }
     }
 
@@ -70,55 +69,13 @@ void SCC::tarjanAlgorithm() {
     vertices = NULL;
 }
 
-// // void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index) {
-// //     uint32_t v = node, tempId;
-// //     vertices[v].index_ = *index;
-// //     vertices[v].lowlink_ = *index;
-// //     ++(*index);
-// //     vertices[v].last_neighbor_ = 0;
-// //     vertices[v].parent_id_ = v;
-// //     vertices[v].onStack = true;
-// //     tarj_stack.enstack(v);
-// //     while (true) {
-// //         if (vertices[v].last_neighbor_ < vertices[v].total) {
-// //             tempId = vertices[v].neighbors[vertices[v].last_neighbor_];
-// //             ++vertices[v].last_neighbor_;
-// //             if (visited.searchInsert(tempId)) {
-// //                 vertices[tempId].node_id_ = tempId;
-// //                 vertices[tempId].index_ = *index;
-// //                 vertices[tempId].lowlink_ = *index;
-// //                 vertices[tempId].parent_id_ = v;
-// //                 ++(*index);
-// //                 tarj_stack.enstack(tempId);
-// //                 vertices[tempId].onStack = true;
-// //                 v = tempId;
-// //             } else if (vertices[tempId].onStack == true) {
-// //                 vertices[v].lowlink_ = (vertices[v].lowlink_ < vertices[tempId].index_)
-//                     ? vertices[v].lowlink_ : vertices[tempId].index_;
-//             }
-//         } else {
-//             if (vertices[v].lowlink_ == vertices[v].index_) {
-//                 Component &comp = components_[components_count_];
-//                 do {
-//                     tempId = tarj_stack.popBack();
-//                     vertices[tempId].onStack = false;
-//                     comp.included_node_ids.enstack(tempId);
-//                     ++comp.included_nodes_count;
-//                     id_belongs_to_component_[tempId] = components_count_;
-//                 } while (tempId != v);
-//                 ++components_count_;
-//             }
-//             uint32_t parent_id_ = vertices[v].parent_id_;
-//             if (parent_id_ != v) {
-//                 vertices[parent_id_].lowlink_ = (vertices[parent_id_].lowlink_ < vertices[v].lowlink_)
-//                     ? vertices[parent_id_].lowlink_ : vertices[v].lowlink_;
-//             }
-//         }
-//     }
-//
-//     tarj_stack.clear();
-//
 
+/*For a given node as a root, calculates the strongly connected components on the paths from it
+ *Use of vertices array index, where info for each vertex is stored
+ *For the non-recursive implementation, we need a stack to keep the current path
+ *A vertex ain't poped from the stack, until the exploration of its children etc has finished, and
+ *when this happens, we check whether there has been formatted a new SCC
+ */
 void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index) {
 
     uint32_t v, w, tempId;
@@ -126,12 +83,6 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
 
     while (dfs_stack.isEmpty() == false) {
         v = dfs_stack.top();
-        // cout << dfs_stack.getSize() << endl;
-        // cout << dfs_stack.getElements() << endl;
-        // cout << graph.getNodes() << endl;
-        // cout << "v = " << v << endl;
-        // cout << "parent = " << vertices[v].parent_id_ << endl;
-        // cout << "children visited parent = " << vertices[vertices[v].parent_id_].childrenvisited << " total " << vertices[vertices[v].parent_id_].total << endl;
         if (vertices[v].visited == false) {
             vertices[v].visited = true;
             vertices[v].index_ = *index;
@@ -140,27 +91,19 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
             tarj_stack.enstack(v);
             vertices[v].onStack = true;
         }
-        // Garray<uint32_t> &neighbors = graph.getNeighbors(v, 'F');
-        // vertices[v].total = neighbors.getElements();
         if (vertices[v].childrenvisited < vertices[v].total) {
-            // for (uint32_t i = verti; i < vertices[v].total; i++) {
             w = vertices[v].neighbors[vertices[v].childrenvisited];
-            // cout << "w = " << w << endl;
             if (vertices[w].visited == false) {
                 vertices[w].parent_id_ = v;
                 ++vertices[v].childrenvisited;
                 dfs_stack.enstack(w);
-                // cout << w << " not visited" << endl;
             } else if (vertices[w].onStack == true) {
                 vertices[v].lowlink_ = (vertices[v].lowlink_ < vertices[w].index_)
                     ? vertices[v].lowlink_ : vertices[w].index_;
                 ++vertices[v].childrenvisited;
-                // cout << w << " visited " << endl;
             } else if (vertices[w].visited == true) {
-                // cout << w << " visited " << endl;
                 ++vertices[v].childrenvisited;
             }
-            // }
         } else {
             v = dfs_stack.popBack();
             if (vertices[v].childrenvisited == vertices[v].total) {
@@ -209,12 +152,3 @@ void SCC::print() {
         cout << "-------------------------------" << endl;
     }
 }
-
-// SCC::Component& SCC::Component::operator=(const SCC::Component& other) {
-//   if (this != &other) {
-//       this->component_id = other.component_id;
-//       this->included_nodes_count = other.included_nodes_count;
-//       memcpy(&this->included_node_ids, &other.included_node_ids, included_nodes_count * sizeof(Garray<uint32_t>));
-//   }
-//   return *this;
-// }

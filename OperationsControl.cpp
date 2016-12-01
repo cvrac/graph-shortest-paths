@@ -34,7 +34,7 @@ void OperationsControl::run(const uint32_t &hashSize, const char &mode) {
         this->strongly_conn_.estimateStronglyConnectedComponents();
     }
     //start = clock();
-    // this->runQueries(mode);
+    this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
     // if (mode == 's') {
     //     this->strongly_conn_.print();
@@ -148,7 +148,7 @@ int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) 
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
     path_.reset();
     if (ret != -1) {
-        // cout << "same component " << source << " " << target << endl;
+        cout << "same component " << source << " " << target << endl;
         return ret;
     } else if (ret == -1)
         ret = path_.shortestPath(source, target, 'A');
