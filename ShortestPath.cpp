@@ -112,5 +112,4 @@ void ShortestPath::reset() {
 	frontier_front_.clear();
 	frontier_back_.clear();
 	visit_version_++;
-	//cout << visit_version_ << "\n";
 }
