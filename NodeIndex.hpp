@@ -35,6 +35,7 @@ public:
     bool checkSetListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version);
     bool checkListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version)
         {if (index_[node_id].visit_version_ == visit_version) return true; else return false;}
+    bool checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag);
     uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const;
     long getListHeadPos(const uint32_t &node_id) const {return index_[node_id].pos;}
     uint32_t getAverageNeighbors();
@@ -48,7 +49,7 @@ private:
     struct ListHead {
         friend class SCC;
 
-        ListHead() : pos(-1), last_pos(-1), total_neighbors(0), neighbors_hash_(NULL), visit_version_(0) {
+        ListHead() : pos(-1), last_pos(-1), total_neighbors(0), neighbors_hash_(NULL), visit_version_(0), cc_flag_(false) {
             //neighbors_hash_ = new HashTable(HASH_SIZE);
         }
 
@@ -57,6 +58,7 @@ private:
         uint32_t total_neighbors;
         HashTable<uint32_t> *neighbors_hash_; // Allocate only when needed
         unsigned long long visit_version_;
+        bool cc_flag_; // Similar to visit_version_, suitable for search that always visits the whole graph
     };
 
     ListHead *index_;

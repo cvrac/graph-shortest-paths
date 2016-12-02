@@ -12,16 +12,13 @@ class CC {
 
 public:
     struct UpdateCell {
-        UpdateCell() : neighbor_(0), neighbor_exists_(false), ptr_(0), ptr_exists_(false) {}
-        void print();
+        UpdateCell() : neighbor_(0), visit_version_(0) {}
 
         uint32_t neighbor_;
-        uint32_t ptr_;
-        bool neighbor_exists_;
-        bool ptr_exists_;
+        unsigned long long visit_version_;
     };
 
-    CC(Graph &graph, const float &threshold) : graph_(graph), frontier_(INITIAL_FRONTIER_ARRAY_SIZE), visit_version_(0),
+    CC(Graph &graph, const float &threshold) : graph_(graph), frontier_(INITIAL_FRONTIER_ARRAY_SIZE), cc_flag_(false), visit_version_(0),
                                                queries_count_(0), update_index_use_count_(0), threshold_(threshold), total_rebuilds_(0) {}
     ~CC();
     void estimateConnectedComponents();
@@ -41,6 +38,7 @@ private:
     Garray<uint32_t> ccindex_;
     Garray<UpdateCell> update_index_;
     unsigned long long visit_version_;
+    bool cc_flag_;
     uint32_t queries_count_;
     uint32_t update_index_use_count_;
     float threshold_;

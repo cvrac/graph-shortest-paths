@@ -17,7 +17,7 @@ inline void Graph::insertNode(const uint32_t node_id) {
     inner_index_.insertNode(node_id);
 }
 
-uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
+uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id) {
     uint32_t min = source_node_id;
     uint32_t max = target_node_id;
     if (target_node_id < min) {
@@ -26,15 +26,15 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     }
     this->insertNode(max);
     this->insertNode(min);
-    if (bidirectional) {
+    /*if (bidirectional) {
         //bidirectional_index_.insertNode(min);
         bidirectional_index_.insertNode(max);
-    }
+    }*/
     return min;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const bool &bidirectional) {
-    const uint32_t min = this->insertNodes(source_node_id, target_node_id, bidirectional);
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id) {
+    const uint32_t min = this->insertNodes(source_node_id, target_node_id);
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;
@@ -52,14 +52,10 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     } else {
         return false;
     }
-    if (bidirectional) {
-       // uint32_t max = target_node_id;
-      //  if (min == target_node_id) {
-       //     max = source_node_id;
-       // }
+    /*if (bidirectional) {
         this->insertEdge(source_node_id, target_node_id, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
         this->insertEdge(target_node_id, source_node_id, &this->bidirectional_index_, &this->bidirectional_buffer_, true);
-    }
+    }*/
     // clock_t end = clock();
     // cout << "edge insertion took " << static_cast<double>((end - start) / CLOCKS_PER_SEC) << endl;
     return true;
@@ -107,36 +103,37 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } else if (direction == 'A') {
+    } /*else if (direction == 'A') {
         index = &bidirectional_index_;
-    }
-
+    }*/
     return index->getListHeadNeighbors(source);
 }
 
 
 Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
-    NodeIndex *index;
-    Buffer *buffer;
-    if (direction == 'F') {
-        index = &outer_index_;
-        buffer = &outer_buffer_;
-    } else if (direction == 'B') {
-        index = &inner_index_;
-        buffer = &inner_buffer_;
+    neighbors_array_.clear();
+    if (direction == 'F' || direction == 'B') {
+        NodeIndex *index;
+        Buffer *buffer;
+        if (direction == 'F') {
+            index = &outer_index_;
+            buffer = &outer_buffer_;
+        } else if (direction == 'B') {
+            index = &inner_index_;
+            buffer = &inner_buffer_;
+        }
+        uint32_t total_neighbors = index->getListHeadNeighbors(node_id);
+        neighbors_array_.increaseSize(total_neighbors);
+        return this->getNeighbors(node_id, *index, *buffer);
     } else if (direction == 'A') {
-        index = &bidirectional_index_;
-        buffer = &bidirectional_buffer_;
+        uint32_t total_neighbors = inner_index_.getListHeadNeighbors(node_id) + outer_index_.getListHeadNeighbors(node_id);
+        neighbors_array_.increaseSize(total_neighbors);
+        getNeighbors(node_id, inner_index_, inner_buffer_);
+        return getNeighbors(node_id, outer_index_, outer_buffer_);
     }
-
-    return this->getNeighbors(node_id, *index, *buffer);
 }
 
-/* Caller should free after use */
 Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {
-    neighbors_array_.clear();
-    uint32_t total_neighbors = index.getListHeadNeighbors(node_id);
-    neighbors_array_.increaseSize(total_neighbors);
     long list_node_pos = index.getListHeadPos(node_id);
     if (list_node_pos != -1) {
         long pos = list_node_pos;
@@ -159,9 +156,9 @@ bool Graph::checkMarkVisitedNode(const uint32_t &node_id, const char &direction,
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } else if (direction == 'A') {
+    } /*else if (direction == 'A') {
         index = &bidirectional_index_;
-    }
+    }*/
     return index->checkSetListHeadVisitedVersion(node_id, visit_version);
 }
 
@@ -171,9 +168,9 @@ bool Graph::checkVisitedNode(const uint32_t &node_id, const char &direction, con
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } else if (direction == 'A') {
+    } /*else if (direction == 'A') {
         index = &bidirectional_index_;
-    }
+    }*/
     return index->checkListHeadVisitedVersion(node_id, visit_version);
 }
 
@@ -219,7 +216,7 @@ void Graph::print() {
     cout << "\n*** INNER ***\n";
     this->print(inner_index_, inner_buffer_);
     cout << "\n*** BIDIRECTIONAL ***\n";
-    this->print(bidirectional_index_, bidirectional_buffer_);
+    //this->print(bidirectional_index_, bidirectional_buffer_);
 
 }
 

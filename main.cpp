@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char **argv) {
     uint32_t hashSize = 131;
     char mode = 'n';
-    float cc_threshold = 0.49;
+    float cc_threshold = 1;
     if (argc > 1) {
         hashSize = (uint32_t) atol(argv[1]);
     }
@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     }
 
     OperationsControl operationsControl(hashSize, cc_threshold);
-    operationsControl.run(hashSize, mode);
+    operationsControl.run(mode);
 
     return 0;
 }

@@ -19,21 +19,21 @@ void CC::estimateConnectedComponents() {
     bool first = true;
     uint32_t cc_id = 0;
     for (uint32_t start_node = 0 ; start_node < total_nodes ; start_node++) {
-        if (! graph_.checkMarkVisitedNode(start_node, 'A', visit_version_)) {
+        if (! graph_.checkMarkCCFlag(start_node, cc_flag_)) {
             continue;
         }
         if (!first) {
             cc_id++;
         }
         ccindex_[start_node] = cc_id;
-        frontier_.enqueue(start_node);
+        frontier_.enstack(start_node);
         while (! frontier_.isEmpty()) {
-            uint32_t node = frontier_.popFront();
+            uint32_t node = frontier_.popBack();
             Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A');
             for (int i = 0; i < neighbors.getElements(); i++) {
                 node = neighbors[i];
-                if (graph_.checkMarkVisitedNode(node, 'A', visit_version_)) {
-                    frontier_.enqueue(node);
+                if (graph_.checkMarkCCFlag(node, cc_flag_)) {
+                    frontier_.enstack(node);
                     ccindex_[node] = cc_id;
                 }
             }
@@ -42,8 +42,10 @@ void CC::estimateConnectedComponents() {
             first = false;
         }
     }
-    update_index_.init(cc_id+1);
-    update_index_.setElements(cc_id+1);
+    //if (visit_version_ == 1) {   // Omitting new/deletes with versioning barely helps
+        update_index_.init(cc_id+1);
+        update_index_.setElements(cc_id+1);
+  //  }
 }
 
 void CC::insertNewEdge(const uint32_t &source_node, const uint32_t &target_node) {
@@ -83,36 +85,20 @@ void CC::insertNewEdge(const uint32_t &source_node, const uint32_t &target_node)
         min = max;
         max = temp;
     }
-    while (update_index_[min].neighbor_exists_) {
+    while (update_index_[min].visit_version_ == visit_version_) {
         if (update_index_[min].neighbor_ == max) {
             return;
         } else if (update_index_[min].neighbor_ < max) {
             min = update_index_[min].neighbor_;
         }
         else {
-            if (! update_index_[min].ptr_exists_) {
-                update_index_[min].ptr_ = max;
-                update_index_[min].ptr_exists_ = true;
-            }
-            uint32_t base = update_index_[min].ptr_;
             uint32_t temp = max;
             max = update_index_[min].neighbor_;
             min = temp;
-            if (update_index_[base].neighbor_ == min) {
-                return;
-            }
-            while (update_index_[base].ptr_exists_) {
-                base = update_index_[base].ptr_;
-                if (update_index_[base].neighbor_ == min) {
-                    return;
-                }
-            }
-            update_index_[base].ptr_ = min;
-            update_index_[base].ptr_exists_ = true;
         }
     }
     update_index_[min].neighbor_ = max;
-    update_index_[min].neighbor_exists_ = true;
+    update_index_[min].visit_version_ = visit_version_;
 }
 
 bool CC::sameConnectedComponent(const uint32_t &source_node, const uint32_t &target_node) {
@@ -138,29 +124,16 @@ bool CC::sameConnectedComponent(const uint32_t &source_node, const uint32_t &tar
         min = max;
         max = temp;
     }
-    while (update_index_[min].neighbor_exists_) {
+    while (update_index_[min].visit_version_ == visit_version_) {
         if (update_index_[min].neighbor_ == max) {
             return true;
         } else if (update_index_[min].neighbor_ < max) {
             min = update_index_[min].neighbor_;
         }
         else {
-            if (! update_index_[min].ptr_exists_) {
-                return false;
-            }
-            uint32_t base = update_index_[min].ptr_;
             uint32_t temp = max;
             max = update_index_[min].neighbor_;
             min = temp;
-            if (update_index_[base].neighbor_ == min) {
-                return true;
-            }
-            while (update_index_[base].ptr_exists_) {
-                base = update_index_[base].ptr_;
-                if (update_index_[base].neighbor_ == min) {
-                    return true;
-                }
-            }
         }
     }
     return false;
@@ -173,6 +146,11 @@ void CC::reset() {
     queries_count_ = 0;
     update_index_use_count_ = 0;
     visit_version_++;
+    if (cc_flag_) {
+        cc_flag_ = false;
+    } else {
+        cc_flag_ = true;
+    }
 }
 
 void CC::print() {
@@ -181,14 +159,9 @@ void CC::print() {
     }
     cout << "Updates: \n";
     for (uint32_t n = 0 ; n < update_index_.getElements() ; n++) {
-        cout << n << ":";
-        update_index_[n].print();
+        cout << n << ":" << (update_index_[n].visit_version_ == visit_version_ ? update_index_[n].neighbor_ : -1);
         cout << "\n";
     }
     cout << endl;
     cout << "Nodes are " << graph_.getNodes() << endl;
-}
-
-void CC::UpdateCell::print() {
-    cout << (neighbor_exists_? " true" : " false") << " " << neighbor_;
 }

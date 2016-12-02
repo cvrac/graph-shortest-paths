@@ -11,7 +11,7 @@ class OperationsControl {
 public:
     OperationsControl(uint32_t &hashSize, const float &cc_threshold);
     ~OperationsControl();
-    void run(const uint32_t &hashSize, const char &mode);
+    void run(const char &mode);
     int estimateShortestPath(uint32_t &source, uint32_t &target);
 
 private:

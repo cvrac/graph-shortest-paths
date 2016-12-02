@@ -97,6 +97,14 @@ bool NodeIndex::checkSetListHeadVisitedVersion(const uint32_t &node_id, const un
     return true;
 }
 
+bool NodeIndex::checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag) {
+    if (index_[node_id].cc_flag_ == cc_flag) {
+        return false;
+    }
+    index_[node_id].cc_flag_ = cc_flag;
+    return true;
+}
+
 void NodeIndex::print() const {
     cout << "--- NodeIndex ---\ncur_size_: " << cur_size_ << ", max_size_: " << max_size_ << endl;
     for (uint32_t node = 0; node < cur_size_; node++) {
