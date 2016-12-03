@@ -169,8 +169,11 @@ bool Garray<T>::search(const T &element) {
     return false;
 }
 
+//extern bool flag;
+
 template <class T>
 T &Garray<T>::operator[](uint32_t i) {
+    //if (flag) std::cout << "i is " << i << ", size is " << size_ << std::endl;
     assert(i < this->size_);
     return this->array_[i];
 }
