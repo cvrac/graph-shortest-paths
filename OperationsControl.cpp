@@ -39,11 +39,10 @@ void OperationsControl::run(const char &mode) {
 }
 
 void OperationsControl::buildGraph(const char &mode) {
-    string line;
     char cLine[100];
+    int cLineSize = sizeof(cLine);
     //bool bidirectional_insert = (mode == 'c');
-    while (getline(cin, line)) {
-        strcpy(cLine, line.c_str());
+    while (fgets(cLine, cLineSize, stdin)) {
         char *n1;
         n1 = strtok(cLine, " \t\n\0");
         if (n1 == NULL) continue;
@@ -57,8 +56,8 @@ void OperationsControl::buildGraph(const char &mode) {
 }
 
 void OperationsControl::runQueries(const char &mode) {
-    string line;
     char cLine[100];
+    int cLineSize = sizeof(cLine);
     //bool bidirectional_insert = (mode == 'c');
     uint32_t search_skips = 0;
     //uint32_t searches = 0;
@@ -68,8 +67,7 @@ void OperationsControl::runQueries(const char &mode) {
     // uint32_t *batch = new uint32_t[size];
     // uint32_t counter = 0;
     //clock_t start = clock();
-    while (getline(cin, line)) { //cout << line << endl;
-        strcpy(cLine, line.c_str());
+    while (fgets(cLine, cLineSize, stdin)) { //cout << cLine << endl;
         char *op;
         op = strtok(cLine, " \t\n\0");
         if (op == NULL) continue;
