@@ -13,16 +13,16 @@
 using namespace std;
 bool flag = false;
 OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_),
- strongly_conn_(hashSize, graph_, path_), connected_components_(graph_, cc_threshold) { }
+ strongly_conn_(graph_, path_), connected_components_(graph_, cc_threshold) { }
 
 OperationsControl::~OperationsControl() { }
 
 void OperationsControl::run(const char &mode) {
-    clock_t start = clock();
+//    clock_t start = clock();
     this->buildGraph(mode);
 //    cout << "Threshold " << connected_components_.getThreshold() << endl;
 //    cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    start = clock();
+//    start = clock();
     if (mode == 'c') {
         connected_components_.estimateConnectedComponents();
 //        cout << "estimateConnectedComponents: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
@@ -31,13 +31,11 @@ void OperationsControl::run(const char &mode) {
     if (mode == 's') {
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
+        //this->strongly_conn_.print();
     }
     //start = clock();
     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    // if (mode == 's') {
-    //     this->strongly_conn_.print();
-    // }
 }
 
 void OperationsControl::buildGraph(const char &mode) {
@@ -98,7 +96,7 @@ void OperationsControl::runQueries(const char &mode) {
             // counter += 3;
             // graph_.insertEdge(sourceNode, targetNode);
         } else if (!strcmp(op, "Q")) {
-            clock_t start = clock();
+//            clock_t start = clock();
             char *node = strtok(NULL, " \t\n\0");
             if (node == NULL) continue;
             uint32_t sourceNode = atol(node);
@@ -112,7 +110,7 @@ void OperationsControl::runQueries(const char &mode) {
             }
 
             if (mode == 's') {
-                cout << this->estimateShortestPath(sourceNode, targetNode) << endl;
+                cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
             } else if (mode == 'c') {
                 if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
                     //searches++;
@@ -127,7 +125,7 @@ void OperationsControl::runQueries(const char &mode) {
                 cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
                 path_.reset();
             }
-            total_query_time += (clock() - start) / (double) CLOCKS_PER_SEC;
+//            total_query_time += (clock() - start) / (double) CLOCKS_PER_SEC;
             // if (counter == size) {
             //     uint32_t *old = batch;
             //     batch = new uint32_t[size * 2];
@@ -144,7 +142,7 @@ void OperationsControl::runQueries(const char &mode) {
             total_query_time = 0;
             if (mode == 'c') {
                 if (connected_components_.needRebuilding()) {
-                    clock_t start = clock();
+//                    clock_t start = clock();
                     connected_components_.rebuildIndexes();
 //                    cout << "Rebuilding time: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
                     //total_rebuilding_time += (clock() - start) / (double) CLOCKS_PER_SEC;
@@ -172,7 +170,7 @@ void OperationsControl::runQueries(const char &mode) {
     // delete[] batch;
 }
 
-int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
+inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
     path_.reset();
     if (ret != -1) {

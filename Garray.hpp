@@ -17,6 +17,7 @@ public:
     Garray(const uint32_t &size);
     ~Garray();
     void init(const uint32_t &size);
+    void shrink(const uint32_t &size);
     void enqueue(const T &element) {this->push(element, 'Q');}
     void enstack(const T &element) {this->push(element, 'S');}
     void increaseSize(const uint32_t &min_size);
@@ -158,6 +159,23 @@ void inline Garray<T>::init(const uint32_t &size) {
     size_ = size;
 }
 
+/* Shrink to a lower size, copy old elements up to that size */
+template <class T>
+void Garray<T>::shrink(const uint32_t &size) {
+    if (size_ <= size) {
+        return;
+    }
+    T *old_array = array_;
+    array_ = new T[size];
+    uint32_t new_elements = (elements_ <= size ? elements_ : size);
+    memcpy(array_, old_array, new_elements * sizeof(T));
+    if (old_array != NULL) {
+        delete[] old_array;
+    }
+    size_ = size;
+    elements_ = new_elements;
+}
+
 /* For array/stack use. Can be easily modified to work for queue as well if needed */
 template <class T>
 bool Garray<T>::search(const T &element) {
@@ -169,11 +187,8 @@ bool Garray<T>::search(const T &element) {
     return false;
 }
 
-//extern bool flag;
-
 template <class T>
 T &Garray<T>::operator[](uint32_t i) {
-    //if (flag) std::cout << "i is " << i << ", size is " << size_ << std::endl;
     assert(i < this->size_);
     return this->array_[i];
 }

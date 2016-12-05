@@ -16,18 +16,14 @@ SCC::Component::Component() : component_id(0), included_nodes_count(0) {
 
 SCC::Component::~Component() { }
 
-SCC::SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz),
-    components_(size), components_count_(0), inverted_index_size_(0),
-    id_belongs_to_component_(NULL) { }
+SCC::SCC(Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz) { }
 
-SCC::~SCC() {
-    delete[] id_belongs_to_component_;
-    id_belongs_to_component_ = NULL;
-}
+SCC::~SCC() {}
 
 void SCC::init() {
-    inverted_index_size_ = graph.getNodes();
-    id_belongs_to_component_ = new uint32_t[inverted_index_size_];
+    uint32_t total_nodes = graph.getNodes();
+    id_belongs_to_component_.init(total_nodes);
+    id_belongs_to_component_.setElements(total_nodes);
 }
 
 //SCC estimation, on the given static graph, using Tarjan's algorithm
@@ -43,7 +39,7 @@ void SCC::tarjanAlgorithm() {
     Garray<uint32_t> dfs_stack;
     Vertex *vertices = new Vertex[graph.getNodes()];
     // HashTable<uint32_t> visited(100003);
-    components_.increaseSize(graph.getNodes());
+    components_.init(graph.getNodes());
     NodeIndex::ListHead *node = NULL;
 
     for (uint32_t i = 0; i < graph.getNodes(); i++) {
@@ -59,6 +55,7 @@ void SCC::tarjanAlgorithm() {
                 stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
         }
     }
+    //components_.shrink(components_.getElements());
 
   for (uint32_t i = 0; i < graph.getNodes(); i++) {
         delete[] vertices[i].neighbors;
@@ -79,6 +76,7 @@ void SCC::tarjanAlgorithm() {
 void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index) {
 
     uint32_t v, w, tempId;
+    uint32_t components_count = components_.getElements();
     dfs_stack.enstack(node);
 
     while (dfs_stack.isEmpty() == false) {
@@ -108,15 +106,15 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
             v = dfs_stack.popBack();
             if (vertices[v].childrenvisited == vertices[v].total) {
                 if (vertices[v].lowlink_ == vertices[v].index_) {
-                    Component &comp = components_[components_count_];
+                    Component &comp = components_[components_count];
                     do {
                         tempId = tarj_stack.popBack();
                         vertices[tempId].onStack = false;
                         comp.included_node_ids.enstack(tempId);
                         ++comp.included_nodes_count;
-                        id_belongs_to_component_[tempId] = components_count_;
+                        id_belongs_to_component_[tempId] = components_count;
                     } while (tempId != v);
-                    ++components_count_;
+                    ++components_count;
                 }
                 uint32_t parent_id_ = vertices[v].parent_id_;
                 if (parent_id_ != v) {
@@ -129,7 +127,7 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
         }
 
     }
-
+    components_.setElements(components_count);
     dfs_stack.clear();
     tarj_stack.clear();
 }
@@ -146,9 +144,12 @@ int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint3
 }
 
 void SCC::print() {
-    for (int i = 0; i < components_count_; i++) {
-        cout << "Component " << i << endl;
+    for (int i = 0; i < components_.getElements(); i++) {
+        cout << "Component " << i << "\n";
         components_[i].included_node_ids.print();
-        cout << "-------------------------------" << endl;
+        cout << "-------------------------------" << "\n";
+    }
+    for (int i = 0 ; i < id_belongs_to_component_.getElements() ; i++) {
+        cout << "inverted_index[" << i << "] = " << id_belongs_to_component_[i] << "\n";
     }
 }

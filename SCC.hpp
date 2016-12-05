@@ -14,7 +14,7 @@ class Graph;
 class SCC {
 
 public:
-    SCC(const uint32_t &size, Graph &prgraph, ShortestPath &pathz);
+    SCC(Graph &prgraph, ShortestPath &pathz);
     ~SCC();
     void estimateStronglyConnectedComponents();
     int findNodeStronglyConnectedComponentID(uint32_t &node_id);
@@ -61,9 +61,7 @@ private:
     Graph &graph;
     ShortestPath &path;
     Garray<Component> components_;
-    uint32_t components_count_;
-    uint32_t inverted_index_size_;
-    uint32_t *id_belongs_to_component_;
+    Garray<uint32_t> id_belongs_to_component_;
 };
 
 #endif
