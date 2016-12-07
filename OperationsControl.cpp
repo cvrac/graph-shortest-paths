@@ -112,12 +112,12 @@ void OperationsControl::runQueries(const char &mode) {
             } else if (mode == 'c') {
                 if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
                     //searches++;
-                    cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
+                    path_.shortestPath(sourceNode, targetNode, 'A');// << "\n";
                     path_.reset();
                 }
                 else {
                     search_skips++;
-                    cout << -1 << "\n";
+                    //cout << -1 << "\n";
                 }
             } else if (mode == 'n') {
                 cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
@@ -161,7 +161,7 @@ void OperationsControl::runQueries(const char &mode) {
         //connected_components_.print();
     }
     //connected_components_.print();
-//    cout << "Search skips: " << search_skips; // << "\nSearches: " << searches << endl;
+    cout << "Search skips: " << search_skips; // << "\nSearches: " << searches << endl;
     //cout << "Total rebuilds: " << connected_components_.getTotalRebuilds() << endl;
     //cout << "Rebulding time: " << total_rebuilding_time << endl;
     //cout << "Pure query time: " << ((clock() - start) / (double) CLOCKS_PER_SEC) - total_rebuilding_time << endl;

@@ -36,7 +36,12 @@ public:
     bool checkListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version)
         {if (index_[node_id].visit_version_ == visit_version) return true; else return false;}
     bool checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag);
-    uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const;
+    uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const {
+        if (index_[source].neighbors_hash_ == NULL) {
+            return 0;
+        }
+        return index_[source].neighbors_hash_->getBucketCount(target);
+    }
     long getListHeadPos(const uint32_t &node_id) const {return index_[node_id].pos;}
     uint32_t getAverageNeighbors();
     uint32_t getTotalReallocs() const {return total_reallocs_;}

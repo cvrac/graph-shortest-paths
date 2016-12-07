@@ -73,13 +73,6 @@ bool NodeIndex::searchInsertHash(const uint32_t &node_id, const uint32_t &neighb
     return index_[node_id].neighbors_hash_->searchInsert(neighbor_id);
 }
 
-uint32_t NodeIndex::getHashNeighbors(const uint32_t &source, const uint32_t &target) const {
-    if (index_[source].neighbors_hash_ == NULL) {
-        return 0;
-    }
-    return index_[source].neighbors_hash_->getBucketCount(target);
-}
-
 uint32_t NodeIndex::getAverageNeighbors() {
     long long sum = 0;
     for (uint32_t node = 0; node < cur_size_; node++) {
