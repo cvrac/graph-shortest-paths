@@ -4,10 +4,10 @@ HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffe
 all: gsp
 
 CC 	= g++
-FLAGS	= -g3 -O2 -c
+FLAGS	= -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -g3 -O2 -o gsp $(OBJS)
+	$(CC) -O2 -o gsp $(OBJS)
 
 Array.o: Array.cpp
 	$(CC) $(FLAGS) Array.cpp

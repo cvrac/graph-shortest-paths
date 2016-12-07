@@ -60,9 +60,12 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirf_, visit_version_)) {
 						//explored_set_.insert(tempId);
+                        uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirf_);
+                        if (grandch == 0)
+                            continue;
+                        c1 += grandch;
 						frontier_front_.enqueue(tempId);
 						++clevelf1_;
-						c1 += pr_graph_.getNeighborsCount(tempId, dirf_);
 					}
 				}
 			}
@@ -86,9 +89,12 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirb_, visit_version_)) {
 						//explored_set_x.insert(tempId);
-						frontier_back_.enqueue(tempId);
+                        uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirb_);
+                        if (grandch == 0)
+                            continue;
+                        c2 += grandch;
+                        frontier_back_.enqueue(tempId);
 						++clevelb1_;
-						c2 += pr_graph_.getNeighborsCount(tempId, dirb_);
 					}
 				}
 			}

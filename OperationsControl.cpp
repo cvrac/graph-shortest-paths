@@ -41,8 +41,8 @@ void OperationsControl::run(const char &mode) {
 void OperationsControl::buildGraph(const char &mode) {
     int ch;
     uint32_t sourceNode, targetNode;
-    // char cLine[100];
-    // int cLineSize = sizeof(cLine);
+    char cLine[100];
+    int cLineSize = sizeof(cLine);
 
     // fgets(cLine, cLineSize, stdin);
 
@@ -70,7 +70,7 @@ void OperationsControl::buildGraph(const char &mode) {
         // cout << sourceNode << " " << targetNode << endl;
         graph_.insertEdge(sourceNode, targetNode);
     }
-    //bool bidirectional_insert = (mode == 'c');
+    // bool bidirectional_insert = (mode == 'c');
     // while (fgets(cLine, cLineSize, stdin)) {
     //     char *n1;
     //     n1 = strtok(cLine, " \t\n\0");
@@ -90,19 +90,20 @@ void OperationsControl::runQueries(const char &mode) {
     //uint32_t searches = 0;
     double total_rebuilding_time = 0;
     double total_query_time = 0;
+    char cLine[100];
+    char cLineSize = sizeof(cLine);
     // uint32_t size = 60;
     // uint32_t *batch = new uint32_t[size];
     // uint32_t counter = 0;
     //clock_t start = clock();
     int ch;
-    cout << "foo" << endl;
+
+    while ((ch = getchar()) == '\n') continue;
     while ((ch = getchar()) != '\n') continue;
 
     while ((ch = getchar()) != EOF) {
 
         if (ch == 'F') {
-            // cout << "\nQuery time: " << total_query_time << endl;
-//             total_query_time = 0;
             if (mode == 'c') {
                 if (connected_components_.needRebuilding()) {
 //                    clock_t start = clock();
@@ -158,7 +159,6 @@ void OperationsControl::runQueries(const char &mode) {
                 cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
                 path_.reset();
             }
-            //total_query_time += (clock() - start) / (double) CLOCKS_PER_SEC;
 
         } else if (ch == 'A') {
 
@@ -186,12 +186,7 @@ void OperationsControl::runQueries(const char &mode) {
             }
         }
     }
-    //connected_components_.print();
-    cout << "Search skips: " << search_skips; // << "\nSearches: " << searches << endl;
-    //cout << "Total rebuilds: " << connected_components_.getTotalRebuilds() << endl;
-    //cout << "Rebulding time: " << total_rebuilding_time << endl;
-    //cout << "Pure query time: " << ((clock() - start) / (double) CLOCKS_PER_SEC) - total_rebuilding_time << endl;
-    // delete[] batch;
+
 //     while (fgets(cLine, cLineSize, stdin)) { //cout << cLine << endl;
 //         char *op;
 //         op = strtok(cLine, " \t\n\0");
