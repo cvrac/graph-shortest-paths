@@ -6,7 +6,6 @@
 #include "Garray.hpp"
 
 #define INITIAL_FRONTIER_ARRAY_SIZE 131
-#define HASH_SIZE 3
 
 class CC {
 

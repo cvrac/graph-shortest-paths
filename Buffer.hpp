@@ -8,7 +8,7 @@
 // Test value: 1
 // Actual value: 10000
 
-#define INITIAL_MAX_LIST_NODES 10000
+#define INITIAL_MAX_LIST_NODES 20000
 
 struct BufferFeedback {
 

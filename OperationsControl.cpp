@@ -292,7 +292,7 @@ inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &t
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
     path_.reset();
     if (ret != -1) {
-//        cout << "same component " << source << " " << target << endl;
+    //    cout << "same component " << source << " " << target << endl;
         return ret;
     } else if (ret == -1)
         ret = path_.shortestPath(source, target, 'A');

@@ -50,17 +50,17 @@ void SCC::tarjanAlgorithm() {
     }
 
     for (uint32_t i = 0; i < graph.getNodes(); i++) {
-        if ((node = graph.outer_index_.getListHead(i)) != NULL) {
-            if (vertices[i].visited == false)
-                stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
-        }
+        // if ((node = graph.outer_index_.getListHead(i)) != NULL) {
+        if (vertices[i].visited == false)
+            stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
+        // }
     }
     //components_.shrink(components_.getElements());
 
-  for (uint32_t i = 0; i < graph.getNodes(); i++) {
-        delete[] vertices[i].neighbors;
-        vertices[i].neighbors = NULL;
-    }
+    // for (uint32_t i = 0; i < graph.getNodes(); i++) {
+    //     delete[] vertices[i].neighbors;
+    //     vertices[i].neighbors = NULL;
+    // }
 
     delete[] vertices;
     vertices = NULL;
