@@ -6,9 +6,7 @@
 #include "HashTable.hpp"
 
 // Test size: 3
-// Actual size: 1000
 
-#define INITIAL_INDEX_MAX_SIZE 100000
 #define HASH_SIZE 3
 
 class SCC;
@@ -20,8 +18,9 @@ class NodeIndex {
 public:
     friend class SCC;
 
-    NodeIndex();
+    NodeIndex(const uint32_t &size);
     ~NodeIndex();
+    void init(const uint32_t &size);
     void insertNode(const uint32_t &node_id);
     ListHead *getListHead(const uint32_t &node_id) const {return &index_[node_id];}
     uint32_t getCurSize() const {return cur_size_;}

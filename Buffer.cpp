@@ -8,8 +8,8 @@
 
 using namespace std;
 
-Buffer::Buffer() : buffer_(new ListNode[INITIAL_MAX_LIST_NODES]),
-    cur_list_nodes_(0), max_list_nodes_(INITIAL_MAX_LIST_NODES), total_reallocs_(0) {
+Buffer::Buffer(const uint32_t &list_nodes) : buffer_(new ListNode[list_nodes]),
+    cur_list_nodes_(0), max_list_nodes_(list_nodes), total_reallocs_(0) {
     // buffer_ = new ListNode[INITIAL_MAX_LIST_NODES * sizeof(ListNode)];
 //    buffer_ = (ListNode *)malloc(INITIAL_MAX_LIST_NODES * sizeof(ListNode));
     assert(buffer_ != NULL);

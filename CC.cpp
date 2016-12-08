@@ -13,13 +13,13 @@ CC::~CC() {}
 
 void CC::estimateConnectedComponents() {
     this->reset();
-    uint32_t total_nodes = graph_.getNodes();
+    uint32_t total_nodes = graph_.getNodes('N');
     assert(total_nodes);
 
     bool first = true;
     uint32_t cc_id = 0;
     for (uint32_t start_node = 0 ; start_node < total_nodes ; start_node++) {
-        if (! graph_.checkMarkCCFlag(start_node, cc_flag_)) {
+        if (! graph_.checkMarkCCFlag(start_node, cc_flag_, 'N')) {
             continue;
         }
         if (!first) {
@@ -32,7 +32,7 @@ void CC::estimateConnectedComponents() {
             Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A');
             for (int i = 0; i < neighbors.getElements(); i++) {
                 node = neighbors[i];
-                if (graph_.checkMarkCCFlag(node, cc_flag_)) {
+                if (graph_.checkMarkCCFlag(node, cc_flag_, 'N')) {
                     frontier_.enstack(node);
                     ccindex_[node] = cc_id;
                 }
@@ -165,7 +165,7 @@ bool CC::sameConnectedComponent(const uint32_t &source_node, const uint32_t &tar
 }
 
 void CC::reset() {
-    uint32_t total_nodes = graph_.getNodes();
+    uint32_t total_nodes = graph_.getNodes('N');
     ccindex_.init(total_nodes);
     ccindex_.setElements(total_nodes);
     queries_count_ = 0;
@@ -193,5 +193,5 @@ void CC::print() {
             cout << "size_index_[" << i << "] = " << size_index_[i] << "\n";
         }
     }
-    cout << "Nodes are " << graph_.getNodes() << endl;
+    cout << "Nodes are " << graph_.getNodes('N') << endl;
 }

@@ -8,8 +8,6 @@
 // Test value: 1
 // Actual value: 10000
 
-#define INITIAL_MAX_LIST_NODES 20000
-
 struct BufferFeedback {
 
 public:
@@ -22,7 +20,7 @@ public:
 class Buffer {
 
 public:
-    Buffer();
+    Buffer(const uint32_t &list_nodes);
     ~Buffer();
     long allocNewNode();
     ListNode *getListNode(const long &list_node_pos) const {return &buffer_[list_node_pos];}

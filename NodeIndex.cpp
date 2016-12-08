@@ -8,14 +8,16 @@
 
 using namespace std;
 
-NodeIndex::NodeIndex() : index_(new ListHead[INITIAL_INDEX_MAX_SIZE]), cur_size_(0),
-    max_size_(INITIAL_INDEX_MAX_SIZE), total_reallocs_(0) {
+NodeIndex::NodeIndex(const uint32_t &size) : index_(NULL), cur_size_(0),
+    max_size_(size), total_reallocs_(0) {
+    if (size) {
+        index_ = new ListHead[size];
+        assert(index_ != NULL);
+    }
 //    index_ = (ListHead *)malloc(INITIAL_INDEX_MAX_SIZE * sizeof(ListHead));
-    assert(index_ != NULL);
 //    for (uint32_t i = 0 ; i < INITIAL_INDEX_MAX_SIZE ; i++) {
 //        new (&index_[i]) ListHead();
 //    }
-    index_->total_neighbors = 0;
 }
 
 NodeIndex::~NodeIndex() {
@@ -26,6 +28,11 @@ NodeIndex::~NodeIndex() {
 //    free(index_);
 }
 
+void NodeIndex::init(const uint32_t &size) {
+    assert(!max_size_ );
+    index_ = new ListHead[size];
+    max_size_ = size;
+}
 
 void NodeIndex::insertNode(const uint32_t &node_id) {
     if (max_size_ <= node_id) {

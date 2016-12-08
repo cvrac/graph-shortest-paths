@@ -10,22 +10,27 @@ using namespace std;
 Graph::~Graph() {
     outer_index_.deleteNeigborsHash();
     inner_index_.deleteNeigborsHash();
+    scc_index_.deleteNeigborsHash();
 }
 
-inline void Graph::insertNode(const uint32_t node_id) {
-    outer_index_.insertNode(node_id);
-    inner_index_.insertNode(node_id);
+inline void Graph::insertNode(const uint32_t node_id, const char &mode) {
+    if (mode == 'N') {
+        outer_index_.insertNode(node_id);
+        inner_index_.insertNode(node_id);
+    } else if (mode == 'S') {
+        scc_index_.insertNode(node_id);
+    }
 }
 
-uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id) {
+uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode) {
     uint32_t min = source_node_id;
     uint32_t max = target_node_id;
     if (target_node_id < min) {
         min = target_node_id;
         max = source_node_id;
     }
-    this->insertNode(max);
-    this->insertNode(min);
+    this->insertNode(max, mode);
+    this->insertNode(min, mode);
     /*if (bidirectional) {
         //bidirectional_index_.insertNode(min);
         bidirectional_index_.insertNode(max);
@@ -33,8 +38,11 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     return min;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id) {
-    const uint32_t min = this->insertNodes(source_node_id, target_node_id);
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode) {
+    const uint32_t min = this->insertNodes(source_node_id, target_node_id, mode);
+    if (mode == 'S') {
+        return this->insertEdge(source_node_id, target_node_id, &scc_index_, &scc_buffer_, false);
+    }
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;
@@ -103,16 +111,16 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } /*else if (direction == 'A') {
-        index = &bidirectional_index_;
-    }*/
+    } else if (direction == 'S') {
+        index = &scc_index_;
+    }
     return index->getListHeadNeighbors(source);
 }
 
 
 Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
     neighbors_array_.clear();
-    if (direction == 'F' || direction == 'B') {
+    if (direction == 'F' || direction == 'B' || direction == 'S') {
         NodeIndex *index;
         Buffer *buffer;
         if (direction == 'F') {
@@ -121,6 +129,9 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direc
         } else if (direction == 'B') {
             index = &inner_index_;
             buffer = &inner_buffer_;
+        } else if (direction == 'S') {
+            index = &scc_index_;
+            buffer = &scc_buffer_;
         }
         uint32_t total_neighbors = index->getListHeadNeighbors(node_id);
         neighbors_array_.increaseSize(total_neighbors);
@@ -156,9 +167,9 @@ bool Graph::checkMarkVisitedNode(const uint32_t &node_id, const char &direction,
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } /*else if (direction == 'A') {
-        index = &bidirectional_index_;
-    }*/
+    } else if (direction == 'S') {
+        index = &scc_index_;
+    }
     return index->checkSetListHeadVisitedVersion(node_id, visit_version);
 }
 
@@ -168,14 +179,14 @@ bool Graph::checkVisitedNode(const uint32_t &node_id, const char &direction, con
         index = &outer_index_;
     } else if (direction == 'B') {
         index = &inner_index_;
-    } /*else if (direction == 'A') {
-        index = &bidirectional_index_;
-    }*/
+    } else if (direction == 'S') {
+        index = &scc_index_;
+    }
     return index->checkListHeadVisitedVersion(node_id, visit_version);
 }
 
 uint32_t Graph::getStatistics() {
-    cout << "Nodes: " << this->getNodes() << "\nAverage outer edges: " <<
+    cout << "Nodes: " << this->getNodes('N') << "\nAverage outer edges: " <<
     outer_index_.getAverageNeighbors() << "\nAverage inner edges: " <<
     inner_index_.getAverageNeighbors() << "\nBuffer reallocs: " <<
     outer_buffer_.getTotalReallocs() + inner_buffer_.getTotalReallocs() << "\nNodeIndex reallocs: " <<
@@ -187,7 +198,8 @@ void Graph::printAll() {
     this->printAll(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
     this->printAll(inner_index_, inner_buffer_);
-}
+    cout << "\n*** SCC ***\n";
+    this->printAll(scc_index_, scc_buffer_);}
 
 void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
     buffer.print();
@@ -215,13 +227,14 @@ void Graph::print() {
     this->print(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
     this->print(inner_index_, inner_buffer_);
-    cout << "\n*** BIDIRECTIONAL ***\n";
-    //this->print(bidirectional_index_, bidirectional_buffer_);
+    cout << "\n*** SCC ***\n";
+    this->print(scc_index_, scc_buffer_);
 
 }
 
 void Graph::print(const NodeIndex &index, const Buffer &buffer) {
     for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
+        neighbors_array_.clear();
         Garray<uint32_t > &neighbors = this->getNeighbors(node, index, buffer);
          cout << "Node " << node << " has " << neighbors.getElements() << " neighbors:\n";
         neighbors.print();

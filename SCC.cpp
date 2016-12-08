@@ -21,7 +21,7 @@ SCC::SCC(Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz) { }
 SCC::~SCC() {}
 
 void SCC::init() {
-    uint32_t total_nodes = graph.getNodes();
+    uint32_t total_nodes = graph.getNodes('N');
     id_belongs_to_component_.init(total_nodes);
     id_belongs_to_component_.setElements(total_nodes);
 }
@@ -37,19 +37,19 @@ void SCC::tarjanAlgorithm() {
     uint32_t index = 0;
     Garray<uint32_t> tarj_stack;
     Garray<uint32_t> dfs_stack;
-    Vertex *vertices = new Vertex[graph.getNodes()];
+    Vertex *vertices = new Vertex[graph.getNodes('N')];
     // HashTable<uint32_t> visited(100003);
-    components_.init(graph.getNodes());
+    components_.init(graph.getNodes('N'));
     NodeIndex::ListHead *node = NULL;
 
-    for (uint32_t i = 0; i < graph.getNodes(); i++) {
+    for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
         Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F');
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
-    for (uint32_t i = 0; i < graph.getNodes(); i++) {
+    for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
         // if ((node = graph.outer_index_.getListHead(i)) != NULL) {
         if (vertices[i].visited == false)
             stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);

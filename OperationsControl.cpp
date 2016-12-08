@@ -68,7 +68,7 @@ void OperationsControl::buildGraph(const char &mode) {
             ch = getchar();
         }
         // cout << sourceNode << " " << targetNode << endl;
-        graph_.insertEdge(sourceNode, targetNode);
+        graph_.insertEdge(sourceNode, targetNode, 'N');
     }
     // bool bidirectional_insert = (mode == 'c');
     // while (fgets(cLine, cLineSize, stdin)) {
@@ -135,7 +135,7 @@ void OperationsControl::runQueries(const char &mode) {
                 ch = getchar();
             }
 
-            uint32_t total_nodes = graph_.getNodes();
+            uint32_t total_nodes = graph_.getNodes('N');
             if (sourceNode >= total_nodes || targetNode >= total_nodes) {
                 cout << -1 << "\n";
                 continue;
@@ -181,7 +181,7 @@ void OperationsControl::runQueries(const char &mode) {
                 ch = getchar();
             }
 
-            if (graph_.insertEdge(sourceNode, targetNode) && mode == 'c') {
+            if (graph_.insertEdge(sourceNode, targetNode, 'N') && mode == 'c') {
                 connected_components_.insertNewEdge(sourceNode, targetNode);
             }
         }
