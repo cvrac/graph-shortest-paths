@@ -7,7 +7,8 @@
 
 // Test size: 3
 
-#define HASH_SIZE 43
+#define HASH_SIZE 3
+#define HASH_SIZE_SCC 43
 
 class SCC;
 
@@ -27,9 +28,9 @@ public:
     void setListHeadPos(const uint32_t &node_id, const long &head) {index_[node_id].pos = head;}
     void setListHeadLast(const uint32_t &node_id, const long &last) {index_[node_id].last_pos = last;}
     void setListHeadNeighbors(const uint32_t &node_id, const uint32_t &n) {index_[node_id].total_neighbors = n;}
-    void insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
+    void insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode);
     bool searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
-    bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id);
+    bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode);
     uint32_t getListHeadNeighbors(const uint32_t &node_id) const {return index_[node_id].total_neighbors;}
     bool checkSetListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version);
     bool checkListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version)

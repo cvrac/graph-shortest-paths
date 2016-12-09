@@ -40,7 +40,7 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
 
 bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode) {
     if (mode == 'S') {
-        return this->insertEdge(source_node_id, target_node_id, &scc_index_, &scc_buffer_, false);
+        return this->insertEdge(source_node_id, target_node_id, &scc_index_, &scc_buffer_, mode, false);
     }
     const uint32_t min = this->insertNodes(source_node_id, target_node_id, mode);
     // clock_t start = clock();
@@ -53,10 +53,10 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     if (outer_index_.getHashNeighbors(*node1, *node2) > inner_index_.getHashNeighbors(*node2, *node1)) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
     }
-    if (this->insertEdge(*node1, *node2, index, buffer, skip_search)) {
+    if (this->insertEdge(*node1, *node2, index, buffer, mode, skip_search)) {
         skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer);
-        this->insertEdge(*node1, *node2, index, buffer, skip_search);
+        this->insertEdge(*node1, *node2, index, buffer, mode, skip_search);
     } else {
         return false;
     }
@@ -69,7 +69,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     return true;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const bool &skip_search) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const char &mode, const bool &skip_search) {
     long first_pos = index->getListHead(source_node_id)->pos;
     if (first_pos == -1) {
         first_pos = buffer->allocNewNode();
@@ -78,7 +78,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     }
     long pos;
     if (! skip_search) {
-        if (! index->searchInsertHash(source_node_id, target_node_id)) {
+        if (! index->searchInsertHash(source_node_id, target_node_id, mode)) {
             return false;
         }
     }
