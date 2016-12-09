@@ -1,5 +1,5 @@
-OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o
-HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Garray.hpp CC.hpp
+OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o GrailIndex.o
+HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Garray.hpp CC.hpp GrailIndex.hpp
 
 all: gsp
 
@@ -17,6 +17,9 @@ NodeIndex.o: NodeIndex.cpp
 
 ListNode.o: ListNode.cpp
 	$(CC) $(FLAGS) ListNode.cpp
+
+GrailIndex.o: GrailIndex.cpp
+	$(CC) $(FLAGS) GrailIndex.cpp
 
 SCC.o: SCC.cpp
 	$(CC) $(FLAGS) SCC.cpp

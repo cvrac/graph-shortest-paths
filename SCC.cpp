@@ -143,6 +143,29 @@ int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint3
     return (id_belongs_to_component_[source] == id_belongs_to_component_[target]) ? path.shortestPath(source, target, 'S') : -1;
 }
 
+void SCC::addSccNeighbors() {
+    uint32_t neighborScc;
+
+    for (uint32_t comp = 0; comp < components_.getElements(); comp++) {
+        Component &scc = components_[comp];
+        for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
+            Garray<uint32_t> &neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
+
+            for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
+                neighborScc = id_belongs_to_component_[neighbors[neighbor]];
+                graph.insertEdge(comp, neighborScc, 'S');
+            }
+
+            // Garray<uint32_t> &back_neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'B');
+            // for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
+            //     neighborScc = id_belongs_to_component_[neighbors[neighbor]];
+            //     graph.insertEdge(neighborScc, comp, 'S');
+            // }
+
+        }
+    }
+}
+
 void SCC::print() {
     for (int i = 0; i < components_.getElements(); i++) {
         cout << "Component " << i << "\n";

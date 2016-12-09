@@ -32,6 +32,7 @@ void NodeIndex::init(const uint32_t &size) {
     assert(!max_size_ );
     index_ = new ListHead[size];
     max_size_ = size;
+    cur_size_ = max_size_;
 }
 
 void NodeIndex::insertNode(const uint32_t &node_id) {

@@ -5,6 +5,7 @@
 #include "ShortestPath.hpp"
 #include "SCC.hpp"
 #include "CC.hpp"
+#include "GrailIndex.hpp"
 
 class OperationsControl {
 
@@ -22,6 +23,7 @@ private:
     ShortestPath path_;
     SCC strongly_conn_;
     CC connected_components_;
+    GrailIndex grail_index_;
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

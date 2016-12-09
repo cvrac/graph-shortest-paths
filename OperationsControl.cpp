@@ -13,7 +13,7 @@
 using namespace std;
 bool flag = false;
 OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_),
- strongly_conn_(graph_, path_), connected_components_(graph_, cc_threshold) { }
+ strongly_conn_(graph_, path_), connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_) { }
 
 OperationsControl::~OperationsControl() { }
 
@@ -32,6 +32,7 @@ void OperationsControl::run(const char &mode) {
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
         //this->strongly_conn_.print();
+        this->grail_index_.buildGrailIndex();
     }
     //start = clock();
     this->runQueries(mode);

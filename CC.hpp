@@ -28,6 +28,7 @@ public:
                             return (float) (update_index_use_count_) / queries_count_ > threshold_;}
     uint32_t getTotalRebuilds() const {return total_rebuilds_;}
     float getThreshold() const {return threshold_;}
+    uint32_t getUpdateIndexUseCount() const {return update_index_use_count_;}
     void setQueriesCount(const uint32_t &queries_count) {queries_count_ = queries_count;}
     void setUpdateIndexUseCount(const uint32_t &update_index_use_count) {update_index_use_count_ = update_index_use_count;}
     void print();

@@ -7,7 +7,7 @@
 
 // Test size: 3
 
-#define HASH_SIZE 3
+#define HASH_SIZE 43
 
 class SCC;
 

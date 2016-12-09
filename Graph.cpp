@@ -39,10 +39,10 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
 }
 
 bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode) {
-    const uint32_t min = this->insertNodes(source_node_id, target_node_id, mode);
     if (mode == 'S') {
         return this->insertEdge(source_node_id, target_node_id, &scc_index_, &scc_buffer_, false);
     }
+    const uint32_t min = this->insertNodes(source_node_id, target_node_id, mode);
     // clock_t start = clock();
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;

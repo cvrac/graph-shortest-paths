@@ -12,7 +12,6 @@ class ShortestPath;
 class Graph;
 
 class SCC {
-
 public:
     SCC(Graph &prgraph, ShortestPath &pathz);
     ~SCC();
@@ -21,6 +20,8 @@ public:
     void iterateStronglyConnectedComponentID();
     bool nextStronglyConnectedComponentID();
     int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
+    uint32_t getSccNumber() { return this->components_.getElements(); }
+    void addSccNeighbors();
     void init();
     void print();
 
@@ -61,7 +62,6 @@ private:
     };
 
     void tarjanAlgorithm();
-    // void stronglyConnected(uint32_t &node, Garray<uint32_t> &tarj_stack, HashTable<uint32_t> &visited, Vertex *vertices, uint32_t *index);
     void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index);
 
     Graph &graph;
