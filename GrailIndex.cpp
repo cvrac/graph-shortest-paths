@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <assert.h>
+#include <stdlib.h>
 
 GrailIndex::GrailIndex(Graph &gr, SCC &components) : index_(NULL), graph_(gr), str_components_(components)
 { }
@@ -28,6 +29,8 @@ void GrailIndex::buildGrailIndex() {
     index_ = new Garray<uint32_t>[graph_.getNodes('S')];
     assert(index_ != NULL);
 
+    srand((unsigned) time(NULL));
+
     for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
         Garray<uint32_t> &neighbors = graph_.getNeighbors(i, 'S');
         vertices[i].total = neighbors.getElements();
@@ -37,7 +40,6 @@ void GrailIndex::buildGrailIndex() {
 
 
     uint32_t order = 1, index = 0;
-    // cout << "qq2" << endl;
     for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
         if (vertices[i].visited == false)
             postOrderTraversal(i, vertices, dfs_stack, order, index);
@@ -48,18 +50,35 @@ void GrailIndex::buildGrailIndex() {
         vertices[i].visited = false;
     }
 
-    order = 1;
-    index = 2;
-    uint32_t start = graph_.getNodes('S');
-    for (uint32_t i = start-1; i > 0; i--) {
-        if (vertices[i].visited == false)
-            postOrderTraversal(i, vertices, dfs_stack, order, index);
-    }
+    // order = 1;
+    // index = 2;
+    // uint32_t start = graph_.getNodes('S');
+    // uint32_t i = rand() % start;
+    // postOrderTraversal(i, vertices, dfs_stack, order, index);
+    // for (uint32_t i = 0; i < start; i++) {
+    //     if (vertices[i].visited == false)
+    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
+    // }
+    //
+    // for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
+    //     vertices[i].childrenvisited = 0;
+    //     vertices[i].visited = false;
+    // }
+    //
+    // order = 1;
+    // index = 4;
+    // i = rand() % start;
+    // postOrderTraversal(i, vertices, dfs_stack, order, index);
+    // for (uint32_t i = 0; i < start; i++) {
+    //     if (vertices[i].visited == false)
+    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
+    // }
+
 
     delete[] vertices;
     vertices = NULL;
 
-    // graph_.print();
+    // // graph_.print();
     // for (uint32_t i = 0; i < graph_.getNodes('S'); i++)
     //     index_[i].print();
 }
@@ -131,7 +150,9 @@ GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t ta
 
     if (!subset(index_[id2][0], index_[id2][1], index_[id1][0], index_[id1][1]))
         return NO;
-    if (!subset(index_[id2][2], index_[id2][3], index_[id1][2], index_[id1][3]))
-        return NO;
     else return MAYBE;
+    /*if (!subset(index_[id2][2], index_[id2][3], index_[id1][2], index_[id1][3]))
+        return NO;
+    if (!subset(index_[id2][4], index_[id2][5], index_[id1][4], index_[id1][5]))
+        return NO;*/
 }
