@@ -111,3 +111,12 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garr
 
     dfs_stack.clear();
 }
+
+GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t target_node) {
+    uint32_t id1 = str_components_.findNodeStronglyConnectedComponentID(source_node);
+    uint32_t id2 = str_components_.findNodeStronglyConnectedComponentID(target_node);
+
+    if (!subset(index_[id2], index_[id1]))
+        return NO;
+    else return MAYBE;
+}

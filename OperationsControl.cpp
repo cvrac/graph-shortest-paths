@@ -40,7 +40,7 @@ void OperationsControl::run(const char &mode) {
         //graph_.print();
     }
     //start = clock();
-    // this->runQueries(mode);
+    this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
 }
 
@@ -296,12 +296,18 @@ void OperationsControl::runQueries(const char &mode) {
 
 inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
-    path_.reset();
     if (ret != -1) {
-    //    cout << "same component " << source << " " << target << endl;
+        path_.reset();
         return ret;
-    } else if (ret == -1)
-        ret = path_.shortestPath(source, target, 'A');
-    path_.reset();
-    return ret;
+    }
+
+    enum GRAIL_ANSWER grail_ans;
+    if ((grail_ans = grail_index_.isReachableGrailIndex(source, target)) == NO) {
+        // cout << "foo" << endl;
+        return -1;
+    } else if (grail_ans == MAYBE) {
+        ret = path_.shortestPath(source, target, 'A'); //part1 ektelesi opou mesa emperiextai kai grail
+        path_.reset();
+        return ret;
+    }
 }
