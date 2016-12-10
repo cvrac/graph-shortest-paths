@@ -24,6 +24,7 @@ public:
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode);
     Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
+    uint32_t getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction);
     uint32_t getNodes(const char &mode) {
         if (mode == 'S') {
             return scc_index_.getCurSize();

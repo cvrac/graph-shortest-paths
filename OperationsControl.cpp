@@ -35,7 +35,7 @@ void OperationsControl::run(const char &mode) {
         this->grail_index_.buildGrailIndex();
     }
     //start = clock();
-    this->runQueries(mode);
+    // this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
 }
 

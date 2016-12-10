@@ -161,6 +161,41 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &
     return neighbors_array_;
 }
 
+uint32_t Graph::getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction) {
+    NodeIndex *index;
+    Buffer *buffer;
+    if (direction == 'F') {
+        index = &outer_index_;
+        buffer = &outer_buffer_;
+    } else if (direction == 'B') {
+        index = &inner_index_;
+        buffer = &inner_buffer_;
+    } else if (direction == 'S') {
+        index = &scc_index_;
+        buffer = &scc_buffer_;
+    }
+
+    long list_node_pos = index->getListHeadPos(source);
+    uint32_t i = neighbor;
+    if (list_node_pos != -1) {
+        long pos = list_node_pos;
+        do {
+            ListNode *list_node = buffer->getListNode(pos);
+            uint32_t list_node_max_size = list_node->getNeighborNumber();
+            uint32_t *neighbors_arr = list_node->getNeighborArray();
+            if (i < list_node_max_size)
+                return neighbors_arr[i];
+            list_node_pos = list_node->getNextPos();
+            if (list_node_pos == -1)
+                break;
+            pos = list_node_pos;
+            i -= list_node_max_size;
+        } while (1);
+    }
+    // cout << neighbor << endl;
+}
+
+
 bool Graph::checkMarkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version) {
     NodeIndex *index;
     if (direction == 'F') {
@@ -225,8 +260,8 @@ void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
 void Graph::print() {
     cout << "*** OUTER ***\n";
     this->print(outer_index_, outer_buffer_);
-    cout << "\n*** INNER ***\n";
-    this->print(inner_index_, inner_buffer_);
+    // cout << "\n*** INNER ***\n";
+    // this->print(inner_index_, inner_buffer_);
     cout << "\n*** SCC ***\n";
     this->print(scc_index_, scc_buffer_);
 

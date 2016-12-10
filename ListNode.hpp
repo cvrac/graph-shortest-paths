@@ -21,6 +21,7 @@ public:
     uint32_t *getNeighborArray() {return neighbor_;}
     uint32_t getNeighborNumber() {return cur_neighbors_;}
     void print() const;
+    uint32_t getMaxSize() { return MAX_NEIGHBORS; }
 
 private:
     uint32_t neighbor_[MAX_NEIGHBORS];

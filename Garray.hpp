@@ -154,6 +154,7 @@ template <class T>
 void inline Garray<T>::init(const uint32_t &size) {
     if (array_ != NULL) {
         delete[] array_;
+        array_ = NULL;
     }
     array_ = new T[size];
     size_ = size;
