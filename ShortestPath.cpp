@@ -56,7 +56,11 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				--clevelf_;
 				// c1++;
 				if (mode == 'G') {
-					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+					// comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+					if (grail_.isReachableGrailIndex(node_id, target) == NO) {
+						cout << "unreachable" << endl;
+						return -1;
+					}
 				}
 
 				//expand node
@@ -65,12 +69,13 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
 						continue;
-					if (mode == 'G') {
-						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-						if (comp1 != comp2 && grail_.isReachableGrailIndex(comp2, comp_end) == NO) {
-							return -1;
-						}
-					}
+					// if (mode == 'G') {
+					// 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+					// 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target) == NO) {
+					// 		cout << "unreachable" << endl;
+					// 		return -1;
+					// 	}
+					// }
 					if (pr_graph_.checkVisitedNode(tempId, dirb_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirf_, visit_version_)) {
@@ -95,7 +100,11 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				--clevelb_;
 				// c2++;
 				if (mode == 'G') {
-					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+					// comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+					if (grail_.isReachableGrailIndex(node_id, source) == NO) {
+						cout << "unreachable" << endl;
+						return -1;
+					}
 				}
 
 				//expand node
@@ -104,12 +113,13 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
 						continue;
-					if (mode == 'G') {
-						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-						if (comp1 != comp2 && grail_.isReachableGrailIndex(comp2, comp_start) == NO) {
-							return -1;
-						}
-					}
+					// if (mode == 'G') {
+					// 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+					// 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source) == NO) {
+					// 		cout << "unreachable" << endl;
+					// 		return -1;
+					// 	}
+					// }
 					if (pr_graph_.checkVisitedNode(tempId, dirf_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirb_, visit_version_)) {

@@ -76,18 +76,7 @@ void OperationsControl::buildGraph(const char &mode) {
         // cout << sourceNode << " " << targetNode << endl;
         graph_.insertEdge(sourceNode, targetNode, 'N');
     }
-    // bool bidirectional_insert = (mode == 'c');
-    // while (fgets(cLine, cLineSize, stdin)) {
-    //     char *n1;
-    //     n1 = strtok(cLine, " \t\n\0");
-    //     if (n1 == NULL) continue;
-    //     if (n1[0] == 'S' || !strcmp(n1, "STATIC") || !strcmp(n1, "DYNAMIC")) break;
-    //     uint32_t sourceNode = atol(n1);
-    //     char *n2 = strtok(NULL, " \t\n\0");
-    //     if (n2 == NULL) continue;
-    //     uint32_t targetNode = atol(n2);
-    //     graph_.insertEdge(sourceNode, targetNode);
-    // }
+
 }
 
 void OperationsControl::runQueries(const char &mode) {
@@ -192,106 +181,6 @@ void OperationsControl::runQueries(const char &mode) {
             }
         }
     }
-
-//     while (fgets(cLine, cLineSize, stdin)) { //cout << cLine << endl;
-//         char *op;
-//         op = strtok(cLine, " \t\n\0");
-//         if (op == NULL) continue;
-//         if (!strcmp(op, "A")) {
-//             char *node = strtok(NULL, " \t\n\0");
-//             if (node == NULL) continue;
-//             uint32_t sourceNode = atol(node);
-//             node = strtok(NULL, " \t\n\0");
-//             if (node == NULL) continue;
-//             uint32_t targetNode = atol(node);
-//             if (graph_.insertEdge(sourceNode, targetNode) && mode == 'c') {
-//                 connected_components_.insertNewEdge(sourceNode, targetNode);
-//             }
-//             // if (counter == size) {
-//             //     uint32_t *old = batch;
-//             //     batch = new uint32_t[size * 2];
-//             //     memcpy(batch, old, sizeof(uint32_t) * size);
-//             //     size *= 2;
-//             //     delete[] old;
-//             // }
-//             // batch[counter] = 0;
-//             // batch[counter + 1] = sourceNode;
-//             // batch[counter + 2] = targetNode;
-//             // counter += 3;
-//             // graph_.insertEdge(sourceNode, targetNode);
-//         } else if (!strcmp(op, "Q")) {
-// //            clock_t start = clock();
-//             char *node = strtok(NULL, " \t\n\0");
-//             if (node == NULL) continue;
-//             uint32_t sourceNode = atol(node);
-//             node = strtok(NULL, " \t\n\0");
-//             if (node == NULL) continue;
-//             uint32_t targetNode = atol(node);
-//             uint32_t total_nodes = graph_.getNodes();
-//             if (sourceNode >= total_nodes || targetNode >= total_nodes) {
-//                 cout << -1 << "\n";
-//                 continue;
-//             }
-//
-//             if (mode == 's') {
-//                 cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
-//             } else if (mode == 'c') {
-//                 if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
-//                     //searches++;
-//                     cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
-//                     path_.reset();
-//                 }
-//                 else {
-//                     search_skips++;
-//                     cout << -1 << "\n";
-//                 }
-//             } else if (mode == 'n') {
-//                 cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
-//                 path_.reset();
-//             }
-// //            total_query_time += (clock() - start) / (double) CLOCKS_PER_SEC;
-//             // if (counter == size) {
-//             //     uint32_t *old = batch;
-//             //     batch = new uint32_t[size * 2];
-//             //     memcpy(batch, old, sizeof(uint32_t) * size);
-//             //     size *= 2;
-//             //     delete[] old;
-//             // }
-//             // batch[counter] = 1;
-//             // batch[counter + 1] = sourceNode;
-//             // batch[counter + 2] = targetNode;
-//             // counter += 3;
-//         } else if (!strcmp(op, "F")) {
-// //            cout << "\nQuery time: " << total_query_time << endl;
-//             total_query_time = 0;
-//             if (mode == 'c') {
-//                 if (connected_components_.needRebuilding()) {
-// //                    clock_t start = clock();
-//                     connected_components_.rebuildIndexes();
-// //                    cout << "Rebuilding time: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-//                     //total_rebuilding_time += (clock() - start) / (double) CLOCKS_PER_SEC;
-//                 }
-//                 connected_components_.setQueriesCount(0);
-//                 connected_components_.setUpdateIndexUseCount(0);
-//             }
-//             // for (uint32_t i = 0; i < counter; i += 3) {
-//             //     if (batch[i] == 0) {
-//             //         graph_.insertEdge(batch[i + 1], batch[i + 2]);
-//             //     } else {
-//             //         cout << path_.shortestPath(batch[i + 1], batch[i + 2]) << endl;
-//             //         path_.reset();
-//             //     }
-//             // }
-//             // counter = 0;
-//         }
-//         //connected_components_.print();
-//     }
-//     //connected_components_.print();
-// //    cout << "Search skips: " << search_skips; // << "\nSearches: " << searches << endl;
-//     //cout << "Total rebuilds: " << connected_components_.getTotalRebuilds() << endl;
-//     //cout << "Rebulding time: " << total_rebuilding_time << endl;
-//     //cout << "Pure query time: " << ((clock() - start) / (double) CLOCKS_PER_SEC) - total_rebuilding_time << endl;
-//     // delete[] batch;
 }
 
 inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
@@ -304,9 +193,10 @@ inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &t
     enum GRAIL_ANSWER grail_ans;
     if ((grail_ans = grail_index_.isReachableGrailIndex(source, target)) == NO) {
         // cout << "foo" << endl;
+        // cout << "unreachable" << endl;
         return -1;
     } else if (grail_ans == MAYBE) {
-        ret = path_.shortestPath(source, target, 'G'); //part1 ektelesi opou mesa emperiextai kai grail
+        ret = path_.shortestPath(source, target, 'A'); //part1 ektelesi opou mesa emperiextai kai grail
         path_.reset();
         return ret;
     }

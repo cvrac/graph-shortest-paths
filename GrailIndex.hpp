@@ -32,7 +32,6 @@ private:
     void createHyperGraph();
     void postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> & dfs_stack, uint32_t &order, uint32_t &index);
     bool subset(uint32_t &y1, uint32_t &y2, uint32_t &x1, uint32_t &x2) {
-        // cout << x1 << x2 << y1 << y2 << endl;
         return y1 >= x1 && y2 <= x2;
     }
 
