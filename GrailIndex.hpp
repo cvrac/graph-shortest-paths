@@ -35,9 +35,11 @@ private:
 
     void createHyperGraph();
     void postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> & dfs_stack);
+    bool subset(Garray<uint32_t> &y, Garray<uint32_t> &x) {
+        return y[0] >= x[0] && y[1] <= x[1];
+    }
 
     Garray<Garray<uint32_t> > index_;
-    Graph hyper_graph_;
     Graph &graph_;
     SCC &str_components_;
 };

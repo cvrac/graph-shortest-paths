@@ -150,9 +150,9 @@ void SCC::addSccNeighbors() {
         Component &scc = components_[comp];
         for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
             Garray<uint32_t> &neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
-
             for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
                 neighborScc = id_belongs_to_component_[neighbors[neighbor]];
+                if (neighborScc == comp) continue;
                 graph.insertEdge(comp, neighborScc, 'S');
             }
 

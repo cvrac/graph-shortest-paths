@@ -223,10 +223,10 @@ void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
 }
 
 void Graph::print() {
-    cout << "*** OUTER ***\n";
+/*    cout << "*** OUTER ***\n";
     this->print(outer_index_, outer_buffer_);
     cout << "\n*** INNER ***\n";
-    this->print(inner_index_, inner_buffer_);
+    this->print(inner_index_, inner_buffer_);*/
     cout << "\n*** SCC ***\n";
     this->print(scc_index_, scc_buffer_);
 

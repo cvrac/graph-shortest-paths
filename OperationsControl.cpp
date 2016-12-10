@@ -29,10 +29,15 @@ void OperationsControl::run(const char &mode) {
         //connected_components_.print();
     }
     if (mode == 's') {
+        start = clock();
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
+        cout << "SCC: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n";
         //this->strongly_conn_.print();
+        start = clock();
         this->grail_index_.buildGrailIndex();
+        cout << "Hypergraph build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+        //graph_.print();
     }
     //start = clock();
     this->runQueries(mode);
