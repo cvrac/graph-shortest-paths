@@ -7,12 +7,15 @@
 #include "Graph.hpp"
 #include "Garray.hpp"
 #include "SCC.hpp"
+#include "GrailIndex.hpp"
+
+class GrailIndex;
 
 class ShortestPath {
 
 public:
 	friend class SCC;
-	ShortestPath(Graph &gr, SCC &comp);
+	ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail);
 	~ShortestPath();
 	int shortestPath(uint32_t &source, uint32_t &target, char mode);
 	void reset();
@@ -22,6 +25,7 @@ private:
 	unsigned int clevelb_, clevelb1_;
 	Graph &pr_graph_;
 	SCC &strongly_conn_;
+	GrailIndex &grail_;
 	Garray<uint32_t> frontier_front_;
 	Garray<uint32_t> frontier_back_;
 	unsigned int distance_front_;

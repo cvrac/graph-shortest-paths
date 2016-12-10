@@ -7,9 +7,11 @@
 
 using namespace std;
 
-ShortestPath::ShortestPath(Graph &gr, SCC &comp) : visit_version_(1), clevelf_(0), clevelf1_(0), clevelb_(0), clevelb1_(0), pr_graph_(gr), strongly_conn_(comp),
-												   distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
-												   frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE), frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
+ShortestPath::ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail) : visit_version_(1), clevelf_(0), clevelf1_(0), clevelb_(0), clevelb1_(0),
+																	  pr_graph_(gr), strongly_conn_(comp), grail_(grail),
+																	  distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
+												   					  frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE),
+																	  frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE) {}
 
 ShortestPath::~ShortestPath() { }
 
@@ -19,10 +21,14 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 		return 0;
 
 	//initilizations of structures
-	uint32_t tempId, node_id, comp1, comp2;
+	uint32_t tempId, node_id, comp1, comp2, comp_start, comp_end;
 	if (mode == 'S') {
 		comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(source);
 		comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(target);
+	}
+	if (mode == 'G') {
+		comp_start = strongly_conn_.findNodeStronglyConnectedComponentID(source);
+		comp_end = strongly_conn_.findNodeStronglyConnectedComponentID(target);
 	}
 	short int child_check;
 
@@ -49,6 +55,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				node_id = frontier_front_.popFront();
 				--clevelf_;
 				// c1++;
+				if (mode == 'G') {
+					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+				}
 
 				//expand node
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
@@ -56,6 +65,12 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
 						continue;
+					if (mode == 'G') {
+						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+						if (comp1 != comp2 && grail_.isReachableGrailIndex(comp2, comp_end) == NO) {
+							return -1;
+						}
+					}
 					if (pr_graph_.checkVisitedNode(tempId, dirb_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirf_, visit_version_)) {
@@ -79,12 +94,22 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				node_id = frontier_back_.popFront();
 				--clevelb_;
 				// c2++;
+				if (mode == 'G') {
+					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+				}
+
 				//expand node
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
 						continue;
+					if (mode == 'G') {
+						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+						if (comp1 != comp2 && grail_.isReachableGrailIndex(comp2, comp_start) == NO) {
+							return -1;
+						}
+					}
 					if (pr_graph_.checkVisitedNode(tempId, dirf_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirb_, visit_version_)) {

@@ -12,7 +12,7 @@
 
 using namespace std;
 bool flag = false;
-OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_),
+OperationsControl::OperationsControl(uint32_t &hashSize, const float &cc_threshold) : path_(graph_, strongly_conn_, grail_index_),
  strongly_conn_(graph_, path_), connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_) { }
 
 OperationsControl::~OperationsControl() { }
@@ -306,7 +306,7 @@ inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &t
         // cout << "foo" << endl;
         return -1;
     } else if (grail_ans == MAYBE) {
-        ret = path_.shortestPath(source, target, 'A'); //part1 ektelesi opou mesa emperiextai kai grail
+        ret = path_.shortestPath(source, target, 'G'); //part1 ektelesi opou mesa emperiextai kai grail
         path_.reset();
         return ret;
     }
