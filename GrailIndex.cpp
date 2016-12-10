@@ -36,11 +36,24 @@ void GrailIndex::buildGrailIndex() {
     }
 
 
-    uint32_t order = 1;
+    uint32_t order = 1, index = 0;
     // cout << "qq2" << endl;
     for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
         if (vertices[i].visited == false)
-            postOrderTraversal(i, vertices, dfs_stack, order);
+            postOrderTraversal(i, vertices, dfs_stack, order, index);
+    }
+
+    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
+        vertices[i].childrenvisited = 0;
+        vertices[i].visited = false;
+    }
+
+    order = 1;
+    index = 2;
+    uint32_t start = graph_.getNodes('S');
+    for (uint32_t i = start-1; i > 0; i--) {
+        if (vertices[i].visited == false)
+            postOrderTraversal(i, vertices, dfs_stack, order, index);
     }
 
     delete[] vertices;
@@ -61,7 +74,7 @@ void GrailIndex::createHyperGraph() {
 }
 
 
-void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> &dfs_stack, uint32_t &order) {
+void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> &dfs_stack, uint32_t &order, uint32_t &index) {
     uint32_t v, w;
 
     dfs_stack.enstack(node);
@@ -96,9 +109,9 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garr
                 w = vertices[v].neighbors[i];
                 Garray<uint32_t> &val_array = index_[w];
                 if (minrank == -1)
-                    minrank = val_array[0];
+                    minrank = val_array[index];
                 else {
-                    minrank = (val_array[0] < minrank) ? val_array[0] : minrank;
+                    minrank = (val_array[index] < minrank) ? val_array[index] : minrank;
                 }
             }
 
@@ -116,7 +129,9 @@ GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t ta
     uint32_t id1 = str_components_.findNodeStronglyConnectedComponentID(source_node);
     uint32_t id2 = str_components_.findNodeStronglyConnectedComponentID(target_node);
 
-    if (!subset(index_[id2], index_[id1]))
+    if (!subset(index_[id2][0], index_[id2][1], index_[id1][0], index_[id1][1]))
+        return NO;
+    if (!subset(index_[id2][2], index_[id2][3], index_[id1][2], index_[id1][3]))
         return NO;
     else return MAYBE;
 }
