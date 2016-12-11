@@ -72,7 +72,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						continue;
 					if (mode == 'G') {
 						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-						if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target) == NO) {
+						if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target, 'R') == NO || grail_.isReachableGrailIndex(target, tempId, 'L') == NO) {
 							// cout << "unreachable" << endl;
 							// return -1;
 							// ++ret;
@@ -106,13 +106,13 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				node_id = frontier_back_.popFront();
 				--clevelb_;
 				// c2++;
-				// if (mode == 'G') {
-				// 	comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
+				 if (mode == 'G') {
+				 	comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
 				// 	// if (grail_.isReachableGrailIndex(node_id, source) == NO) {
 				// 		// cout << "unreachable" << endl;
 				// 		// return -1;
 				// 	// }
-				// }
+				 }
 
 				//expand node
 				uint32_t ret = 0;
@@ -121,14 +121,15 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
 						continue;
-					// if (mode == 'G') {
-					// 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-					// 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source) == NO) {
+					 if (mode == 'G') {
+					 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+					 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source, 'L') == NO || grail_.isReachableGrailIndex(source, tempId, 'R') == NO) {
 					// 		// cout << "unreachable" << endl;
 					// 		// return -1;
 					// 		++ret;
-					// 	}
-					// }
+							continue;
+					 	}
+					 }
 					if (pr_graph_.checkVisitedNode(tempId, dirf_, visit_version_))  {
 						return distance_front_ + distance_back_ + 1;
 					} else if (pr_graph_.checkMarkVisitedNode(tempId, dirb_, visit_version_)) {

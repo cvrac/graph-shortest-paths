@@ -191,7 +191,7 @@ inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &t
     }
 
     enum GRAIL_ANSWER grail_ans;
-    if ((grail_ans = grail_index_.isReachableGrailIndex(source, target)) == NO) {
+    if ((grail_ans = grail_index_.isReachableGrailIndex(source, target, 'R')) == NO || (grail_ans = grail_index_.isReachableGrailIndex(target, source, 'L')) == NO) {
         // cout << "foo" << endl;
     //    cout << "unreachable" << endl;
         return -1;
