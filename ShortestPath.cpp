@@ -21,7 +21,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 		return 0;
 
 	//initilizations of structures
-	uint32_t tempId, node_id, comp1, comp2, comp_start, comp_end;
+	uint32_t tempId, node_id, comp1, comp2, comp_start, comp_end, ret;
 	if (mode == 'S') {
 		comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(source);
 		comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(target);
@@ -57,14 +57,14 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				// c1++;
 				if (mode == 'G') {
 					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
-					// if (grail_.isReachableGrailIndex(node_id, target) == NO) {
-					// 	cout << "unreachable" << endl;
+					// if (grail_.isReachableGrailIndex(node_id, target, 'R') == NO || grail_.isReachableGrailIndex(target, node_id, 'L') == NO) {
+					// 	// cout << "unreachable" << endl;
 					// 	return -1;
 					// }
 				}
 
 				//expand node
-				uint32_t ret = 0;
+				ret = 0;
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
@@ -91,9 +91,11 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						++clevelf1_;
 					}
 				}
-				// if (ret == neighbors.getElements()) {
-				// 	// cout << "unreachable" << endl;
-				// 	return -1;
+				// if (mode == 'G') {
+				// 	if (ret == neighbors.getElements()) {
+				// 		// cout << "unreachable" << endl;
+				// 		return -1;
+				// 	}
 				// }
 			}
 			++distance_front_;
@@ -108,14 +110,14 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				// c2++;
 				 if (mode == 'G') {
 				 	comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
-				// 	// if (grail_.isReachableGrailIndex(node_id, source) == NO) {
-				// 		// cout << "unreachable" << endl;
-				// 		// return -1;
-				// 	// }
+					// if (grail_.isReachableGrailIndex(node_id, source, 'L') == NO || grail_.isReachableGrailIndex(source, node_id, 'R') == NO) {
+					// 	// cout << "unreachable" << endl;
+					// 	return -1;
+					// }
 				 }
 
 				//expand node
-				uint32_t ret = 0;
+				ret = 0;
 				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
@@ -126,7 +128,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source, 'L') == NO || grail_.isReachableGrailIndex(source, tempId, 'R') == NO) {
 					// 		// cout << "unreachable" << endl;
 					// 		// return -1;
-					// 		++ret;
+							// ++ret;
 							continue;
 					 	}
 					 }
@@ -142,9 +144,11 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						++clevelb1_;
 					}
 				}
-				// if (ret == neighbors.getElements()) {
-				// 	// cout << "unreachable" << endl;
-				// 	return -1;
+				// if (mode == 'G') {
+				// 	if (ret == neighbors.getElements()) {
+				// 		// cout << "unreachable" << endl;
+				// 		return -1;
+				// 	}
 				// }
 			}
 			++distance_back_;

@@ -5,8 +5,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-GrailIndex::GrailIndex(Graph &gr, SCC &components) : run(2), graph_(gr), str_components_(components)
-{ }
+GrailIndex::GrailIndex(Graph &gr, SCC &components) : run(2), graph_(gr), str_components_(components) { }
 
 GrailIndex::~GrailIndex() { }
 
@@ -39,14 +38,10 @@ void GrailIndex::buildGrailIndex(const char &dir) {
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
-
     uint32_t root, order;
     for (uint32_t index = 0; index < run * 2; index += 2) {
         order = 1;
-        if (!index)
-            root = 0;
-        else
-            root = rand() % end;
+        root = rand() % end;
         postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
         for (uint32_t i = 0; i < end; i++) {
             if (vertices[i].visited == false)
@@ -72,7 +67,9 @@ void GrailIndex::createHyperGraph() {
     str_components_.addSccNeighbors();
 }
 
-
+/*Post order traversal of the graph, for the creation of the grail index.
+ *Two indices are created, one forward, and one backwards
+ */
 void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertices, Garray<uint32_t> &dfs_stack, uint32_t &order, uint32_t &index, const char &dir) {
     uint32_t v, w;
     Garray<Garray<uint32_t> > &scc_index = (dir == 'R' ? outer_index_ : inner_index_);
@@ -124,16 +121,15 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
     dfs_stack.clear();
 }
 
+/*Grail reachability query*/
 GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t target_node, const char &dir) {
     Garray<Garray<uint32_t> > &scc_index = (dir == 'R' ? outer_index_ : inner_index_);
     uint32_t id1 = str_components_.findNodeStronglyConnectedComponentID(source_node);
     uint32_t id2 = str_components_.findNodeStronglyConnectedComponentID(target_node);
 
-    if (!subset(scc_index[id2][0], scc_index[id2][1], scc_index[id1][0], scc_index[id1][1]))
-        return NO;
-    else return MAYBE;
-    /*if (!subset(scc_index[id2][2], scc_index[id2][3], scc_index[id1][2], scc_index[id1][3]))
-        return NO;
-    if (!subset(scc_index[id2][4], scc_index[id2][5], scc_index[id1][4], scc_index[id1][5]))
-        return NO;*/
+    for (uint32_t index = 0; index < run; index += 2) {
+        if (!subset(scc_index[id2][index], scc_index[id2][index + 1], scc_index[id1][index], scc_index[id1][index + 1]))
+            return NO;
+    }
+    return MAYBE;
 }
