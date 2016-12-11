@@ -36,7 +36,7 @@ void OperationsControl::run(const char &mode) {
         //this->strongly_conn_.print();
         start = clock();
         this->grail_index_.buildGrailIndex();
-        cout << "Hypergraph build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+        cout << "Hypergraph and grail build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
         //graph_.print();
     }
     //start = clock();
