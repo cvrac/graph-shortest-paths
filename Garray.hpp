@@ -169,15 +169,17 @@ void Garray<T>::shrink(const uint32_t &size) {
         return;
     }
     T *old_array = array_;
-    array_ = new T[size];
     uint32_t new_elements = (elements_ <= size ? elements_ : size);
-    //this->copyWithCopyConst(old_array, new_elements);
-    //memcpy(array_, old_array, new_elements * sizeof(T));
+    size_ = new_elements;
+    elements_ = new_elements;
+
+    array_ = new T[new_elements];
+    for (uint32_t i = 0 ; i < new_elements ; i++) {
+        array_[i] = old_array[i];
+    }
     if (old_array != NULL) {
         delete[] old_array;
     }
-    size_ = size;
-    elements_ = new_elements;
 }
 
 /* For array/stack use. Can be easily modified to work for queue as well if needed */
@@ -199,6 +201,7 @@ T &Garray<T>::operator[](uint32_t i) {
 
 template <class T>
 Garray<T>::Garray(const Garray &garray) {
+    array_ = new T[garray.size_];
     memcpy(array_, garray.array_, garray.size_ * sizeof(T));
     size_ = garray.size_;
     head_ = garray.head_;
@@ -208,11 +211,13 @@ Garray<T>::Garray(const Garray &garray) {
 
 template <class T>
 Garray<T>& Garray<T>::operator=(const Garray<T> &garray) {
+    array_ = new T[garray.size_];
     memcpy(array_, garray.array_, garray.size_ * sizeof(T));
     size_ = garray.size_;
     head_ = garray.head_;
     tail_ = garray.tail_;
     elements_ = garray.elements_;
+    return  *this;
 }
 
 template <class T>

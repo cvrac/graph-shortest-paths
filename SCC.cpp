@@ -52,17 +52,17 @@ void SCC::tarjanAlgorithm() {
             stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
     }
 
-    /*cout << components_[0].component_id;
-    cout << components_[0].included_nodes_count;
-    components_[0].included_node_ids.print();
-
-    components_.shrink(components_.getElements());
-
+/*    cout << "Size: " << components_.getSize() << ", elements: " << components_.getElements() << endl;
     cout << components_[0].component_id;
     cout << components_[0].included_nodes_count;
-    components_[0].included_node_ids.print();
+    components_[0].included_node_ids.print();*/
 
-    exit(0);*/
+  //  components_.shrink(components_.getElements());
+
+/*    cout << "Size: " << components_.getSize() << ", elements: " << components_.getElements() << endl;
+    cout << components_[0].component_id;
+    cout << components_[0].included_nodes_count;
+    components_[0].included_node_ids.print();*/
 }
 
 

@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
         cc_threshold = atof(argv[3]);
     }
 
-    OperationsControl operationsControl(hashSize, cc_threshold);
+    OperationsControl operationsControl(cc_threshold);
     operationsControl.run(mode);
 
     return 0;
