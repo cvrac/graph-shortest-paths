@@ -36,6 +36,8 @@ public:
     T *getArray() {return array_;}
     void setElements(const uint32_t &elements) {elements_ = elements;}
     T &operator[](uint32_t i);
+    Garray(const Garray &garray);
+    Garray<T>& operator=(const Garray<T> &garray);
     T *retVal() { return this->array_; }
     void print() const;
 
@@ -169,7 +171,8 @@ void Garray<T>::shrink(const uint32_t &size) {
     T *old_array = array_;
     array_ = new T[size];
     uint32_t new_elements = (elements_ <= size ? elements_ : size);
-    memcpy(array_, old_array, new_elements * sizeof(T));
+    //this->copyWithCopyConst(old_array, new_elements);
+    //memcpy(array_, old_array, new_elements * sizeof(T));
     if (old_array != NULL) {
         delete[] old_array;
     }
@@ -192,6 +195,24 @@ template <class T>
 T &Garray<T>::operator[](uint32_t i) {
     assert(i < this->size_);
     return this->array_[i];
+}
+
+template <class T>
+Garray<T>::Garray(const Garray &garray) {
+    memcpy(array_, garray.array_, garray.size_ * sizeof(T));
+    size_ = garray.size_;
+    head_ = garray.head_;
+    tail_ = garray.tail_;
+    elements_ = garray.elements_;
+}
+
+template <class T>
+Garray<T>& Garray<T>::operator=(const Garray<T> &garray) {
+    memcpy(array_, garray.array_, garray.size_ * sizeof(T));
+    size_ = garray.size_;
+    head_ = garray.head_;
+    tail_ = garray.tail_;
+    elements_ = garray.elements_;
 }
 
 template <class T>

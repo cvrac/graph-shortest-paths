@@ -55,7 +55,6 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         mirror_index = &scc_inner_index_;
     }
 
-
     if (index->getHashNeighbors(*node1, *node2) > mirror_index->getHashNeighbors(*node2, *node1)) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
     }
@@ -81,6 +80,8 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         if (! index->searchInsertHash(source_node_id, target_node_id, mode)) {
             return false;
         }
+    } else {
+        index->insertNeighborInHash(source_node_id, target_node_id, mode);
     }
     pos = index->getListHead(source_node_id)->last_pos;
     long feedback = buffer->insertNeighbor(pos, target_node_id, true);
@@ -284,8 +285,6 @@ void Graph::printAll(const NodeIndex &index, const Buffer &buffer)  {
 void Graph::print() {
     cout << "*** OUTER ***\n";
     this->print(outer_index_, outer_buffer_);
-    cout << "\n*** INNER ***\n";
-    this->print(inner_index_, inner_buffer_);
     cout << "\n*** INNER ***\n";
     this->print(inner_index_, inner_buffer_);
     cout << "\n*** SCC OUTER ***\n";
