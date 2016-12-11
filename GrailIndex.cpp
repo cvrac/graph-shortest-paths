@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-GrailIndex::GrailIndex(Graph &gr, SCC &components) : outer_index_(NULL), inner_index_(NULL), graph_(gr), str_components_(components)
+GrailIndex::GrailIndex(Graph &gr, SCC &components) : outer_index_(NULL), inner_index_(NULL), run(4), graph_(gr), str_components_(components)
 { }
 
 GrailIndex::~GrailIndex() {
@@ -47,49 +47,26 @@ void GrailIndex::buildGrailIndex(const char &dir) {
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
+    uint32_t end = graph_.getNodes('S'), root, order;
+    for (uint32_t index = 0; index < run * 2; index += 2) {
+        order = 1;
+        root = rand() % end;
+        postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
+        for (uint32_t i = 0; i < end; i++) {
+            if (vertices[i].visited == false)
+                postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
+        }
 
-    uint32_t order = 1, index = 0;
-    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-        if (vertices[i].visited == false)
-            postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
+        for (uint32_t i = 0; i < end; i++) {
+            vertices[i].childrenvisited = 0;
+            vertices[i].visited = false;
+        }
     }
-
-    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-        vertices[i].childrenvisited = 0;
-        vertices[i].visited = false;
-    }
-
-    // order = 1;
-    // index = 2;
-    // uint32_t start = graph_.getNodes('S');
-    // uint32_t i = rand() % start;
-    // postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // for (uint32_t i = 0; i < start; i++) {
-    //     if (vertices[i].visited == false)
-    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // }
-    //
-    // for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-    //     vertices[i].childrenvisited = 0;
-    //     vertices[i].visited = false;
-    // }
-    //
-    // order = 1;
-    // index = 4;
-    // i = rand() % start;
-    // postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // for (uint32_t i = 0; i < start; i++) {
-    //     if (vertices[i].visited == false)
-    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // }
 
 
     delete[] vertices;
     vertices = NULL;
 
-     //graph_.print();
-     //for (uint32_t i = 0; i < graph_.getNodes('S'); i++)
-     //   scc_index[i].print();
 }
 
 /*Given the set of strongly connected components, creates the hypergraph
@@ -101,7 +78,9 @@ void GrailIndex::createHyperGraph() {
     str_components_.addSccNeighbors();
 }
 
-
+/*Post order traversal of the graph, for the creation of the grail index.
+ *Two indices are created, one forward, and one backwards
+ */
 void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> &dfs_stack, uint32_t &order, uint32_t &index, const char &dir) {
     uint32_t v, w;
     Garray<uint32_t> *&scc_index = (dir == 'R' ? outer_index_ : inner_index_);
@@ -153,16 +132,15 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garr
     dfs_stack.clear();
 }
 
+/*Grail reachability query*/
 GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t target_node, const char &dir) {
     Garray<uint32_t> *&scc_index = (dir == 'R' ? outer_index_ : inner_index_);
     uint32_t id1 = str_components_.findNodeStronglyConnectedComponentID(source_node);
     uint32_t id2 = str_components_.findNodeStronglyConnectedComponentID(target_node);
 
-    if (!subset(scc_index[id2][0], scc_index[id2][1], scc_index[id1][0], scc_index[id1][1]))
-        return NO;
-    else return MAYBE;
-    /*if (!subset(scc_index[id2][2], scc_index[id2][3], scc_index[id1][2], scc_index[id1][3]))
-        return NO;
-    if (!subset(scc_index[id2][4], scc_index[id2][5], scc_index[id1][4], scc_index[id1][5]))
-        return NO;*/
+    for (uint32_t index = 0; index < run; index += 2) {
+        if (!subset(scc_index[id2][index], scc_index[id2][index + 1], scc_index[id1][index], scc_index[id1][index + 1]))
+            return NO;
+    }
+    return MAYBE;
 }

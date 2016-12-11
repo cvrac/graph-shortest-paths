@@ -38,6 +38,7 @@ private:
 
     Garray<uint32_t> *outer_index_;
     Garray<uint32_t> *inner_index_;
+    uint32_t run;
     Graph &graph_;
     SCC &str_components_;
 };
