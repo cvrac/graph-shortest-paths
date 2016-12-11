@@ -5,19 +5,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
-GrailIndex::GrailIndex(Graph &gr, SCC &components) : outer_index_(NULL), inner_index_(NULL), graph_(gr), str_components_(components)
+GrailIndex::GrailIndex(Graph &gr, SCC &components) : run(2), graph_(gr), str_components_(components)
 { }
 
-GrailIndex::~GrailIndex() {
-    if (outer_index_ != NULL) {
-        delete[] outer_index_;
-        outer_index_ = NULL;
-    }
-    if (inner_index_ != NULL) {
-        delete[] inner_index_;
-        inner_index_ = NULL;
-    }
-}
+GrailIndex::~GrailIndex() { }
 
 /*Creation of the hypergraph and the grail index*/
 void GrailIndex::buildGrailIndex() {
@@ -27,20 +18,21 @@ void GrailIndex::buildGrailIndex() {
 }
 
 void GrailIndex::buildGrailIndex(const char &dir) {
-    Garray<uint32_t> *&scc_index = (dir == 'R' ? outer_index_ : inner_index_);
+    uint32_t end = graph_.getNodes('S');
+    Garray<Garray<uint32_t> > &scc_index = (dir == 'R' ? outer_index_ : inner_index_);
     Garray<uint32_t> dfs_stack;
+    Garray<Vertex> vertices(end);
+    scc_index.init(end);
     // cout << str_components_.getSccNumber() << endl;
     // scc_index.init(graph_.getNodes('S'));
     // cout << scc_index.getSize() << endl;
 
-    Vertex *vertices = new Vertex[graph_.getNodes('S')];
-    assert(vertices != NULL);
-    scc_index = new Garray<uint32_t>[graph_.getNodes('S')];
-    assert(scc_index != NULL);
+    // scc_index = new Garray<uint32_t>[graph_.getNodes('S')];
+    // assert(scc_index != NULL);
 
     srand((unsigned) time(NULL));
 
-    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
+    for (uint32_t i = 0; i < end; i++) {
         Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir);
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
@@ -48,44 +40,23 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     }
 
 
-    uint32_t order = 1, index = 0;
-    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-        if (vertices[i].visited == false)
-            postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
+    uint32_t root, order;
+    for (uint32_t index = 0; index < run * 2; index += 2) {
+        order = 1;
+        if (!index)
+            root = 0;
+        else
+            root = rand() % end;
+        postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
+        for (uint32_t i = 0; i < end; i++) {
+            if (vertices[i].visited == false)
+                postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
+        }
+        for (uint32_t i = 0; i < end; i++) {
+            vertices[i].childrenvisited = 0;
+            vertices[i].visited = false;
+        }
     }
-
-    for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-        vertices[i].childrenvisited = 0;
-        vertices[i].visited = false;
-    }
-
-    // order = 1;
-    // index = 2;
-    // uint32_t start = graph_.getNodes('S');
-    // uint32_t i = rand() % start;
-    // postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // for (uint32_t i = 0; i < start; i++) {
-    //     if (vertices[i].visited == false)
-    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // }
-    //
-    // for (uint32_t i = 0; i < graph_.getNodes('S'); i++) {
-    //     vertices[i].childrenvisited = 0;
-    //     vertices[i].visited = false;
-    // }
-    //
-    // order = 1;
-    // index = 4;
-    // i = rand() % start;
-    // postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // for (uint32_t i = 0; i < start; i++) {
-    //     if (vertices[i].visited == false)
-    //         postOrderTraversal(i, vertices, dfs_stack, order, index);
-    // }
-
-
-    delete[] vertices;
-    vertices = NULL;
 
      //graph_.print();
      //for (uint32_t i = 0; i < graph_.getNodes('S'); i++)
@@ -102,9 +73,9 @@ void GrailIndex::createHyperGraph() {
 }
 
 
-void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> &dfs_stack, uint32_t &order, uint32_t &index, const char &dir) {
+void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertices, Garray<uint32_t> &dfs_stack, uint32_t &order, uint32_t &index, const char &dir) {
     uint32_t v, w;
-    Garray<uint32_t> *&scc_index = (dir == 'R' ? outer_index_ : inner_index_);
+    Garray<Garray<uint32_t> > &scc_index = (dir == 'R' ? outer_index_ : inner_index_);
     dfs_stack.enstack(node);
 
     while (dfs_stack.isEmpty() == false) {
@@ -154,7 +125,7 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Vertex *vertices, Garr
 }
 
 GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t target_node, const char &dir) {
-    Garray<uint32_t> *&scc_index = (dir == 'R' ? outer_index_ : inner_index_);
+    Garray<Garray<uint32_t> > &scc_index = (dir == 'R' ? outer_index_ : inner_index_);
     uint32_t id1 = str_components_.findNodeStronglyConnectedComponentID(source_node);
     uint32_t id2 = str_components_.findNodeStronglyConnectedComponentID(target_node);
 

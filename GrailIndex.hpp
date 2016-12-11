@@ -31,13 +31,14 @@ private:
 
     void createHyperGraph();
     void buildGrailIndex(const char &dir);
-    void postOrderTraversal(const uint32_t &node, Vertex *vertices, Garray<uint32_t> & dfs_stack, uint32_t &order, uint32_t &index, const char &dir);
+    void postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertices, Garray<uint32_t> & dfs_stack, uint32_t &order, uint32_t &index, const char &dir);
     bool subset(uint32_t &y1, uint32_t &y2, uint32_t &x1, uint32_t &x2) {
         return y1 >= x1 && y2 <= x2;
     }
 
-    Garray<uint32_t> *outer_index_;
-    Garray<uint32_t> *inner_index_;
+    Garray<Garray<uint32_t> > outer_index_;
+    Garray<Garray<uint32_t> > inner_index_;
+    uint32_t run;
     Graph &graph_;
     SCC &str_components_;
 };

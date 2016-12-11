@@ -37,34 +37,21 @@ void SCC::tarjanAlgorithm() {
     uint32_t index = 0;
     Garray<uint32_t> tarj_stack;
     Garray<uint32_t> dfs_stack;
-    Vertex *vertices = new Vertex[graph.getNodes('N')];
-    // HashTable<uint32_t> visited(100003);
+    Garray<Vertex> vertices(graph.getNodes('N'));
     components_.init(graph.getNodes('N'));
-    NodeIndex::ListHead *node = NULL;
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
         Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F');
         vertices[i].total = neighbors.getElements();
-        // vertices[i].total = graph.getNeighborsCount(i, 'F');
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
-        // if ((node = graph.outer_index_.getListHead(i)) != NULL) {
         if (vertices[i].visited == false)
             stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
-        // }
     }
-    //components_.shrink(components_.getElements());
 
-    // for (uint32_t i = 0; i < graph.getNodes(); i++) {
-    //     delete[] vertices[i].neighbors;
-    //     vertices[i].neighbors = NULL;
-    // }
-
-    delete[] vertices;
-    vertices = NULL;
 }
 
 
@@ -74,7 +61,7 @@ void SCC::tarjanAlgorithm() {
  *A vertex ain't poped from the stack, until the exploration of its children etc has finished, and
  *when this happens, we check whether there has been formatted a new SCC
  */
-void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Vertex *vertices, uint32_t *index) {
+void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Garray<Vertex> &vertices, uint32_t *index) {
 
     uint32_t v, w, tempId;
     uint32_t components_count = components_.getElements();
