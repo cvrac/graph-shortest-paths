@@ -22,7 +22,7 @@ void GrailIndex::buildGrailIndex() {
     } else {
         clock_t start = clock();
         createHyperGraph();
-        cout << "Hypergraph:: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+//        cout << "Hypergraph:: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
         buildGrailIndex('R');
         buildGrailIndex('L');
     }

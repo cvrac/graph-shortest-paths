@@ -161,7 +161,7 @@ void SCC::addSccNeighbors() {
         }
     }
 
-    cout << "edge counter hypergraph = " << edgeCounter << endl;
+//    cout << "edge counter hypergraph = " << edgeCounter << endl;
 }
 
 void SCC::print() {

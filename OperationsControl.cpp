@@ -32,11 +32,11 @@ void OperationsControl::run(const char &mode) {
         start = clock();
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
-        cout << "SCC: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n";
+//        cout << "SCC: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n";
         //this->strongly_conn_.print();
         start = clock();
         this->grail_index_.buildGrailIndex();
-        cout << "Hypergraph and grail build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+//        cout << "Hypergraph and grail build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
         //graph_.print();
     }
     //start = clock();

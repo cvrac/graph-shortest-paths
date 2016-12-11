@@ -40,8 +40,7 @@ private:
     Graph &graph_;
     Garray<uint32_t> frontier_;
     Garray<uint32_t> ccindex_;
-    Garray<Garray<uint32_t> > update_index_;
-    Garray<uint32_t> size_index_;
+    Garray<UpdateCell> update_index_;
     unsigned long long visit_version_;
     bool cc_flag_;
     uint32_t queries_count_;

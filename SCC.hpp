@@ -43,14 +43,13 @@ private:
     };
 
     struct Vertex {
-        Vertex() : node_id_(0), parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), neighbors(NULL), total(0), onStack(false), visited(false) { }
+        Vertex() : parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), neighbors(NULL), total(0), onStack(false), visited(false) { }
         ~Vertex() {
             if (neighbors != NULL) {
                 delete[] neighbors;
                 neighbors = NULL;
             }
         }
-        uint32_t node_id_;
         uint32_t parent_id_;
         uint32_t index_;
         uint32_t lowlink_;
