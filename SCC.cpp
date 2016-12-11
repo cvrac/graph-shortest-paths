@@ -145,19 +145,30 @@ int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint3
 }
 
 void SCC::addSccNeighbors() {
-    uint32_t neighborScc, edgeCounter = 0;
+    uint32_t neighborScc, edgeCounter = 0, scc;
 
-    for (uint32_t comp = 0; comp < components_.getElements(); comp++) {
-        Component &scc = components_[comp];
-        for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
-            // cout << comp << " " << scc.included_node_ids[vertex] << endl;
-            Garray<uint32_t> &neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
-            for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
-                neighborScc = id_belongs_to_component_[neighbors[neighbor]];
-                if (neighborScc == comp) continue;
-                if (graph.insertEdge(comp, neighborScc, 'S'))
-                    ++edgeCounter;
-            }
+    // for (uint32_t comp = 0; comp < components_.getElements(); comp++) {
+    //     Component &scc = components_[comp];
+    //     for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
+    //         // cout << comp << " " << scc.included_node_ids[vertex] << endl;
+    //         Garray<uint32_t> &neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
+    //         for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
+    //             neighborScc = id_belongs_to_component_[neighbors[neighbor]];
+    //             if (neighborScc == comp) continue;
+    //             if (graph.insertEdge(comp, neighborScc, 'S'))
+    //                 ++edgeCounter;
+    //         }
+    //     }
+    // }
+
+    for (uint32_t vertex = 0; vertex < graph.getNodes('N'); vertex++) {
+        scc = id_belongs_to_component_[vertex];
+        Garray<uint32_t> &neighbors = graph.getNeighbors(vertex, 'F');
+        for (uint32_t i = 0; i < neighbors.getElements(); i++) {
+            neighborScc = id_belongs_to_component_[neighbors[i]];
+            if (neighborScc == scc) continue;
+            if (graph.insertEdge(scc, neighborScc, 'S'))
+                ++edgeCounter;
         }
     }
 
