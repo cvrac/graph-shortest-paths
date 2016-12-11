@@ -11,13 +11,10 @@ int main(int argc, char **argv) {
     char mode = 'n';
     float cc_threshold = 1;
     if (argc > 1) {
-        hashSize = (uint32_t) atol(argv[1]);
+        mode = argv[1][0];
     }
     if (argc > 2) {
-        mode = argv[2][0];
-    }
-    if (argc > 3) {
-        cc_threshold = atof(argv[3]);
+        cc_threshold = atof(argv[2]);
     }
 
     OperationsControl operationsControl(cc_threshold);
