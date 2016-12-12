@@ -106,12 +106,6 @@ bool NodeIndex::checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_f
     return true;
 }
 
-bool NodeIndex::checkListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag) {
-    if (index_[node_id].cc_flag_ == cc_flag)
-        return true;
-    return false;
-}
-
 void NodeIndex::print() const {
     cout << "--- NodeIndex ---\ncur_size_: " << cur_size_ << ", max_size_: " << max_size_ << endl;
     for (uint32_t node = 0; node < cur_size_; node++) {

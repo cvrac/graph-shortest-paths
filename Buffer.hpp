@@ -29,6 +29,7 @@ public:
     long getMaxListNodes() const {return max_list_nodes_;}
     long getCurListNodes() const {return cur_list_nodes_;}
     void print() const;
+    void init(const uint32_t &size);
 
 private:
     //ListNode *getListNode(const long &list_node_pos) {return &buffer_[list_node_pos];}

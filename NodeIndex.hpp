@@ -36,7 +36,6 @@ public:
     bool checkListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version)
         {if (index_[node_id].visit_version_ == visit_version) return true; else return false;}
     bool checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag);
-    bool checkListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag);
     uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const {
         if (index_[source].neighbors_hash_ == NULL) {
             return 0;

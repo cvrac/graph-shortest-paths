@@ -19,8 +19,8 @@ public:
     Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE),
               outer_index_(INITIAL_INDEX_MAX_SIZE), inner_index_(INITIAL_INDEX_MAX_SIZE),
               outer_buffer_(INITIAL_MAX_LIST_NODES), inner_buffer_(INITIAL_MAX_LIST_NODES),
-              scc_outer_index_(0), scc_outer_buffer_(INITIAL_MAX_LIST_NODES_SCC),
-              scc_inner_index_(0), scc_inner_buffer_(INITIAL_MAX_LIST_NODES_SCC) {}
+              scc_outer_index_(0), scc_outer_buffer_(0),
+              scc_inner_index_(0), scc_inner_buffer_(0) {}
     ~Graph();
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode);
     Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
@@ -41,14 +41,8 @@ public:
             return scc_inner_index_.checkSetListHeadCCFlag(node_id, cc_flag);
         }
         return outer_index_.checkSetListHeadCCFlag(node_id, cc_flag);}
-    bool checkCCFlag(const uint32_t &node_id, const bool &cc_flag, const char &mode) {
-        if (mode == 'R') {
-            return scc_outer_index_.checkListHeadCCFlag(node_id, cc_flag);
-        } else if (mode == 'L') {
-            return scc_inner_index_.checkListHeadCCFlag(node_id, cc_flag);
-        }
-        return outer_index_.checkListHeadCCFlag(node_id, cc_flag);}
-    void initSccHypergraph(const uint32_t &size) {scc_outer_index_.init(size); scc_inner_index_.init(size);}
+    void initSccHypergraph(const uint32_t &size) {scc_outer_index_.init(size); scc_inner_index_.init(size);
+    scc_outer_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); scc_inner_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); }
     void printAll();
     void print();
 

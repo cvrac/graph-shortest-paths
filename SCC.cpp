@@ -48,7 +48,7 @@ void SCC::tarjanAlgorithm() {
     }
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
-        if (graph.checkCCFlag(i, true, 'N') == false)
+        if (vertices[i].visited == false)
             stronglyConnected(i, dfs_stack, tarj_stack, vertices, &index);
     }
     components_.shrink(components_.getElements());
@@ -69,7 +69,8 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
 
     while (dfs_stack.isEmpty() == false) {
         v = dfs_stack.top();
-        if (graph.checkMarkCCFlag(v, true, 'N') == true) {
+        if (vertices[v].visited == false) {
+            vertices[v].visited = true;
             vertices[v].index_ = *index;
             vertices[v].lowlink_ = *index;
             ++(*index);
@@ -80,7 +81,7 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
             // cout << vertices[v].total << endl;
             // w = graph.getNeighbor(v, vertices[v].childrenvisited, 'F');
             w = vertices[v].neighbors[vertices[v].childrenvisited];
-            if (graph.checkCCFlag(w, true, 'N') == false) {
+            if (vertices[w].visited == false) {
                 vertices[w].parent_id_ = v;
                 ++vertices[v].childrenvisited;
                 dfs_stack.enstack(w);
@@ -88,7 +89,7 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
                 vertices[v].lowlink_ = (vertices[v].lowlink_ < vertices[w].index_)
                     ? vertices[v].lowlink_ : vertices[w].index_;
                 ++vertices[v].childrenvisited;
-            } else if (graph.checkCCFlag(w, true, 'N') == true) {
+            } else if (vertices[w].visited == true) {
                 ++vertices[v].childrenvisited;
             }
         } else {

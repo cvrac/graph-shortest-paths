@@ -61,13 +61,13 @@ void GrailIndex::buildGrailIndex(const char &dir) {
             root = rand() % end;
         postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
         for (uint32_t i = 0; i < end; i++) {
-            if (graph_.checkVisitedNode(i, dir, index + 1) == false)
+            if (vertices[i].visited == false)
                 postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
         }
-        // for (uint32_t i = 0; i < end; i++) {
-        //     vertices[i].childrenvisited = 0;
-        //     vertices[i].visited = false;
-        // }
+        for (uint32_t i = 0; i < end; i++) {
+            vertices[i].childrenvisited = 0;
+            vertices[i].visited = false;
+        }
     }
 
      //graph_.print();
@@ -94,7 +94,8 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
 
     while (dfs_stack.isEmpty() == false) {
         v = dfs_stack.top();
-        if (graph_.checkMarkVisitedNode(v, dir, index + 1)) {
+        if (vertices[v].visited == false) {
+            vertices[v].visited = true;
             if (vertices[v].total == 0) {
                 v = dfs_stack.popBack();
                 // if (v >= graph_.getNodes('S'))
@@ -110,7 +111,7 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
         if (vertices[v].childrenvisited < vertices[v].total) {
             w = vertices[v].neighbors[vertices[v].childrenvisited];
             // cout << v << " " << w << endl;
-            if (graph_.checkVisitedNode(w, dir, index + 1) == false && w != v)
+            if (vertices[w].visited == false && w != v)
                 dfs_stack.enstack(w);
             ++vertices[v].childrenvisited;
         } else {
@@ -132,7 +133,6 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
             val_array.enstack(minrank);
             val_array.enstack(order);
             ++order;
-            vertices[v].childrenvisited = 0;
         }
     }
 

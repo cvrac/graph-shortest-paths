@@ -16,7 +16,7 @@ public:
 
 private:
     struct Vertex {
-        Vertex() : childrenvisited(0), neighbors(NULL), total(0) { }
+        Vertex() : childrenvisited(0), neighbors(NULL), total(0), visited(false) { }
         ~Vertex() {
             if (neighbors != NULL) {
                 delete[] neighbors;
@@ -26,6 +26,7 @@ private:
         uint32_t childrenvisited;
         uint32_t *neighbors;
         uint32_t total;
+        bool visited;
     };
 
     void createHyperGraph();
