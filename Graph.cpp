@@ -8,10 +8,10 @@
 using namespace std;
 
 Graph::~Graph() {
-    outer_index_.deleteNeigborsHash();
-    inner_index_.deleteNeigborsHash();
-    scc_outer_index_.deleteNeigborsHash();
-    scc_inner_index_.deleteNeigborsHash();
+    // outer_index_.deleteNeigborsHash();
+    // inner_index_.deleteNeigborsHash();
+    // scc_outer_index_.deleteNeigborsHash();
+    // scc_inner_index_.deleteNeigborsHash();
 }
 
 inline void Graph::insertNode(const uint32_t node_id) {
@@ -55,16 +55,25 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         mirror_index = &scc_inner_index_;
     }
 
-    if (index->getHashNeighbors(*node1, *node2) > mirror_index->getHashNeighbors(*node2, *node1)) {
+    if (index->getListHeadNeighbors(*node1) > mirror_index->getListHeadNeighbors(*node2)) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
     }
     if (this->insertEdge(*node1, *node2, index, buffer, mode, skip_search)) {
         skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
         this->insertEdge(*node1, *node2, index, buffer, mode, skip_search);
-    } else {
-        return false;
     }
+
+    // if (index->getHashNeighbors(*node1, *node2) > mirror_index->getHashNeighbors(*node2, *node1)) {
+    //     this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
+    // }
+    // if (this->insertEdge(*node1, *node2, index, buffer, mode, skip_search)) {
+    //     skip_search = true;
+    //     this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
+    //     this->insertEdge(*node1, *node2, index, buffer, mode, skip_search);
+    // } else {
+    //     return false;
+    // }
     return true;
 }
 
@@ -77,16 +86,22 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     }
     long pos;
     if (! skip_search) {
-        if (! index->searchInsertHash(source_node_id, target_node_id, mode)) {
-            return false;
-        }
+        pos = first_pos;
     } else {
-        index->insertNeighborInHash(source_node_id, target_node_id, mode);
+        pos = index->getListHead(source_node_id)->last_pos;
     }
-    pos = index->getListHead(source_node_id)->last_pos;
-    long feedback = buffer->insertNeighbor(pos, target_node_id, true);
+    BufferFeedback feedback = buffer->insertNeighbor(pos, target_node_id, skip_search);
+    // if (! skip_search) {
+    //     if (! index->searchInsertHash(source_node_id, target_node_id, mode)) {
+    //         return false;
+    //     }
+    // } else {
+    //     index->insertNeighborInHash(source_node_id, target_node_id, mode);
+    // }
+    // pos = index->getListHead(source_node_id)->last_pos;
+    // long feedback = buffer->insertNeighbor(pos, target_node_id, true);
     index->setListHeadNeighbors(source_node_id, index->getListHeadNeighbors(source_node_id) + 1);
-    index->setListHeadLast(source_node_id, feedback);
+    index->setListHeadLast(source_node_id, feedback.last_pos);
     return true;
 }
 

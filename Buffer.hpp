@@ -24,7 +24,7 @@ public:
     ~Buffer();
     long allocNewNode();
     ListNode *getListNode(const long &list_node_pos) const {return &buffer_[list_node_pos];}
-    long insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const bool &skip_search);
+    BufferFeedback insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const bool &skip_search);
     uint32_t getTotalReallocs() const {return total_reallocs_;}
     long getMaxListNodes() const {return max_list_nodes_;}
     long getCurListNodes() const {return cur_list_nodes_;}
