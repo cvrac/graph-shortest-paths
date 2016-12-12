@@ -41,6 +41,13 @@ public:
             return scc_inner_index_.checkSetListHeadCCFlag(node_id, cc_flag);
         }
         return outer_index_.checkSetListHeadCCFlag(node_id, cc_flag);}
+    bool checkCCFlag(const uint32_t &node_id, const bool &cc_flag, const char &mode) {
+        if (mode == 'R') {
+            return scc_outer_index_.checkListHeadCCFlag(node_id, cc_flag);
+        } else if (mode == 'L') {
+            return scc_inner_index_.checkListHeadCCFlag(node_id, cc_flag);
+        }
+        return outer_index_.checkListHeadCCFlag(node_id, cc_flag);}
     void initSccHypergraph(const uint32_t &size) {scc_outer_index_.init(size); scc_inner_index_.init(size);}
     void printAll();
     void print();

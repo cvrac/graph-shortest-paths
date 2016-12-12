@@ -43,7 +43,7 @@ private:
     };
 
     struct Vertex {
-        Vertex() : parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), neighbors(NULL), total(0), onStack(false), visited(false) { }
+        Vertex() : parent_id_(0), index_(0), lowlink_(0), childrenvisited(0), neighbors(NULL), total(0), onStack(false) { }
         ~Vertex() {
             if (neighbors != NULL) {
                 delete[] neighbors;
@@ -57,7 +57,6 @@ private:
         uint32_t *neighbors;
         uint32_t total;
         bool onStack;
-        bool visited;
     };
 
     void tarjanAlgorithm();
