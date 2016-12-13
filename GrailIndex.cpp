@@ -46,7 +46,7 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     srand((unsigned) time(NULL));
 
     for (uint32_t i = 0; i < end; i++) {
-        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir);
+        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 0);
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));

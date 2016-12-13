@@ -29,7 +29,7 @@ void CC::estimateConnectedComponents() {
         frontier_.enstack(start_node);
         while (! frontier_.isEmpty()) {
             uint32_t node = frontier_.popBack();
-            Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A');
+            Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A', 0);
             for (int i = 0; i < neighbors.getElements(); i++) {
                 node = neighbors[i];
                 if (graph_.checkMarkCCFlag(node, cc_flag_, 'N')) {

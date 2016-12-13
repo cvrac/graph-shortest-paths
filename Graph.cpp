@@ -151,7 +151,7 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
 }
 
 
-Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction) {
+Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction, const char &randomness) {
     neighbors_array_.clear();
     if (direction == 'F' || direction == 'B' || direction == 'L' || direction == 'R') {
         NodeIndex *index;
@@ -171,13 +171,26 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direc
         }
         uint32_t total_neighbors = index->getListHeadNeighbors(node_id);
         neighbors_array_.increaseSize(total_neighbors);
-        return this->getNeighbors(node_id, *index, *buffer);
+        this->getNeighbors(node_id, *index, *buffer);
     } else if (direction == 'A') {
         uint32_t total_neighbors = inner_index_.getListHeadNeighbors(node_id) + outer_index_.getListHeadNeighbors(node_id);
         neighbors_array_.increaseSize(total_neighbors);
         getNeighbors(node_id, inner_index_, inner_buffer_);
-        return getNeighbors(node_id, outer_index_, outer_buffer_);
+        getNeighbors(node_id, outer_index_, outer_buffer_);
     }
+    if (randomness) {
+        uint32_t total_elements = neighbors_array_.getElements();
+        uint32_t swaps = total_elements * randomness / 200;
+        swaps_ += swaps;
+        while (swaps--) {
+            uint32_t element1 = rand() % total_elements;
+            uint32_t element2 = rand() % total_elements;
+            uint32_t tmp = neighbors_array_[element1];
+            neighbors_array_[element1] = neighbors_array_[element2];
+            neighbors_array_[element2] = tmp;
+        }
+    }
+    return neighbors_array_;
 }
 
 Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {

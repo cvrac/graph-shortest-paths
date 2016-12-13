@@ -41,7 +41,7 @@ void SCC::tarjanAlgorithm() {
     components_.init(graph.getNodes('N'));
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
-        Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F');
+        Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F', 0);
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
@@ -152,7 +152,7 @@ void SCC::addSccNeighbors() {
 
     for (uint32_t vertex = 0; vertex < graph.getNodes('N'); vertex++) {
         scc = id_belongs_to_component_[vertex];
-        Garray<uint32_t> &neighbors = graph.getNeighbors(vertex, 'F');
+        Garray<uint32_t> &neighbors = graph.getNeighbors(vertex, 'F', 0);
         for (uint32_t i = 0; i < neighbors.getElements(); i++) {
             neighborScc = id_belongs_to_component_[neighbors[i]];
             if (neighborScc == scc) continue;

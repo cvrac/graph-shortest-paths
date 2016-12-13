@@ -20,10 +20,10 @@ public:
               outer_index_(INITIAL_INDEX_MAX_SIZE), inner_index_(INITIAL_INDEX_MAX_SIZE),
               outer_buffer_(INITIAL_MAX_LIST_NODES), inner_buffer_(INITIAL_MAX_LIST_NODES),
               scc_outer_index_(0), scc_outer_buffer_(0),
-              scc_inner_index_(0), scc_inner_buffer_(0) {}
+              scc_inner_index_(0), scc_inner_buffer_(0), swaps_(0) {}
     ~Graph();
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode);
-    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction);
+    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction, const char &randomness);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
     uint32_t getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction);
     uint32_t getNodes(const char &mode) {
@@ -45,6 +45,7 @@ public:
     scc_outer_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); scc_inner_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); }
     void printAll();
     void print();
+    uint32_t swaps_;
 
 private:
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const char &mode, const bool &skip_search);

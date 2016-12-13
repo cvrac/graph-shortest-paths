@@ -42,6 +42,7 @@ void OperationsControl::run(const char &mode) {
     //start = clock();
     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    cout << "Total swaps: " << graph_.Graph::swaps_ << endl;
 }
 
 void OperationsControl::buildGraph(const char &mode) {
@@ -76,7 +77,6 @@ void OperationsControl::buildGraph(const char &mode) {
         // cout << sourceNode << " " << targetNode << endl;
         graph_.insertEdge(sourceNode, targetNode, 'N');
     }
-
 }
 
 void OperationsControl::runQueries(const char &mode) {

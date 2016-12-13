@@ -7,7 +7,6 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    uint32_t hashSize = 131;
     char mode = 'n';
     float cc_threshold = 1;
     if (argc > 1) {

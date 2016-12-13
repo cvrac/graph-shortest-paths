@@ -65,7 +65,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_);
+				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_, 0);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
@@ -118,7 +118,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_);
+				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_, 0);
 				for (int i = 0; i < neighbors.getElements(); i++) {
 					tempId = neighbors[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
