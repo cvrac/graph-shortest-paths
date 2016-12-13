@@ -6,7 +6,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-GrailIndex::GrailIndex(Graph &gr, SCC &components) : run(2), use(true), graph_(gr), str_components_(components) { }
+GrailIndex::GrailIndex(Graph &gr, SCC &components) : run(5), use(true), graph_(gr), str_components_(components) { }
 
 GrailIndex::~GrailIndex() { }
 
@@ -46,7 +46,7 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     srand((unsigned) time(NULL));
 
     for (uint32_t i = 0; i < end; i++) {
-        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 0);
+        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 50);
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
@@ -67,6 +67,8 @@ void GrailIndex::buildGrailIndex(const char &dir) {
         for (uint32_t i = 0; i < end; i++) {
             vertices[i].childrenvisited = 0;
             vertices[i].visited = false;
+            Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 90);
+            memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
         }
     }
 
