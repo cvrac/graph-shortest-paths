@@ -29,7 +29,7 @@ void GrailIndex::buildGrailIndex() {
 }
 
 void GrailIndex::buildGrailIndex(const char &dir) {
-    uint32_t end = graph_.getNodes('S');
+    uint32_t end = graph_.getNodes('S'), swaps;
     if (use == false)
         end = graph_.getNodes('N');
     Garray<Garray<uint32_t> > &scc_index = (dir == 'R' || dir == 'F' ? outer_index_ : inner_index_);
@@ -46,29 +46,47 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     srand((unsigned) time(NULL));
 
     for (uint32_t i = 0; i < end; i++) {
-        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 50);
+        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 0);
         vertices[i].total = neighbors.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
         memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
     uint32_t root, order;
+    char dirf;
+    if (dir == 'R')
+        dirf = 'L';
+    else if (dir == 'L')
+        dirf = 'R';
+    else if (dir == 'F')
+        dirf = 'B';
+    else if (dir == 'B')
+        dirf = 'F';
     for (uint32_t index = 0; index < run * 2; index += 2) {
         order = 1;
-        if (index == 0)
-            root = 0;
-        else
+        root = 0;
+        while (graph_.getNeighborsCount(root, dirf) != 0)
             root = rand() % end;
         postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
         for (uint32_t i = 0; i < end; i++) {
-            if (vertices[i].visited == false)
+            if (vertices[i].visited == false && graph_.getNeighborsCount(i, dirf) == 0)
                 postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
         }
         for (uint32_t i = 0; i < end; i++) {
             vertices[i].childrenvisited = 0;
             vertices[i].visited = false;
-            Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 90);
-            memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
+            // Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 90);
+            // uint32_t total_elements = neighbors_array_.getElements();
+            swaps = vertices[i].total * 90 / 200;
+            // swaps_ += swaps;
+            while (swaps--) {
+                uint32_t element1 = rand() % vertices[i].total;
+                uint32_t element2 = rand() % vertices[i].total;
+                uint32_t tmp = vertices[i].neighbors[element1];
+                vertices[i].neighbors[element1] = vertices[i].neighbors[element2];
+                vertices[i].neighbors[element2] = tmp;
+            }
+            // memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
         }
     }
 
