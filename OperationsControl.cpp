@@ -184,11 +184,18 @@ void OperationsControl::runQueries(const char &mode) {
 }
 
 inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
+/*    uint32_t a = strongly_conn_.findNodeStronglyConnectedComponentID(source), b = strongly_conn_.findNodeStronglyConnectedComponentID(target);
+    if (b > a) {
+        // cout << "foo" << endl;
+        return -1;
+    }
+*/
     int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
-    if (ret != -1) {
+    if (ret > -1) {
         path_.reset();
         return ret;
-    }
+    } else if (ret == -2)
+        return -1;
 
     enum GRAIL_ANSWER grail_ans;
     if ((grail_ans = grail_index_.isReachableGrailIndex(source, target, 'R')) == NO || (grail_ans = grail_index_.isReachableGrailIndex(target, source, 'L')) == NO) {

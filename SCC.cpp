@@ -130,7 +130,11 @@ int SCC::findNodeStronglyConnectedComponentID(uint32_t &node_id) {
 }
 
 int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
-    return (id_belongs_to_component_[source] == id_belongs_to_component_[target]) ? path.shortestPath(source, target, 'S') : -1;
+    if (id_belongs_to_component_[source] == id_belongs_to_component_[target])
+        return path.shortestPath(source, target, 'S');
+    else if (id_belongs_to_component_[target] > id_belongs_to_component_[source])
+        return -2;
+    return -1;
 }
 
 void SCC::addSccNeighbors() {

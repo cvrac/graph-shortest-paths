@@ -18,15 +18,25 @@ void CC::estimateConnectedComponents() {
 
     bool first = true;
     uint32_t cc_id = 0;
+    Garray<uint32_t> roots;
+    for (uint32_t i = 0; i < total_nodes; i++) {
+        if (graph_.getNeighborsCount(i, 'B') == 0 || graph_.getNeighborsCount(i, 'F') == 0) {
+            roots.enstack(i);
+        }
+    }
+    total_nodes = roots.getElements();
     for (uint32_t start_node = 0 ; start_node < total_nodes ; start_node++) {
-        if (! graph_.checkMarkCCFlag(start_node, cc_flag_, 'N')) {
+        uint32_t root = roots[start_node];
+        // uint32_t root = start_node;
+        // cout << root << endl;
+        if (! graph_.checkMarkCCFlag(root, cc_flag_, 'N')) {
             continue;
         }
         if (!first) {
             cc_id++;
         }
-        ccindex_[start_node] = cc_id;
-        frontier_.enstack(start_node);
+        ccindex_[root] = cc_id;
+        frontier_.enstack(root);
         while (! frontier_.isEmpty()) {
             uint32_t node = frontier_.popBack();
             Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A', 0);
