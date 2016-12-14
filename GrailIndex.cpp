@@ -45,14 +45,6 @@ void GrailIndex::buildGrailIndex(const char &dir) {
 
     srand((unsigned) time(NULL));
 
-    for (uint32_t i = 0; i < end; i++) {
-        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 0);
-        vertices[i].total = neighbors.getElements();
-        vertices[i].neighbors = new uint32_t[vertices[i].total];
-        memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
-    }
-
-    uint32_t root, order;
     char dirf;
     if (dir == 'R')
         dirf = 'L';
@@ -62,22 +54,44 @@ void GrailIndex::buildGrailIndex(const char &dir) {
         dirf = 'B';
     else if (dir == 'B')
         dirf = 'F';
+
+    Garray<uint32_t> roots;
+
+    for (uint32_t i = 0; i < end; i++) {
+        if (graph_.getNeighborsCount(i, dirf) == 0)
+            roots.enstack(i);
+        Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 0);
+        vertices[i].total = neighbors.getElements();
+        vertices[i].neighbors = new uint32_t[vertices[i].total];
+        memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
+    }
+
+    uint32_t root, order;
+
+    root = 0;
     for (uint32_t index = 0; index < run * 2; index += 2) {
         order = 1;
-        root = 0;
-        while (graph_.getNeighborsCount(root, dirf) != 0)
-            root = rand() % end;
+        // root = 0;
+        // while (graph_.getNeighborsCount(root, dirf) != 0)
+        //     root = rand() % end;
+        // for (uint32_t i = 0; i < end; i++) {
+        //     if (graph_.getNeighborsCount(i, dirf) != 0 && i != root) {
+        //         root = i;
+        //         break;
+        //     }
+        // }
+        root = roots[rand() % roots.getElements()];
         postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
-        for (uint32_t i = 0; i < end; i++) {
-            if (vertices[i].visited == false && graph_.getNeighborsCount(i, dirf) == 0)
-                postOrderTraversal(i, vertices, dfs_stack, order, index, dir);
+        for (uint32_t i = 0; i < roots.getElements(); i++) {
+            if (vertices[roots[i]].visited == false)
+                postOrderTraversal(roots[i], vertices, dfs_stack, order, index, dir);
         }
         for (uint32_t i = 0; i < end; i++) {
             vertices[i].childrenvisited = 0;
             vertices[i].visited = false;
             // Garray<uint32_t> &neighbors = graph_.getNeighbors(i, dir, 90);
             // uint32_t total_elements = neighbors_array_.getElements();
-            swaps = vertices[i].total * 90 / 200;
+            swaps = vertices[i].total * 80 / 200;
             // swaps_ += swaps;
             while (swaps--) {
                 uint32_t element1 = rand() % vertices[i].total;
@@ -170,9 +184,10 @@ GRAIL_ANSWER GrailIndex::isReachableGrailIndex(uint32_t source_node, uint32_t ta
         id2 = target_node;
     }
 
-    for (uint32_t index = 0; index < run; index += 2) {
+    for (uint32_t index = 0; index < run * 2; index += 2) {
         if (!subset(scc_index[id2][index], scc_index[id2][index + 1], scc_index[id1][index], scc_index[id1][index + 1]))
             return NO;
+        // if (!(scc_index[id2][index] >= scc_index[id1][index] && scc_index[id2][index + 1] <= scc_index[id1][index + 1]))
     }
     return MAYBE;
 }
