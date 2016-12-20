@@ -1,5 +1,5 @@
 OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o GrailIndex.o
-HEADER = NodeIndex.hpp ListNode.hpp HashTable.hpp SCC.hpp ShortestPath.hpp Buffer.hpp Graph.hpp OperationsControl.hpp Garray.hpp CC.hpp GrailIndex.hpp
+HEADER = src/NodeIndex.hpp src/ListNode.hpp src/HashTable.hpp src/SCC.hpp src/ShortestPath.hpp src/Buffer.hpp src/Graph.hpp src/OperationsControl.hpp src/Garray.hpp src/CC.hpp src/GrailIndex.hpp
 
 all: gsp
 
@@ -9,38 +9,38 @@ FLAGS	= -O2 -c
 gsp: $(OBJS) $(HEADER)
 	$(CC) -O2 -o gsp $(OBJS)
 
-Array.o: Array.cpp
-	$(CC) $(FLAGS) Array.cpp
+Array.o: src/Array.cpp
+	$(CC) $(FLAGS) src/Array.cpp
 
-NodeIndex.o: NodeIndex.cpp
-	$(CC) $(FLAGS) NodeIndex.cpp
+NodeIndex.o: src/NodeIndex.cpp
+	$(CC) $(FLAGS) src/NodeIndex.cpp
 
-ListNode.o: ListNode.cpp
-	$(CC) $(FLAGS) ListNode.cpp
+ListNode.o: src/ListNode.cpp
+	$(CC) $(FLAGS) src/ListNode.cpp
 
-GrailIndex.o: GrailIndex.cpp
-	$(CC) $(FLAGS) GrailIndex.cpp
+GrailIndex.o: src/GrailIndex.cpp
+	$(CC) $(FLAGS) src/GrailIndex.cpp
 
-SCC.o: SCC.cpp
-	$(CC) $(FLAGS) SCC.cpp
+SCC.o: src/SCC.cpp
+	$(CC) $(FLAGS) src/SCC.cpp
 
-CC.o: CC.cpp
-	$(CC) $(FLAGS) CC.cpp
+CC.o: src/CC.cpp
+	$(CC) $(FLAGS) src/CC.cpp
 
-ShortestPath.o: ShortestPath.cpp
-	$(CC) $(FLAGS) ShortestPath.cpp
+ShortestPath.o: src/ShortestPath.cpp
+	$(CC) $(FLAGS) src/ShortestPath.cpp
 
-Buffer.o: Buffer.cpp
-	$(CC) $(FLAGS) Buffer.cpp
+Buffer.o: src/Buffer.cpp
+	$(CC) $(FLAGS) src/Buffer.cpp
 
-Graph.o: Graph.cpp
-	$(CC) $(FLAGS) Graph.cpp
+Graph.o: src/Graph.cpp
+	$(CC) $(FLAGS) src/Graph.cpp
 
-OperationsControl.o: OperationsControl.cpp
-	$(CC) $(FLAGS) OperationsControl.cpp
+OperationsControl.o: src/OperationsControl.cpp
+	$(CC) $(FLAGS) src/OperationsControl.cpp
 
-main.o: main.cpp
-	$(CC) $(FLAGS) main.cpp
+main.o: src/main.cpp
+	$(CC) $(FLAGS) src/main.cpp
 
 clean:
 	rm -f gsp $(OBJS)
