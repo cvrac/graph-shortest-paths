@@ -12,8 +12,10 @@
 
 using namespace std;
 bool flag = false;
-OperationsControl::OperationsControl(const float &cc_threshold) : path_(graph_, strongly_conn_, grail_index_),
- strongly_conn_(graph_, path_), connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_) { }
+OperationsControl::OperationsControl(const float &cc_threshold, const uint8_t pool_size) :
+ path_(graph_, strongly_conn_, grail_index_),  strongly_conn_(graph_, path_),
+ connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
+ res_array_(40), scheduler_(pool_size, res_array_) { }
 
 OperationsControl::~OperationsControl() { }
 

@@ -5,6 +5,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <assert.h>
 
 /* The array can be initialised with 0 size to avoid memory allocation (no arguments constructor).
  * The value below refers to the size the array will acquire on the first insertion if it was initialised with 0 size. */
