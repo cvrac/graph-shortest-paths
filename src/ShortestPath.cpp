@@ -12,7 +12,7 @@ ShortestPath::ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail) : visit_vers
 																	  distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
 												   					  frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE),
 																	  frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE),
-																	  explored_set_front_(gr), explored_set_back_(gr) {}
+																	  explored_set_front_(gr), explored_set_back_(gr), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
 
 ShortestPath::~ShortestPath() { }
 
@@ -72,9 +72,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirf_, 0);
-				for (int i = 0; i < neighbors.getElements(); i++) {
-					tempId = neighbors[i];
+				pr_graph_.getNeighbors(node_id, dirf_, 0, neighbors_);
+				for (int i = 0; i < neighbors_.getElements(); i++) {
+					tempId = neighbors_[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
 						continue;
 					if (mode == 'G') {
@@ -99,7 +99,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					}
 				}
 				// if (mode == 'G') {
-				// 	if (ret == neighbors.getElements()) {
+				// 	if (ret == neighbors_.getElements()) {
 				// 		// cout << "unreachable" << endl;
 				// 		return -1;
 				// 	}
@@ -125,9 +125,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				Garray<uint32_t > &neighbors = pr_graph_.getNeighbors(node_id, dirb_, 0);
-				for (int i = 0; i < neighbors.getElements(); i++) {
-					tempId = neighbors[i];
+				pr_graph_.getNeighbors(node_id, dirb_, 0, neighbors_);
+				for (int i = 0; i < neighbors_.getElements(); i++) {
+					tempId = neighbors_[i];
 					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
 						continue;
 					 if (mode == 'G') {
@@ -152,7 +152,7 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					}
 				}
 				// if (mode == 'G') {
-				// 	if (ret == neighbors.getElements()) {
+				// 	if (ret == neighbors_.getElements()) {
 				// 		// cout << "unreachable" << endl;
 				// 		return -1;
 				// 	}

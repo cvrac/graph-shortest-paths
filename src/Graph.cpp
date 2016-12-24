@@ -147,8 +147,8 @@ uint32_t Graph::getNeighborsCount(const uint32_t &source, const char &direction)
 }
 
 
-Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direction, const char &randomness) {
-    neighbors_array_.clear();
+void Graph::getNeighbors(const uint32_t &node_id, const char& direction, const char &randomness, Garray<uint32_t> &neighbors_array) {
+    neighbors_array.clear();
     if (direction == 'F' || direction == 'B' || direction == 'L' || direction == 'R') {
         NodeIndex *index;
         Buffer *buffer;
@@ -166,36 +166,35 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const char& direc
             buffer = &scc_inner_buffer_;
         }
         uint32_t total_neighbors = index->getListHeadNeighbors(node_id);
-        neighbors_array_.increaseSize(total_neighbors);
-        this->getNeighbors(node_id, *index, *buffer);
+        neighbors_array.increaseSize(total_neighbors);
+        this->getNeighbors(node_id, *index, *buffer, neighbors_array);
     } else if (direction == 'A') {
         uint32_t total_neighbors = inner_index_.getListHeadNeighbors(node_id) + outer_index_.getListHeadNeighbors(node_id);
-        neighbors_array_.increaseSize(total_neighbors);
-        getNeighbors(node_id, inner_index_, inner_buffer_);
-        getNeighbors(node_id, outer_index_, outer_buffer_);
+        neighbors_array.increaseSize(total_neighbors);
+        getNeighbors(node_id, inner_index_, inner_buffer_, neighbors_array);
+        getNeighbors(node_id, outer_index_, outer_buffer_, neighbors_array);
     }
     if (randomness) {
-        uint32_t total_elements = neighbors_array_.getElements();
+        uint32_t total_elements = neighbors_array.getElements();
         uint32_t swaps = total_elements * randomness / 200;
         swaps_ += swaps;
         while (swaps--) {
             uint32_t element1 = rand() % total_elements;
             uint32_t element2 = rand() % total_elements;
-            uint32_t tmp = neighbors_array_[element1];
-            neighbors_array_[element1] = neighbors_array_[element2];
-            neighbors_array_[element2] = tmp;
+            uint32_t tmp = neighbors_array[element1];
+            neighbors_array[element1] = neighbors_array[element2];
+            neighbors_array[element2] = tmp;
         }
     }
-    return neighbors_array_;
 }
 
-Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer) {
+void Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Garray<uint32_t> &neighbors_array) {
     long list_node_pos = index.getListHeadPos(node_id);
     if (list_node_pos != -1) {
         long pos = list_node_pos;
         do {
             ListNode *list_node = buffer.getListNode(pos);
-            neighbors_array_.pushBatch(list_node->getNeighborArray(), list_node->getNeighborNumber());
+            neighbors_array.pushBatch(list_node->getNeighborArray(), list_node->getNeighborNumber());
             list_node_pos = list_node->getNextPos();
             if (list_node_pos == -1) {
                 break;
@@ -203,10 +202,9 @@ Garray<uint32_t> &Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &
             pos = list_node_pos;
         } while (1);
     }
-    return neighbors_array_;
 }
 
-uint32_t Graph::getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction) {
+uint32_t Graph::getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction, Garray<uint32_t> &neighbors_array) {
     NodeIndex *index;
     Buffer *buffer;
     if (direction == 'F') {
@@ -295,8 +293,8 @@ void Graph::print() {
 
 void Graph::print(const NodeIndex &index, const Buffer &buffer) {
     for (uint32_t node = 0 ; node < index.getCurSize() ; node++) {
-        neighbors_array_.clear();
-        Garray<uint32_t > &neighbors = this->getNeighbors(node, index, buffer);
+        Garray<uint32_t > neighbors;
+        this->getNeighbors(node, index, buffer, neighbors);
          cout << "Node " << node << " has " << neighbors.getElements() << " neighbors:\n";
         neighbors.print();
         cout << "\n";

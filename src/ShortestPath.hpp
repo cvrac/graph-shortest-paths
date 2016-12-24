@@ -34,12 +34,12 @@ private:
 	Garray<uint32_t> frontier_back_;
 	ExploredSet explored_set_front_;
 	ExploredSet explored_set_back_;
+	Garray<uint32_t> neighbors_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;
 	char dirb_;
 	unsigned long long visit_version_;
-
 };
 
 #endif

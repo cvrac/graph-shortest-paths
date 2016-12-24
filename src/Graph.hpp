@@ -17,16 +17,15 @@ public:
     friend class CC;
     friend class SCC;
     friend class ExploredSet;
-    Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE),
-              outer_index_(INITIAL_INDEX_MAX_SIZE), inner_index_(INITIAL_INDEX_MAX_SIZE),
+    Graph() : outer_index_(INITIAL_INDEX_MAX_SIZE), inner_index_(INITIAL_INDEX_MAX_SIZE),
               outer_buffer_(INITIAL_MAX_LIST_NODES), inner_buffer_(INITIAL_MAX_LIST_NODES),
               scc_outer_index_(0), scc_outer_buffer_(0),
               scc_inner_index_(0), scc_inner_buffer_(0), swaps_(0) {}
     ~Graph();
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode);
-    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const char &direction, const char &randomness);
+    void getNeighbors(const uint32_t &node_id, const char &direction, const char &randomness, Garray<uint32_t> &neighbors_array);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
-    uint32_t getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction);
+    uint32_t getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction, Garray<uint32_t> &neighbors_array);
     uint32_t getNodes(const char &mode) {
         if (mode == 'S') {
             return scc_outer_index_.getCurSize();
@@ -44,7 +43,7 @@ private:
     uint32_t insertNodes(const uint32_t &source_node_id, const uint32_t &target_node_id);
     void insertNode(const uint32_t node_id);
     void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer, const char &mode);
-    Garray<uint32_t> &getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer);
+    void getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Garray<uint32_t> &neighbors_array);
     void printAll(const NodeIndex &index, const Buffer &buffer);
     void print(const NodeIndex &index, const Buffer &buffer);
 

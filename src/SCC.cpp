@@ -16,7 +16,7 @@ SCC::Component::Component() : component_id(0), included_nodes_count(0) {
 
 SCC::Component::~Component() { }
 
-SCC::SCC(Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz) { }
+SCC::SCC(Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) { }
 
 SCC::~SCC() {}
 
@@ -41,10 +41,10 @@ void SCC::tarjanAlgorithm() {
     components_.init(graph.getNodes('N'));
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
-        Garray<uint32_t> &neighbors = graph.getNeighbors(i, 'F', 0);
-        vertices[i].total = neighbors.getElements();
+        graph.getNeighbors(i, 'F', 0, neighbors_);
+        vertices[i].total = neighbors_.getElements();
         vertices[i].neighbors = new uint32_t[vertices[i].total];
-        memcpy(vertices[i].neighbors, neighbors.retVal(), vertices[i].total * sizeof(uint32_t));
+        memcpy(vertices[i].neighbors, neighbors_.retVal(), vertices[i].total * sizeof(uint32_t));
     }
 
     for (uint32_t i = 0; i < graph.getNodes('N'); i++) {
@@ -144,9 +144,9 @@ void SCC::addSccNeighbors() {
     //     Component &scc = components_[comp];
     //     for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
     //         // cout << comp << " " << scc.included_node_ids[vertex] << endl;
-    //         Garray<uint32_t> &neighbors = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
-    //         for (uint32_t neighbor = 0; neighbor < neighbors.getElements(); neighbor++) {
-    //             neighborScc = id_belongs_to_component_[neighbors[neighbor]];
+    //         Garray<uint32_t> &neighbors_ = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
+    //         for (uint32_t neighbor = 0; neighbor < neighbors_.getElements(); neighbor++) {
+    //             neighborScc = id_belongs_to_component_[neighbors_[neighbor]];
     //             if (neighborScc == comp) continue;
     //             if (graph.insertEdge(comp, neighborScc, 'S'))
     //                 ++edgeCounter;
@@ -156,9 +156,9 @@ void SCC::addSccNeighbors() {
 
     for (uint32_t vertex = 0; vertex < graph.getNodes('N'); vertex++) {
         scc = id_belongs_to_component_[vertex];
-        Garray<uint32_t> &neighbors = graph.getNeighbors(vertex, 'F', 0);
-        for (uint32_t i = 0; i < neighbors.getElements(); i++) {
-            neighborScc = id_belongs_to_component_[neighbors[i]];
+        graph.getNeighbors(vertex, 'F', 0, neighbors_);
+        for (uint32_t i = 0; i < neighbors_.getElements(); i++) {
+            neighborScc = id_belongs_to_component_[neighbors_[i]];
             if (neighborScc == scc) continue;
             if (graph.insertEdge(scc, neighborScc, 'S'))
                 ++edgeCounter;

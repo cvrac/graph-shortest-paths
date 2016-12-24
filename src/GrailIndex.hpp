@@ -42,6 +42,7 @@ private:
     bool use;
     Graph &graph_;
     SCC &str_components_;
+    Garray<uint32_t> neighbors_;
 };
 
 #endif

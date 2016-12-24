@@ -67,6 +67,7 @@ private:
     ShortestPath &path;
     Garray<Component> components_;
     Garray<uint32_t> id_belongs_to_component_;
+    Garray<uint32_t> neighbors_;
 };
 
 #endif
