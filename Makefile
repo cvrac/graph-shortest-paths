@@ -1,5 +1,5 @@
-OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o GrailIndex.o
-HEADER = src/NodeIndex.hpp src/ListNode.hpp src/HashTable.hpp src/SCC.hpp src/ShortestPath.hpp src/Buffer.hpp src/Graph.hpp src/OperationsControl.hpp src/Garray.hpp src/CC.hpp src/GrailIndex.hpp
+OBJS =  NodeIndex.o ListNode.o ShortestPath.o Buffer.o Graph.o OperationsControl.o main.o SCC.o CC.o GrailIndex.o JobScheduler.o
+HEADER = src/NodeIndex.hpp src/ListNode.hpp src/HashTable.hpp src/SCC.hpp src/ShortestPath.hpp src/Buffer.hpp src/Graph.hpp src/OperationsControl.hpp src/Garray.hpp src/CC.hpp src/GrailIndex.hpp src/JobScheduler.hpp
 
 all: gsp
 
@@ -7,7 +7,10 @@ CC 	= g++
 FLAGS	= -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -O2 -o gsp $(OBJS)
+	$(CC) -O2 -pthread -o gsp $(OBJS)
+
+JobScheduler.o: src/JobScheduler.cpp
+	$(CC) $(FLAGS) src/JobScheduler.cpp
 
 Array.o: src/Array.cpp
 	$(CC) $(FLAGS) src/Array.cpp
