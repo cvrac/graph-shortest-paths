@@ -49,5 +49,7 @@ void JobScheduler::submitJob(Job *job) {
 }
 
 void JobScheduler::executeAllJobs() {
+    // ShortestPath::increaseExploredSet; for each ShortestPath object (to include new nodes from current batch)
+    // Maybe call it from OperationsControl just before calling executeAllJobs, so as not to include a ShortestPath reference in this module
     pthread_cond_signal(&cond_nonempty_);
 }

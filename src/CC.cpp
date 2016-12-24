@@ -18,31 +18,21 @@ void CC::estimateConnectedComponents() {
 
     bool first = true;
     uint32_t cc_id = 0;
-    Garray<uint32_t> roots;
-    for (uint32_t i = 0; i < total_nodes; i++) {
-        if (graph_.getNeighborsCount(i, 'B') == 0 || graph_.getNeighborsCount(i, 'F') == 0) {
-            roots.enstack(i);
-        }
-    }
-    total_nodes = roots.getElements();
     for (uint32_t start_node = 0 ; start_node < total_nodes ; start_node++) {
-        uint32_t root = roots[start_node];
-        // uint32_t root = start_node;
-        // cout << root << endl;
-        if (! graph_.checkMarkCCFlag(root, cc_flag_, 'N')) {
+        if (! explored_set_.checkMarkVisitedNode(start_node, visit_version_)) {
             continue;
         }
         if (!first) {
             cc_id++;
         }
-        ccindex_[root] = cc_id;
-        frontier_.enstack(root);
+        ccindex_[start_node] = cc_id;
+        frontier_.enstack(start_node);
         while (! frontier_.isEmpty()) {
             uint32_t node = frontier_.popBack();
             Garray<uint32_t > &neighbors = graph_.getNeighbors(node, 'A', 0);
             for (int i = 0; i < neighbors.getElements(); i++) {
                 node = neighbors[i];
-                if (graph_.checkMarkCCFlag(node, cc_flag_, 'N')) {
+                if (explored_set_.checkMarkVisitedNode(node, visit_version_)) {
                     frontier_.enstack(node);
                     ccindex_[node] = cc_id;
                 }
@@ -53,8 +43,8 @@ void CC::estimateConnectedComponents() {
         }
     }
     //if (visit_version_ == 1) {   // Omitting new/deletes with versioning barely helps
-        update_index_.init(cc_id+1);
-        update_index_.setElements(cc_id+1);
+    update_index_.init(cc_id+1);
+    update_index_.setElements(cc_id+1);
     //  }
     size_index_.init(cc_id+2);  // Size index compatibility with visit_version not implemented (not needed yet)
     size_index_.setElements(cc_id+2);
@@ -79,7 +69,7 @@ void CC::insertNewEdge(const uint32_t &source_node, const uint32_t &target_node)
      * If they are, they will definitely have the same number of component neighbors,
      * so skip search if the don't. If they do, consult size_index */
 
-   // cout << size1 << " Vs " << size2 << "\n";
+    // cout << size1 << " Vs " << size2 << "\n";
     if (size1 == size2 && (size_index_[size1+1] == 1 || update_index_[comp1].search(comp2))) {
         return;
     }
@@ -130,11 +120,7 @@ void CC::reset() {
     queries_count_ = 0;
     update_index_use_count_ = 0;
     visit_version_++;
-    if (cc_flag_) {
-        cc_flag_ = false;
-    } else {
-        cc_flag_ = true;
-    }
+    explored_set_.update(graph_.getNodes('N'));
 }
 
 void CC::print() {

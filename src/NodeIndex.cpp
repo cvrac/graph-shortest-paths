@@ -89,23 +89,6 @@ uint32_t NodeIndex::getAverageNeighbors() {
     return (uint32_t) (sum / cur_size_);
 }
 
-/* Return false if flags are the same, otherwise set and return true */
-bool NodeIndex::checkSetListHeadVisitedVersion(const uint32_t &node_id, const unsigned long long &visit_version) {
-    if (index_[node_id].visit_version_ == visit_version) {
-        return false;
-    }
-    index_[node_id].visit_version_ = visit_version;
-    return true;
-}
-
-bool NodeIndex::checkSetListHeadCCFlag(const uint32_t &node_id, const bool &cc_flag) {
-    if (index_[node_id].cc_flag_ == cc_flag) {
-        return false;
-    }
-    index_[node_id].cc_flag_ = cc_flag;
-    return true;
-}
-
 void NodeIndex::print() const {
     cout << "--- NodeIndex ---\ncur_size_: " << cur_size_ << ", max_size_: " << max_size_ << endl;
     for (uint32_t node = 0; node < cur_size_; node++) {

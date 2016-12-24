@@ -82,6 +82,7 @@ void OperationsControl::buildGraph(const char &mode) {
 }
 
 void OperationsControl::runQueries(const char &mode) {
+    path_.init(); // Do for every ShortestPath object
     bool bidirectional_insert = (mode == 'c');
     uint32_t search_skips = 0, sourceNode, targetNode;
     //uint32_t searches = 0;
@@ -183,6 +184,7 @@ void OperationsControl::runQueries(const char &mode) {
             }
         }
     }
+//    cout << "Search skips: " << search_skips << endl;
 }
 
 inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {

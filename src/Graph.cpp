@@ -28,10 +28,6 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     }
     this->insertNode(max);
     this->insertNode(min);
-    /*if (bidirectional) {
-        //bidirectional_index_.insertNode(min);
-        bidirectional_index_.insertNode(max);
-    }*/
     return min;
 }
 
@@ -247,35 +243,6 @@ uint32_t Graph::getNeighbor(const uint32_t &source, const uint32_t &neighbor, co
     // cout << neighbor << endl;
 }
 
-
-bool Graph::checkMarkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version) {
-    NodeIndex *index;
-    if (direction == 'F') {
-        index = &outer_index_;
-    } else if (direction == 'B') {
-        index = &inner_index_;
-    } else if (direction == 'R') {
-        index = &scc_outer_index_;
-    } else if (direction == 'L') {
-        index = &scc_inner_index_;
-    }
-    return index->checkSetListHeadVisitedVersion(node_id, visit_version);
-}
-
-bool Graph::checkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version) {
-    NodeIndex *index;
-    if (direction == 'F') {
-        index = &outer_index_;
-    } else if (direction == 'B') {
-        index = &inner_index_;
-    } else if (direction == 'R') {
-        index = &scc_outer_index_;
-    } else if (direction == 'L') {
-        index = &scc_inner_index_;
-    }
-    return index->checkListHeadVisitedVersion(node_id, visit_version);
-}
-
 uint32_t Graph::getStatistics() {
     cout << "Nodes: " << this->getNodes('N') << "\nAverage outer edges: " <<
     outer_index_.getAverageNeighbors() << "\nAverage inner edges: " <<
@@ -336,4 +303,40 @@ void Graph::print(const NodeIndex &index, const Buffer &buffer) {
         //index.printNeighborsHash(node);
     }
     cout << endl;
+}
+
+void ExploredSet::init(const uint32_t &total_nodes) {
+    explored_set_.init(total_nodes);
+    explored_set_.setElements(total_nodes);
+    for (uint32_t n = 0 ; n < total_nodes ; n++) {
+        explored_set_[n] = 0;
+    }
+}
+
+void ExploredSet::update(const uint32_t &total_nodes) {
+    uint32_t old_elements = explored_set_.getElements();
+    if (total_nodes <= old_elements) {
+        return;
+    }
+    explored_set_.increaseSize(total_nodes);
+    explored_set_.setElements(total_nodes);
+    for (uint32_t n = old_elements ; n < total_nodes ; n++) {
+        explored_set_[n] = 0;
+    }
+}
+
+bool ExploredSet::checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version) {
+    if (explored_set_[node_id] == visit_version) {
+        return false;
+    }
+    explored_set_[node_id] = visit_version;
+    return true;
+}
+
+bool ExploredSet::checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version) {
+    if (explored_set_[node_id] == visit_version) {
+        return true;
+    } else {
+        return false;
+    }
 }

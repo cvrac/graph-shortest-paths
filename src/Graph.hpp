@@ -16,6 +16,7 @@ class Graph {
 public:
     friend class CC;
     friend class SCC;
+    friend class ExploredSet;
     Graph() : neighbors_array_(INITIAL_NEIGHBORS_ARRAY_SIZE),
               outer_index_(INITIAL_INDEX_MAX_SIZE), inner_index_(INITIAL_INDEX_MAX_SIZE),
               outer_buffer_(INITIAL_MAX_LIST_NODES), inner_buffer_(INITIAL_MAX_LIST_NODES),
@@ -32,15 +33,6 @@ public:
         }
         return outer_index_.getCurSize();}
     uint32_t getStatistics();
-    bool checkMarkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version);
-    bool checkVisitedNode(const uint32_t &node_id, const char &direction, const unsigned long long &visit_version);
-    bool checkMarkCCFlag(const uint32_t &node_id, const bool &cc_flag, const char &mode) {
-        if (mode == 'R') {
-            return scc_outer_index_.checkSetListHeadCCFlag(node_id, cc_flag);
-        } else if (mode == 'L') {
-            return scc_inner_index_.checkSetListHeadCCFlag(node_id, cc_flag);
-        }
-        return outer_index_.checkSetListHeadCCFlag(node_id, cc_flag);}
     void initSccHypergraph(const uint32_t &size) {scc_outer_index_.init(size); scc_inner_index_.init(size);
     scc_outer_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); scc_inner_buffer_.init(INITIAL_MAX_LIST_NODES_SCC); }
     void printAll();
@@ -67,6 +59,21 @@ private:
     NodeIndex scc_inner_index_;
     Buffer scc_inner_buffer_;
 
+};
+
+class ExploredSet {
+
+public:
+    ExploredSet(Graph &graph) : graph_(graph) {}
+    ~ExploredSet() {}
+    void init(const uint32_t &total_nodes);
+    void update(const uint32_t &total_nodes);
+    bool checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version);
+    bool checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version);
+
+private:
+    Graph &graph_;
+    Garray<uint32_t> explored_set_;
 };
 
 
