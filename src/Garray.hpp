@@ -68,6 +68,7 @@ template <class T>
 Garray<T>::~Garray() {
     if (array_ != NULL) {
        delete[] array_;
+       array_ = NULL;
     }
 }
 

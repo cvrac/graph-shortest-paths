@@ -64,10 +64,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				// c1++;
 				if (mode == 'G') {
 					comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
-					// if (grail_.isReachableGrailIndex(node_id, target, 'R') == NO || grail_.isReachableGrailIndex(target, node_id, 'L') == NO) {
-					// 	// cout << "unreachable" << endl;
-					// 	return -1;
-					// }
 				}
 
 				//expand node
@@ -80,9 +76,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					if (mode == 'G') {
 						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
 						if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target, 'R') == NO || grail_.isReachableGrailIndex(target, tempId, 'L') == NO) {
-							// cout << "unreachable" << endl;
-							// return -1;
-							// ++ret;
 							continue;
 						}
 					}
@@ -98,12 +91,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						++clevelf1_;
 					}
 				}
-				// if (mode == 'G') {
-				// 	if (ret == neighbors_.getElements()) {
-				// 		// cout << "unreachable" << endl;
-				// 		return -1;
-				// 	}
-				// }
 			}
 			++distance_front_;
 			clevelf_ = clevelf1_;
@@ -117,10 +104,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 				// c2++;
 				 if (mode == 'G') {
 				 	comp1 = strongly_conn_.findNodeStronglyConnectedComponentID(node_id);
-					// if (grail_.isReachableGrailIndex(node_id, source, 'L') == NO || grail_.isReachableGrailIndex(source, node_id, 'R') == NO) {
-					// 	// cout << "unreachable" << endl;
-					// 	return -1;
-					// }
 				 }
 
 				//expand node
@@ -133,9 +116,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 					 if (mode == 'G') {
 					 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
 					 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source, 'L') == NO || grail_.isReachableGrailIndex(source, tempId, 'R') == NO) {
-					// 		// cout << "unreachable" << endl;
-					// 		// return -1;
-							// ++ret;
 							continue;
 					 	}
 					 }
@@ -151,12 +131,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 						++clevelb1_;
 					}
 				}
-				// if (mode == 'G') {
-				// 	if (ret == neighbors_.getElements()) {
-				// 		// cout << "unreachable" << endl;
-				// 		return -1;
-				// 	}
-				// }
 			}
 			++distance_back_;
 			clevelb_ = clevelb1_;

@@ -16,7 +16,7 @@ SCC::Component::Component() : component_id(0), included_nodes_count(0) {
 
 SCC::Component::~Component() { }
 
-SCC::SCC(Graph &prgraph, ShortestPath &pathz) : graph(prgraph), path(pathz), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) { }
+SCC::SCC(Graph &prgraph) : graph(prgraph), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) { }
 
 SCC::~SCC() {}
 
@@ -129,13 +129,13 @@ int SCC::findNodeStronglyConnectedComponentID(uint32_t &node_id) {
     return id_belongs_to_component_[node_id];
 }
 
-int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
-    if (id_belongs_to_component_[source] == id_belongs_to_component_[target])
-        return path.shortestPath(source, target, 'S');
-    else if (id_belongs_to_component_[target] > id_belongs_to_component_[source])
-        return -2;
-    return -1;
-}
+// int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
+//     if (id_belongs_to_component_[source] == id_belongs_to_component_[target])
+//         return path.shortestPath(source, target, 'S');
+//     else if (id_belongs_to_component_[target] > id_belongs_to_component_[source])
+//         return -2;
+//     return -1;
+// }
 
 void SCC::addSccNeighbors() {
     uint32_t neighborScc, edgeCounter = 0, scc;

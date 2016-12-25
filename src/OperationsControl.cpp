@@ -13,11 +13,19 @@
 using namespace std;
 bool flag = false;
 OperationsControl::OperationsControl(const float &cc_threshold, const uint8_t pool_size) :
- path_(graph_, strongly_conn_, grail_index_),  strongly_conn_(graph_, path_),
+ paths_(pool_size),  strongly_conn_(graph_),
  connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
- res_array_(40), scheduler_(pool_size, res_array_) { }
+ res_array_(40), scheduler_(pool_size, res_array_) {
 
-OperationsControl::~OperationsControl() { }
+     for (uint32_t i = 0; i < pool_size; i++)
+        paths_[i] = new ShortestPath(graph_, strongly_conn_, grail_index_);
+
+}
+
+OperationsControl::~OperationsControl() {
+    // for (uint32_t i = 0; i < paths_.getElements(); i++)
+    //     delete[] paths_[i];
+}
 
 void OperationsControl::run(const char &mode) {
    clock_t start = clock();
@@ -47,6 +55,31 @@ void OperationsControl::run(const char &mode) {
     cout << "Total swaps: " << graph_.Graph::swaps_ << endl;
 }
 
+void OperationsControl::parseNodeIds(uint32_t *source, uint32_t *target) {
+    uint32_t sourceNode = *source;
+    int ch;
+    while (ch != ' ' && ch != '\t') {
+        if (ch >= '0' && ch <= '9') {
+            sourceNode = sourceNode * 10 + (ch - '0');
+        }
+        ch = getchar();
+    }
+    // cout << sourceNode << endl;
+    while ((ch = getchar()) == ' ' || ch == '\t')
+        continue;
+
+    uint32_t targetNode = 0;
+    while (ch != '\n') {
+        if (ch >= '0' && ch <= '9') {
+            targetNode = targetNode * 10 + (ch - '0');
+        }
+        ch = getchar();
+    }
+
+    *source = sourceNode;
+    *target = targetNode;
+}
+
 void OperationsControl::buildGraph(const char &mode) {
     int ch;
     uint32_t sourceNode, targetNode;
@@ -58,31 +91,15 @@ void OperationsControl::buildGraph(const char &mode) {
     // if (!strcmp)
 
     while ((ch = getchar()) != EOF && ch != 'S') {
-        sourceNode = 0;
-        while (ch != ' ' && ch != '\t') {
-            if (ch >= '0' && ch <= '9') {
-                sourceNode = sourceNode * 10 + (ch - '0');
-            }
-            ch = getchar();
-        }
-        // cout << sourceNode << endl;
-        while ((ch = getchar()) == ' ' || ch == '\t')
-            continue;
-
-        targetNode = 0;
-        while (ch != '\n') {
-            if (ch >= '0' && ch <= '9') {
-                targetNode = targetNode * 10 + (ch - '0');
-            }
-            ch = getchar();
-        }
+        sourceNode = ch - '0';
+        parseNodeIds(&sourceNode, &targetNode);
         // cout << sourceNode << " " << targetNode << endl;
         graph_.insertEdge(sourceNode, targetNode, 'N');
     }
 }
 
 void OperationsControl::runQueries(const char &mode) {
-    path_.init(); // Do for every ShortestPath object
+    paths_[0]->init(); // Do for every ShortestPath object
     bool bidirectional_insert = (mode == 'c');
     uint32_t search_skips = 0, sourceNode, targetNode;
     //uint32_t searches = 0;
@@ -115,23 +132,9 @@ void OperationsControl::runQueries(const char &mode) {
             // cout << "here" << endl;
         } else if (ch == 'Q') {
             ch = getchar();
-            sourceNode = 0;
-            while ((ch = getchar()) != ' ' && ch != '\t') {
-                if (ch >= '0' && ch <= '9') {
-                    sourceNode = sourceNode * 10 + (ch - '0');
-                }
-            }
-
-            while ((ch = getchar()) == ' ' || ch == '\t')
-                continue;
-
-            targetNode = 0;
-            while (ch != '\n') {
-                if (ch >= '0' && ch <= '9') {
-                    targetNode = targetNode * 10 + (ch - '0');
-                }
-                ch = getchar();
-            }
+            ch = getchar();
+            sourceNode = ch - '0';
+            parseNodeIds(&sourceNode, &targetNode);
 
             uint32_t total_nodes = graph_.getNodes('N');
             if (sourceNode >= total_nodes || targetNode >= total_nodes) {
@@ -142,42 +145,26 @@ void OperationsControl::runQueries(const char &mode) {
             // cout << sourceNode << " " << targetNode << endl;
 
             if (mode == 's') {
-                cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
+                cout << this->estimateShortestPathStronglyConnected(sourceNode, targetNode) << "\n";
             } else if (mode == 'c') {
                 if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
                     //searches++;
-                    cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
-                    path_.reset();
+                    cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
                 }
                 else {
                     search_skips++;
                     cout << -1 << "\n";
                 }
             } else if (mode == 'n') {
-                cout << path_.shortestPath(sourceNode, targetNode, 'A') << "\n";
-                path_.reset();
+                cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
             }
 
         } else if (ch == 'A') {
 
             ch = getchar();
-            sourceNode = 0;
-            while ((ch = getchar()) != ' ' && ch != '\t') {
-                if (ch >= '0' && ch <= '9') {
-                    sourceNode = sourceNode * 10 + (ch - '0');
-                }
-            }
-
-            while ((ch = getchar()) == ' ' || ch == '\t')
-                continue;
-
-            targetNode = 0;
-            while (ch != '\n') {
-                if (ch >= '0' && ch <= '9') {
-                    targetNode = targetNode * 10 + (ch - '0');
-                }
-                ch = getchar();
-            }
+            ch = getchar();
+            sourceNode = ch - '0';
+            parseNodeIds(&sourceNode, &targetNode);
 
             if (graph_.insertEdge(sourceNode, targetNode, 'N') && mode == 'c') {
                 connected_components_.insertNewEdge(sourceNode, targetNode);
@@ -188,15 +175,20 @@ void OperationsControl::runQueries(const char &mode) {
 }
 
 inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
-/*    uint32_t a = strongly_conn_.findNodeStronglyConnectedComponentID(source), b = strongly_conn_.findNodeStronglyConnectedComponentID(target);
-    if (b > a) {
-        // cout << "foo" << endl;
-        return -1;
-    }
-*/
-    int ret = strongly_conn_.estimateShortestPathStronglyConnectedComponents(source, target);
+    int ret = paths_[0]->shortestPath(source, target, 'A');
+    paths_[0]->reset();
+    return ret;
+}
+
+inline int OperationsControl::estimateShortestPathStronglyConnected(uint32_t &source, uint32_t &target) {
+    int ret = -1;
+    if (strongly_conn_.findNodeStronglyConnectedComponentID(source) == strongly_conn_.findNodeStronglyConnectedComponentID(target))
+        ret = paths_[0]->shortestPath(source, target, 'S');
+    else if (strongly_conn_.findNodeStronglyConnectedComponentID(target) > strongly_conn_.findNodeStronglyConnectedComponentID(source))
+        ret = -2;
+
     if (ret > -1) {
-        path_.reset();
+        paths_[0]->reset();
         return ret;
     } else if (ret == -2)
         return -1;
@@ -205,8 +197,8 @@ inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &t
     if ((grail_ans = grail_index_.isReachableGrailIndex(source, target, 'R')) == NO || (grail_ans = grail_index_.isReachableGrailIndex(target, source, 'L')) == NO) {
         return -1;
     } else if (grail_ans == MAYBE) {
-        ret = path_.shortestPath(source, target, 'G'); //part1 ektelesi opou mesa emperiextai kai grail
-        path_.reset();
+        ret = paths_[0]->shortestPath(source, target, 'G'); //part1 ektelesi opou mesa emperiextai kai grail
+        paths_[0]->reset();
         return ret;
     }
 }

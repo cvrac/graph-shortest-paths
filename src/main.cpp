@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
         cc_threshold = atof(argv[2]);
     }
 
-    OperationsControl operationsControl(cc_threshold, 6);
+    OperationsControl operationsControl(cc_threshold, 1);
     operationsControl.run(mode);
 
     return 0;

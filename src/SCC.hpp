@@ -13,13 +13,13 @@ class Graph;
 
 class SCC {
 public:
-    SCC(Graph &prgraph, ShortestPath &pathz);
+    SCC(Graph &prgraph);
     ~SCC();
     void estimateStronglyConnectedComponents();
     int findNodeStronglyConnectedComponentID(uint32_t &node_id);
     void iterateStronglyConnectedComponentID();
     bool nextStronglyConnectedComponentID();
-    int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
+    // int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
     uint32_t getSccNumber() { return this->components_.getElements(); }
     void addSccNeighbors();
     void init();
@@ -64,7 +64,6 @@ private:
     void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Garray<Vertex> &vertices, uint32_t *index);
 
     Graph &graph;
-    ShortestPath &path;
     Garray<Component> components_;
     Garray<uint32_t> id_belongs_to_component_;
     Garray<uint32_t> neighbors_;
