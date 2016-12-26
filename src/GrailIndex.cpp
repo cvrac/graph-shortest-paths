@@ -71,15 +71,6 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     root = 0;
     for (uint32_t index = 0; index < run * 2; index += 2) {
         order = 1;
-        // root = 0;
-        // while (graph_.getNeighborsCount(root, dirf) != 0)
-        //     root = rand() % end;
-        // for (uint32_t i = 0; i < end; i++) {
-        //     if (graph_.getNeighborsCount(i, dirf) != 0 && i != root) {
-        //         root = i;
-        //         break;
-        //     }
-        // }
         root = roots[rand() % roots.getElements()];
         postOrderTraversal(root, vertices, dfs_stack, order, index, dir);
         for (uint32_t i = 0; i < roots.getElements(); i++) {
@@ -104,9 +95,6 @@ void GrailIndex::buildGrailIndex(const char &dir) {
         }
     }
 
-     //graph_.print();
-     //for (uint32_t i = 0; i < graph_.getNodes('S'); i++)
-     //   scc_index[i].print();
 }
 
 /*Given the set of strongly connected components, creates the hypergraph

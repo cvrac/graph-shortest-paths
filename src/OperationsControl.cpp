@@ -17,18 +17,22 @@ OperationsControl::OperationsControl(const float &cc_threshold, const uint8_t po
  connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
  res_array_(40), scheduler_(pool_size, res_array_) {
 
-     for (uint32_t i = 0; i < pool_size; i++)
-        paths_[i] = new ShortestPath(graph_, strongly_conn_, grail_index_);
 
+    for (uint32_t i = 0; i < pool_size; i++) {
+        paths_[i] = new ShortestPath(graph_, strongly_conn_, grail_index_);
+    }
+    paths_.setElements(pool_size);
 }
 
 OperationsControl::~OperationsControl() {
-    // for (uint32_t i = 0; i < paths_.getElements(); i++)
-    //     delete[] paths_[i];
+    for (uint32_t i = 0; i < paths_.getElements(); i++) {
+        delete paths_[i];
+        paths_[i] = NULL;
+    }
 }
 
 void OperationsControl::run(const char &mode) {
-   clock_t start = clock();
+    clock_t start = clock();
     this->buildGraph(mode);
 //    cout << "Threshold " << connected_components_.getThreshold() << endl;
    // cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
@@ -39,16 +43,20 @@ void OperationsControl::run(const char &mode) {
         //connected_components_.print();
     }
     if (mode == 's') {
-        start = clock();
+        // start = clock();
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
 //        cout << "SCC: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n";
         //this->strongly_conn_.print();
-        start = clock();
+        // start = clock();
         this->grail_index_.buildGrailIndex();
+
 //        cout << "Hypergraph and grail build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
         //graph_.print();
     }
+    /*temporary*/
+    for (uint32_t i = 0; i < paths_.getElements(); i++)
+        paths_[i]->increaseExploreSet();
     //start = clock();
     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
@@ -101,6 +109,7 @@ void OperationsControl::buildGraph(const char &mode) {
 void OperationsControl::runQueries(const char &mode) {
     paths_[0]->init(); // Do for every ShortestPath object
     bool bidirectional_insert = (mode == 'c');
+    Job *new_job;
     uint32_t search_skips = 0, sourceNode, targetNode;
     //uint32_t searches = 0;
     double total_rebuilding_time = 0;
@@ -112,6 +121,7 @@ void OperationsControl::runQueries(const char &mode) {
     // uint32_t counter = 0;
     //clock_t start = clock();
     int ch;
+    uint32_t counter = 0;
 
     while ((ch = getchar()) == '\n') continue;
     while ((ch = getchar()) != '\n') continue;
@@ -119,17 +129,20 @@ void OperationsControl::runQueries(const char &mode) {
     while ((ch = getchar()) != EOF) {
 
         if (ch == 'F') {
-            if (mode == 'c') {
-                if (connected_components_.needRebuilding()) {
-//                    clock_t start = clock();
-                    connected_components_.rebuildIndexes();
-//                    cout << "Rebuilding time: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-                    //total_rebuilding_time += (clock() - start) / (double) CLOCKS_PER_SEC;
-                }
-                connected_components_.setQueriesCount(0);
-                connected_components_.setUpdateIndexUseCount(0);
+            // cout << res_array_.getElements() << endl;
+            if (res_array_.getSize() < counter) {
+                // cout << "yes" << endl;
+                res_array_.increaseSize(counter);
             }
-            // cout << "here" << endl;
+
+            res_array_.setElements(counter);
+            scheduler_.executeAllJobs();
+            // break;
+            // cout << "results = " << res_array_.getElements() << endl;
+            for (uint32_t i = 0; i < res_array_.getElements(); i++) {
+                cout << res_array_[i] << "\n";
+            }
+            counter = 0;
         } else if (ch == 'Q') {
             ch = getchar();
             ch = getchar();
@@ -142,22 +155,13 @@ void OperationsControl::runQueries(const char &mode) {
                 continue;
             }
 
-            // cout << sourceNode << " " << targetNode << endl;
-
-            if (mode == 's') {
-                cout << this->estimateShortestPathStronglyConnected(sourceNode, targetNode) << "\n";
-            } else if (mode == 'c') {
-                if (connected_components_.sameConnectedComponent(sourceNode, targetNode)) {
-                    //searches++;
-                    cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
-                }
-                else {
-                    search_skips++;
-                    cout << -1 << "\n";
-                }
-            } else if (mode == 'n') {
-                cout << this->estimateShortestPath(sourceNode, targetNode) << "\n";
+            if (mode == 'n') {
+                new_job = new DynamicJob(counter, sourceNode, targetNode, paths_, connected_components_);
+            } else if (mode == 's') {
+                new_job = new StaticJob(counter, sourceNode, targetNode, paths_, strongly_conn_, grail_index_);
             }
+            scheduler_.submitJob(new_job);
+            ++counter;
 
         } else if (ch == 'A') {
 
@@ -171,34 +175,6 @@ void OperationsControl::runQueries(const char &mode) {
             }
         }
     }
+    scheduler_.terminateThreads();
 //    cout << "Search skips: " << search_skips << endl;
-}
-
-inline int OperationsControl::estimateShortestPath(uint32_t &source, uint32_t &target) {
-    int ret = paths_[0]->shortestPath(source, target, 'A');
-    paths_[0]->reset();
-    return ret;
-}
-
-inline int OperationsControl::estimateShortestPathStronglyConnected(uint32_t &source, uint32_t &target) {
-    int ret = -1;
-    if (strongly_conn_.findNodeStronglyConnectedComponentID(source) == strongly_conn_.findNodeStronglyConnectedComponentID(target))
-        ret = paths_[0]->shortestPath(source, target, 'S');
-    else if (strongly_conn_.findNodeStronglyConnectedComponentID(target) > strongly_conn_.findNodeStronglyConnectedComponentID(source))
-        ret = -2;
-
-    if (ret > -1) {
-        paths_[0]->reset();
-        return ret;
-    } else if (ret == -2)
-        return -1;
-
-    enum GRAIL_ANSWER grail_ans;
-    if ((grail_ans = grail_index_.isReachableGrailIndex(source, target, 'R')) == NO || (grail_ans = grail_index_.isReachableGrailIndex(target, source, 'L')) == NO) {
-        return -1;
-    } else if (grail_ans == MAYBE) {
-        ret = paths_[0]->shortestPath(source, target, 'G'); //part1 ektelesi opou mesa emperiextai kai grail
-        paths_[0]->reset();
-        return ret;
-    }
 }

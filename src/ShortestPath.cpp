@@ -23,9 +23,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 	/* This is temporary. Instead of repeatedly calling it here, it should get called
 	 * once for each batch, before executeAllJobs */
-	if (mode != 'S') {
-		this->increaseExploreSet();
-	}
+	// if (mode != 'S') {
+	// this->increaseExploreSet();
+	// }
 
 	//initilizations of structures
 	uint32_t tempId, node_id, comp1, comp2, comp_start, comp_end, ret;

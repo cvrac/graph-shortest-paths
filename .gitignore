@@ -3,3 +3,4 @@ util.cpp
 util.h
 tests/*.o
 tests/check
+*.txt

@@ -14,8 +14,8 @@ public:
     OperationsControl(const float &cc_threshold, const uint8_t pool_size);
     ~OperationsControl();
     void run(const char &mode);
-    int estimateShortestPathStronglyConnected(uint32_t &source, uint32_t &target);
-    int estimateShortestPath(uint32_t &source, uint32_t &target);
+    // int estimateShortestPathStronglyConnected(uint32_t &source, uint32_t &target);
+    // int estimateShortestPath(uint32_t &source, uint32_t &target);
 
 private:
     void buildGraph(const char &mode);
@@ -27,7 +27,7 @@ private:
     SCC strongly_conn_;
     CC connected_components_;
     GrailIndex grail_index_;
-    Garray<uint32_t> res_array_;
+    Garray<int> res_array_;
     JobScheduler scheduler_;
 };
 
