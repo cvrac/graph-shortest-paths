@@ -85,12 +85,12 @@ void JobScheduler::serve(const uint32_t &id) {
             delete exec_job;
             exec_job = NULL;
 
-            pthread_mutex_lock(&lockf_);
-            ++total_finished;
-            pthread_cond_signal(&finished_);
-            pthread_mutex_unlock(&lockf_);
         }
         if (jobs_per_thread[thread_id] > 0) {
+            pthread_mutex_lock(&lockf_);
+            total_finished += jobs_per_thread[thread_id];
+            pthread_cond_signal(&finished_);
+            pthread_mutex_unlock(&lockf_);
             local_jobs.clear();
             pthread_mutex_lock(&served_mutex_);
             served_[thread_id] = true;
