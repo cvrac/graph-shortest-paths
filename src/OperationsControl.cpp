@@ -54,9 +54,9 @@ void OperationsControl::run(const char &mode) {
 //        cout << "Hypergraph and grail build: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
         //graph_.print();
     }
-    /*temporary*/
+
     for (uint32_t i = 0; i < paths_.getElements(); i++)
-        paths_[i]->increaseExploreSet();
+        paths_[i]->init();
     //start = clock();
     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
@@ -107,7 +107,6 @@ void OperationsControl::buildGraph(const char &mode) {
 }
 
 void OperationsControl::runQueries(const char &mode) {
-    paths_[0]->init(); // Do for every ShortestPath object
     bool bidirectional_insert = (mode == 'c');
     Job *new_job;
     uint32_t search_skips = 0, sourceNode, targetNode;

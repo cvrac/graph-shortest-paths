@@ -15,6 +15,8 @@ public:
     Job(const uint32_t &id, const uint32_t &source, const uint32_t &target, Garray<ShortestPath *> &path) : job_id_(id),
      source_(source), target_(target), paths_(path) { }
     uint32_t &getJobId() { return job_id_; }
+    uint32_t getSource() const {return source_;}
+    uint32_t getTarget() const { return target_;}
     virtual int serve(const uint32_t &id) = 0;
 
 protected:
@@ -53,7 +55,7 @@ public:
     ~JobScheduler();
     void submitJob(Job *job);
     void executeAllJobs();
-    void waitAllTasksFinish();
+    void waitAllTasksFinish(const uint32_t &total_tasks);
     void terminateThreads();
 
 private:
