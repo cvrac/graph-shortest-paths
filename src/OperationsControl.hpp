@@ -11,7 +11,7 @@
 class OperationsControl {
 
 public:
-    OperationsControl(const float &cc_threshold, const uint8_t pool_size);
+    OperationsControl(const float &cc_threshold, const uint32_t pool_size);
     ~OperationsControl();
     void run(const char &mode);
     // int estimateShortestPathStronglyConnected(uint32_t &source, uint32_t &target);

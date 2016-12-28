@@ -12,7 +12,7 @@
 
 using namespace std;
 bool flag = false;
-OperationsControl::OperationsControl(const float &cc_threshold, const uint8_t pool_size) :
+OperationsControl::OperationsControl(const float &cc_threshold, const uint32_t pool_size) :
  paths_(pool_size),  strongly_conn_(graph_),
  connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
  res_array_(40), scheduler_(pool_size, res_array_) {
@@ -60,7 +60,7 @@ void OperationsControl::run(const char &mode) {
     //start = clock();
     this->runQueries(mode);
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
-    cout << "Total swaps: " << graph_.Graph::swaps_ << endl;
+    // cout << "Total swaps: " << graph_.Graph::swaps_ << endl;
 }
 
 void OperationsControl::parseNodeIds(uint32_t *source, uint32_t *target) {

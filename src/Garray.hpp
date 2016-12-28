@@ -58,7 +58,8 @@ Garray<T>::Garray() : array_(NULL), size_(0), head_(0), tail_(0), elements_(0) {
 template <class T>
 Garray<T>::Garray(const uint32_t &size) : size_(size), head_(0), tail_(0), elements_(0) {
     if (size) {
-        array_ = new T[size];
+        array_ = new T[size_]();
+        assert(array_ != NULL);
     } else {
         array_ = NULL;
     }

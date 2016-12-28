@@ -51,7 +51,7 @@ private:
 
 class JobScheduler {
 public:
-    JobScheduler(const uint8_t &pool_size, Garray<int> &resarr);
+    JobScheduler(const uint32_t &pool_size, Garray<int> &resarr);
     ~JobScheduler();
     void submitJob(Job *job);
     void executeAllJobs();
@@ -60,7 +60,7 @@ public:
 
 private:
     struct thread_args {
-        thread_args(JobScheduler *obj, const uint8_t &id) : object(obj), thread_id(id) { }
+        thread_args(JobScheduler *obj, const uint32_t &id) : object(obj), thread_id(id) { }
 
         JobScheduler *object;
         uint32_t thread_id;
@@ -70,7 +70,7 @@ private:
     void serve(const uint32_t &id);
     void jobAssignmentPerThread();
 
-    uint8_t execution_threads_;
+    uint32_t execution_threads_;
     uint32_t total_finished;
     Garray<uint32_t> jobs_per_thread;
     Garray<pthread_t> thread_pool_;

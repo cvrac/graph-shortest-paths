@@ -4,8 +4,9 @@
 #include <sys/signal.h>
 
 
-JobScheduler::JobScheduler(const uint8_t &pool_size, Garray<int> &resarr) : execution_threads_(pool_size),
- total_finished(0), thread_pool_(execution_threads_), result_arr_(resarr) {
+JobScheduler::JobScheduler(const uint32_t &pool_size, Garray<int> &resarr) : execution_threads_(pool_size),
+ total_finished(0), jobs_per_thread(pool_size), thread_pool_(pool_size), job_queue_(pool_size),
+ served_(pool_size), termination_(pool_size), result_arr_(resarr) {
     pthread_mutex_init(&queue_mutex_, 0);
     pthread_cond_init(&cond_nonempty_, 0);
     pthread_mutex_init(&lockf_, 0);
@@ -13,21 +14,16 @@ JobScheduler::JobScheduler(const uint8_t &pool_size, Garray<int> &resarr) : exec
     pthread_mutex_init(&served_mutex_, 0);
     pthread_cond_init(&cond_served_, 0);
 
-    served_.init(execution_threads_);
-    served_.setElements(execution_threads_);
-    jobs_per_thread.init(execution_threads_);
     jobs_per_thread.setElements(execution_threads_);
-    termination_.init(execution_threads_);
+    thread_pool_.setElements(execution_threads_);
+    served_.setElements(execution_threads_);
     termination_.setElements(execution_threads_);
-
-
-    for (uint32_t i = 0; i < execution_threads_; i++) {
-        served_[i] = false;
-        termination_[i] = false;
-    }
 
     thread_args *args;
     for (uint32_t i = 0; i < execution_threads_; i++) {
+        // jobs_per_thread[i] = 0;
+        // served_[i] = false;
+        // termination_[i] = false;
         args = new thread_args(this, i);
         pthread_create(&thread_pool_[i], 0, threadExecute, args);
     }
@@ -60,7 +56,8 @@ void *JobScheduler::threadExecute(void *args) {
 void JobScheduler::serve(const uint32_t &id) {
     Job *exec_job = NULL;
     uint32_t thread_id = id;
-    Garray<Job *> local_jobs;
+    // cout << "thread_id = " << thread_id << endl;
+    Garray<Job *> local_jobs(10);
 
     while (termination_[thread_id] == false) {
         //cout << "Thread " << id << " served_mutex lock" << endl;
@@ -82,15 +79,16 @@ void JobScheduler::serve(const uint32_t &id) {
         //cout << "Thread " << id << " queue_mutex unlock" << endl;
         pthread_mutex_unlock(&queue_mutex_);
 
-        for (uint32_t i = 0; i < jobs_per_thread[thread_id]; i++) {
+        for (uint32_t i = 0; i < local_jobs.getElements() && termination_[thread_id] == false; i++) {
             exec_job = local_jobs[i];
+            if (exec_job == NULL) break;
              //cout << "job " << exec_job->getJobId() << "(" << exec_job->getSource() << "," << exec_job->getTarget() <<") starting at thread " << thread_id << endl;
             result_arr_[exec_job->getJobId()] = exec_job->serve(thread_id);
             delete exec_job;
             exec_job = NULL;
 
         }
-        if (jobs_per_thread[thread_id] > 0) {
+        if (jobs_per_thread[thread_id] > 0 && termination_[thread_id] == false) {
             served_[thread_id] = true;
             local_jobs.clear();
 
@@ -107,7 +105,9 @@ void JobScheduler::serve(const uint32_t &id) {
 }
 
 void JobScheduler::submitJob(Job *job) {
+    // pthread_mutex_lock(&queue_mutex_);
     job_queue_.enqueue(job);
+    // pthread_mutex_unlock(&queue_mutex_);
 }
 
 void JobScheduler::jobAssignmentPerThread() {

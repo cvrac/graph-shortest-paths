@@ -4,10 +4,10 @@ HEADER = src/NodeIndex.hpp src/ListNode.hpp src/HashTable.hpp src/SCC.hpp src/Sh
 all: gsp
 
 CC 	= g++
-FLAGS	= -O2 -c
+FLAGS	= -g3 -O2 -c
 
 gsp: $(OBJS) $(HEADER)
-	$(CC) -O2 -pthread -o gsp $(OBJS)
+	$(CC) -g3 -O2 -pthread -o gsp $(OBJS)
 
 JobScheduler.o: src/JobScheduler.cpp
 	$(CC) $(FLAGS) src/JobScheduler.cpp
