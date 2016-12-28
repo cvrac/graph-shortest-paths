@@ -21,9 +21,9 @@ JobScheduler::JobScheduler(const uint32_t &pool_size, Garray<int> &resarr) : exe
 
     thread_args *args;
     for (uint32_t i = 0; i < execution_threads_; i++) {
-        // jobs_per_thread[i] = 0;
-        // served_[i] = false;
-        // termination_[i] = false;
+        jobs_per_thread[i] = 0;
+        served_[i] = false;
+        termination_[i] = false;
         args = new thread_args(this, i);
         pthread_create(&thread_pool_[i], 0, threadExecute, args);
     }
