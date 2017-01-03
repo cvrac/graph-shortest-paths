@@ -150,7 +150,11 @@ void OperationsControl::runQueries(const char &mode) {
 
             uint32_t total_nodes = graph_.getNodes('N');
             if (sourceNode >= total_nodes || targetNode >= total_nodes) {
-                cout << -1 << "\n";
+                if (res_array_.getSize() < counter) {
+                    // cout << "yes" << endl;
+                    res_array_.increaseSize(counter);
+                }
+                res_array_[counter++] = -1;
                 continue;
             }
 

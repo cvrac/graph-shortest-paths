@@ -82,7 +82,7 @@ void JobScheduler::serve(const uint32_t &id) {
         for (uint32_t i = 0; i < local_jobs.getElements() && termination_[thread_id] == false; i++) {
             exec_job = local_jobs[i];
             if (exec_job == NULL) break;
-             //cout << "job " << exec_job->getJobId() << "(" << exec_job->getSource() << "," << exec_job->getTarget() <<") starting at thread " << thread_id << endl;
+            //cout << "job " << exec_job->getJobId() << "(" << exec_job->getSource() << "," << exec_job->getTarget() <<") starting at thread " << thread_id << endl;
             result_arr_[exec_job->getJobId()] = exec_job->serve(thread_id);
             delete exec_job;
             exec_job = NULL;
