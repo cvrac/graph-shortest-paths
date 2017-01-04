@@ -17,7 +17,7 @@ public:
 	friend class SCC;
 	ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail);
 	~ShortestPath();
-	int shortestPath(uint32_t &source, uint32_t &target, char mode);
+	int shortestPath(uint32_t &source, uint32_t &target, const char &mode, const uint32_t &current_version);
 	void reset();
 	void init() {explored_set_front_.init(pr_graph_.getNodes('N'));
 				 explored_set_back_.init(pr_graph_.getNodes('N'));}
@@ -34,7 +34,8 @@ private:
 	Garray<uint32_t> frontier_back_;
 	ExploredSet explored_set_front_;
 	ExploredSet explored_set_back_;
-	Garray<uint32_t> neighbors_;
+//	Garray<uint32_t> neighbors_;
+//	Garray<uint32_t> edge_version_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;

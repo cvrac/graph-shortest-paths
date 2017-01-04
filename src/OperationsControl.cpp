@@ -35,7 +35,7 @@ void OperationsControl::run(const char &mode) {
     clock_t start = clock();
     this->buildGraph(mode);
 //    cout << "Threshold " << connected_components_.getThreshold() << endl;
-   // cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
 //    start = clock();
     if (mode == 'c') {
         connected_components_.estimateConnectedComponents();
@@ -102,7 +102,7 @@ void OperationsControl::buildGraph(const char &mode) {
         sourceNode = ch - '0';
         parseNodeIds(&sourceNode, &targetNode);
         // cout << sourceNode << " " << targetNode << endl;
-        graph_.insertEdge(sourceNode, targetNode, 'N');
+        graph_.insertEdge(sourceNode, targetNode, 'N', 0);
     }
 }
 
@@ -121,6 +121,8 @@ void OperationsControl::runQueries(const char &mode) {
     //clock_t start = clock();
     int ch;
     uint32_t counter = 0;
+    uint32_t current_version = 0;
+    bool version_change = false;
 
     while ((ch = getchar()) == '\n') continue;
     while ((ch = getchar()) != '\n') continue;
@@ -128,6 +130,12 @@ void OperationsControl::runQueries(const char &mode) {
     while ((ch = getchar()) != EOF) {
 
         if (ch == 'F') {
+            if (mode != 's') {
+                for (uint32_t i = 0 ; i < paths_.getElements() ; i++) {
+                    paths_[i]->increaseExploreSet();
+                }
+            }
+
             // cout << res_array_.getElements() << endl;
             if (res_array_.getSize() < counter) {
                 // cout << "yes" << endl;
@@ -158,22 +166,28 @@ void OperationsControl::runQueries(const char &mode) {
                 continue;
             }
 
-            if (mode == 'n') {
-                new_job = new DynamicJob(counter, sourceNode, targetNode, paths_, connected_components_);
-            } else if (mode == 's') {
+            if (mode != 's') {
+                if (! version_change) {
+                    version_change = true;
+                }
+                new_job = new DynamicJob(counter, sourceNode, targetNode, current_version, paths_, connected_components_);
+            } else {
                 new_job = new StaticJob(counter, sourceNode, targetNode, paths_, strongly_conn_, grail_index_);
             }
             scheduler_.submitJob(new_job);
             ++counter;
 
         } else if (ch == 'A') {
-
+            if (version_change) {
+                current_version++;
+                version_change = false;
+            }
             ch = getchar();
             ch = getchar();
             sourceNode = ch - '0';
             parseNodeIds(&sourceNode, &targetNode);
 
-            if (graph_.insertEdge(sourceNode, targetNode, 'N') && mode == 'c') {
+            if (graph_.insertEdge(sourceNode, targetNode, 'N', current_version) && mode == 'c') {
                 connected_components_.insertNewEdge(sourceNode, targetNode);
             }
         }

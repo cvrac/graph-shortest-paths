@@ -28,11 +28,12 @@ protected:
 
 class DynamicJob : public Job {
 public:
-    DynamicJob(const uint32_t &id, const uint32_t &source, const uint32_t &target, Garray<ShortestPath *> &path, CC &cc) :
-    Job(id, source, target, path),cc_(cc) { }
+    DynamicJob(const uint32_t &id, const uint32_t &source, const uint32_t &target, const uint32_t &current_version, Garray<ShortestPath *> &path, CC &cc) :
+    Job(id, source, target, path), current_version_(current_version), cc_(cc) { }
     int serve(const uint32_t &id);
 
 private:
+    uint32_t current_version_;
     CC &cc_;
 
 };

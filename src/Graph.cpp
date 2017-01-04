@@ -31,7 +31,7 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
     return min;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode, const uint32_t &edge_version) {
     if (mode != 'S') {
         this->insertNodes(source_node_id, target_node_id);
     }
@@ -54,10 +54,10 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     if (index->getListHeadNeighbors(*node1) > mirror_index->getListHeadNeighbors(*node2)) {
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
     }
-    if (this->insertEdge(*node1, *node2, index, buffer, mode, skip_search)) {
+    if (this->insertEdge(*node1, *node2, index, buffer, mode, edge_version, skip_search)) {
         skip_search = true;
         this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
-        this->insertEdge(*node1, *node2, index, buffer, mode, skip_search);
+        this->insertEdge(*node1, *node2, index, buffer, mode, edge_version, skip_search);
     } else {
         return false;
     }
@@ -75,7 +75,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     return true;
 }
 
-bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const char &mode, const bool &skip_search) {
+bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, NodeIndex *index, Buffer *buffer, const char &mode, const uint32_t &edge_version, const bool &skip_search) {
     long first_pos = index->getListHead(source_node_id)->pos;
     if (first_pos == -1) {
         first_pos = buffer->allocNewNode();
@@ -89,7 +89,7 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
         pos = index->getListHead(source_node_id)->last_pos;
     }
     long last_pos;
-    if (! buffer->insertNeighbor(pos, target_node_id, skip_search, &last_pos)) {
+    if (! buffer->insertNeighbor(pos, target_node_id, mode, edge_version, skip_search, &last_pos)) {
         return false;
     }
     // if (! skip_search) {
@@ -195,6 +195,42 @@ void Graph::getNeighbors(const uint32_t &node_id, const NodeIndex &index, const 
         do {
             ListNode *list_node = buffer.getListNode(pos);
             neighbors_array.pushBatch(list_node->getNeighborArray(), list_node->getNeighborNumber());
+            list_node_pos = list_node->getNextPos();
+            if (list_node_pos == -1) {
+                break;
+            }
+            pos = list_node_pos;
+        } while (1);
+    }
+}
+
+/* Almost same code, separate functions so that static graphs don't have to pass unused 'edge_version' Garrays */
+void Graph::getNeighborsDynamic(const uint32_t &node_id, const char &direction, Garray<uint32_t> &neighbors_array, Garray<uint32_t> &edge_version) {
+    neighbors_array.clear();
+    edge_version.clear();
+    NodeIndex *index;
+    Buffer *buffer;
+    if (direction == 'F') {
+        index = &outer_index_;
+        buffer = &outer_buffer_;
+    } else if (direction == 'B') {
+        index = &inner_index_;
+        buffer = &inner_buffer_;
+    }
+    uint32_t total_neighbors = index->getListHeadNeighbors(node_id);
+    neighbors_array.increaseSize(total_neighbors);
+    edge_version.increaseSize(total_neighbors);
+    this->getNeighborsDynamic(node_id, *index, *buffer, neighbors_array, edge_version);
+}
+
+void Graph::getNeighborsDynamic(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Garray<uint32_t> &neighbors_array, Garray<uint32_t> &edge_version) {
+    long list_node_pos = index.getListHeadPos(node_id);
+    if (list_node_pos != -1) {
+        long pos = list_node_pos;
+        do {
+            ListNode *list_node = buffer.getListNode(pos);
+            neighbors_array.pushBatch(list_node->getNeighborArray(), list_node->getNeighborNumber());
+            edge_version.pushBatch(list_node->getEdgeVersion(), list_node->getNeighborNumber());
             list_node_pos = list_node->getNextPos();
             if (list_node_pos == -1) {
                 break;

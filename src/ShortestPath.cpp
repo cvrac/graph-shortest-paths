@@ -12,20 +12,13 @@ ShortestPath::ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail) : visit_vers
 																	  distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
 												   					  frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE),
 																	  frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE),
-																	  explored_set_front_(gr), explored_set_back_(gr), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
-
+																	  explored_set_front_(gr), explored_set_back_(gr) {}
 ShortestPath::~ShortestPath() { }
 
-int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
+int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &mode, const uint32_t &current_version) {
 
 	if (source == target)
 		return 0;
-
-	/* This is temporary. Instead of repeatedly calling it here, it should get called
-	 * once for each batch, before executeAllJobs */
-	// if (mode != 'S') {
-	// this->increaseExploreSet();
-	// }
 
 	//initilizations of structures
 	uint32_t tempId, node_id, comp1, comp2, comp_start, comp_end, ret;
@@ -38,6 +31,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 		comp_end = strongly_conn_.findNodeStronglyConnectedComponentID(target);
 	}
 	short int child_check;
+    long pos;
+    ListNode *listNode;
 
 	clevelf_ = 1;
 	clevelb_ = 1;
@@ -49,7 +44,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 	explored_set_back_.checkMarkVisitedNode(target, visit_version_);
 
 	uint32_t c1 = pr_graph_.getNeighborsCount(source, dirf_), c2 = pr_graph_.getNeighborsCount(target, dirb_);
-	while (true) {
+
+    while (true) {
 
 		//no solution, return failure
 		if (frontier_front_.isEmpty() || frontier_back_.isEmpty())
@@ -68,29 +64,38 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				pr_graph_.getNeighbors(node_id, dirf_, 0, neighbors_);
-				for (int i = 0; i < neighbors_.getElements(); i++) {
-					tempId = neighbors_[i];
-					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
-						continue;
-					if (mode == 'G') {
-						comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-						if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target, 'R') == NO || grail_.isReachableGrailIndex(target, tempId, 'L') == NO) {
-							continue;
-						}
-					}
-					if (explored_set_back_.checkVisitedNode(tempId, visit_version_))  {
-						return distance_front_ + distance_back_ + 1;
-					} else if (explored_set_front_.checkMarkVisitedNode(tempId, visit_version_)) {
-						//explored_set_.insert(tempId);
-                        uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirf_);
-                        if (grandch == 0)
+                pos = pr_graph_.outer_index_.getListHeadPos(node_id);
+                while (pos != -1) {
+                    listNode = pr_graph_.outer_buffer_.getListNode(pos);
+                    pos = listNode->next_pos_;
+                    for (int i = 0; i < listNode->cur_neighbors_; i++) {
+                        if (mode == 'D') {
+                            if (current_version < listNode->edge_version_[i]) {
+                                continue;
+                            }
+                        }
+                        tempId = listNode->neighbor_[i];
+                        if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp1)
                             continue;
-                        c1 += grandch;
-						frontier_front_.enqueue(tempId);
-						++clevelf1_;
-					}
-				}
+                        if (mode == 'G') {
+                            comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+                            if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, target, 'R') == NO || grail_.isReachableGrailIndex(target, tempId, 'L') == NO) {
+                                continue;
+                            }
+                        }
+                        if (explored_set_back_.checkVisitedNode(tempId, visit_version_))  {
+                            return distance_front_ + distance_back_ + 1;
+                        } else if (explored_set_front_.checkMarkVisitedNode(tempId, visit_version_)) {
+                            //explored_set_.insert(tempId);
+                            uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirf_);
+                            if (grandch == 0)
+                                continue;
+                            c1 += grandch;
+                            frontier_front_.enqueue(tempId);
+                            ++clevelf1_;
+                        }
+                    }
+                }
 			}
 			++distance_front_;
 			clevelf_ = clevelf1_;
@@ -108,29 +113,38 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, char mode) {
 
 				//expand node
 				ret = 0;
-				pr_graph_.getNeighbors(node_id, dirb_, 0, neighbors_);
-				for (int i = 0; i < neighbors_.getElements(); i++) {
-					tempId = neighbors_[i];
-					if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
-						continue;
-					 if (mode == 'G') {
-					 	comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
-					 	if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source, 'L') == NO || grail_.isReachableGrailIndex(source, tempId, 'R') == NO) {
-							continue;
-					 	}
-					 }
-					if (explored_set_front_.checkVisitedNode(tempId, visit_version_))  {
-						return distance_front_ + distance_back_ + 1;
-					} else if (explored_set_back_.checkMarkVisitedNode(tempId, visit_version_)) {
-						//explored_set_x.insert(tempId);
-                        uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirb_);
-                        if (grandch == 0)
+                pos = pr_graph_.inner_index_.getListHeadPos(node_id);
+                while (pos != -1) {
+                    listNode = pr_graph_.inner_buffer_.getListNode(pos);
+                    pos = listNode->next_pos_;
+                    for (int i = 0; i < listNode->cur_neighbors_; i++) {
+                        if (mode == 'D') {
+                            if (current_version < listNode->edge_version_[i]) {
+                                continue;
+                            }
+                        }
+                        tempId = listNode->neighbor_[i];
+                        if (mode == 'S' && strongly_conn_.findNodeStronglyConnectedComponentID(tempId) != comp2)
                             continue;
-                        c2 += grandch;
-                        frontier_back_.enqueue(tempId);
-						++clevelb1_;
-					}
-				}
+                         if (mode == 'G') {
+                            comp2 = strongly_conn_.findNodeStronglyConnectedComponentID(tempId);
+                            if (comp1 != comp2 && grail_.isReachableGrailIndex(tempId, source, 'L') == NO || grail_.isReachableGrailIndex(source, tempId, 'R') == NO) {
+                                continue;
+                            }
+                         }
+                        if (explored_set_front_.checkVisitedNode(tempId, visit_version_))  {
+                            return distance_front_ + distance_back_ + 1;
+                        } else if (explored_set_back_.checkMarkVisitedNode(tempId, visit_version_)) {
+                            //explored_set_x.insert(tempId);
+                            uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirb_);
+                            if (grandch == 0)
+                                continue;
+                            c2 += grandch;
+                            frontier_back_.enqueue(tempId);
+                            ++clevelb1_;
+                        }
+                    }
+                }
 			}
 			++distance_back_;
 			clevelb_ = clevelb1_;

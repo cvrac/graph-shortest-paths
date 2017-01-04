@@ -4,11 +4,14 @@
 
 using namespace std;
 
-void ListNode::insertNeighbor(const uint32_t &neighbor_id) {
+void ListNode::insertNeighbor(const uint32_t &neighbor_id, const char &mode, const uint32_t &edge_version) {
     if (this->isFull()) {
         return;
     }
     neighbor_[cur_neighbors_++] = neighbor_id;
+    if (mode != 'S') {
+        edge_version_[cur_neighbors_-1] = edge_version;
+    }
 }
 
 bool ListNode::search(const uint32_t &target_id) {

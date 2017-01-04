@@ -168,7 +168,7 @@ void JobScheduler::executeAllJobs() {
 }
 
 int DynamicJob::serve(const uint32_t &id) {
-    int ret = paths_[id]->shortestPath(source_, target_, 'A');
+    int ret = paths_[id]->shortestPath(source_, target_, 'D', current_version_);
     paths_[id]->reset();
     return ret;
 }
@@ -178,7 +178,7 @@ int StaticJob::serve(const uint32_t &id) {
      //cout << "source = " << source_ << " target = " << target_ << endl;
     int ret = -1;
     if (scc_.findNodeStronglyConnectedComponentID(source_) == scc_.findNodeStronglyConnectedComponentID(target_))
-        ret = paths_[id]->shortestPath(source_, target_, 'S');
+        ret = paths_[id]->shortestPath(source_, target_, 'S', 0);
     // else if (scc_.findNodeStronglyConnectedComponentID(target_) > scc_.findNodeStronglyConnectedComponentID(source_))
     //     ret = -2;
 
@@ -191,7 +191,7 @@ int StaticJob::serve(const uint32_t &id) {
     if ((grail_ans = grail_.isReachableGrailIndex(source_, target_, 'R')) == NO || (grail_ans = grail_.isReachableGrailIndex(target_, source_, 'L')) == NO) {
         return -1;
     } else if (grail_ans == MAYBE) {
-        ret = paths_[id]->shortestPath(source_, target_, 'G');
+        ret = paths_[id]->shortestPath(source_, target_, 'G', 0);
         paths_[id]->reset();
         return ret;
     }

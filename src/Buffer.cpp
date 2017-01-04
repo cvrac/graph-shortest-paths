@@ -58,7 +58,7 @@ long Buffer::allocNewNode() {
     return cur_list_nodes_++;
 }
 
-bool Buffer::insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const bool &skip_search, long *last_pos) {
+bool Buffer::insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, const char &mode, const uint32_t &edge_version, const bool &skip_search, long *last_pos) {
     long cur_pos = first_pos;
     ListNode *cur_node = this->getListNode(cur_pos);
 
@@ -87,7 +87,7 @@ bool Buffer::insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, 
         cur_pos = next_node_pos;
         cur_node = this->getListNode(cur_pos);
     }
-    cur_node->insertNeighbor(neighbor_id);
+    cur_node->insertNeighbor(neighbor_id, mode, edge_version);
     *last_pos = cur_pos;
     return true;
 }

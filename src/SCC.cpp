@@ -160,7 +160,7 @@ void SCC::addSccNeighbors() {
         for (uint32_t i = 0; i < neighbors_.getElements(); i++) {
             neighborScc = id_belongs_to_component_[neighbors_[i]];
             if (neighborScc == scc) continue;
-            if (graph.insertEdge(scc, neighborScc, 'S'))
+            if (graph.insertEdge(scc, neighborScc, 'S', 0))
                 ++edgeCounter;
         }
     }
