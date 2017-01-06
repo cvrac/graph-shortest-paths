@@ -10,8 +10,10 @@
 #include <time.h>
 #include <iomanip>
 
+#define BILLION  1000000000L;
+
 using namespace std;
-bool flag = false;
+
 OperationsControl::OperationsControl(const float &cc_threshold, const uint32_t pool_size) :
  paths_(pool_size),  strongly_conn_(graph_),
  connected_components_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
@@ -34,8 +36,8 @@ OperationsControl::~OperationsControl() {
 void OperationsControl::run(const char &mode) {
     clock_t start = clock();
     this->buildGraph(mode);
-//    cout << "Threshold " << connected_components_.getThreshold() << endl;
-    cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+    cout << "Threshold " << connected_components_.getThreshold() << endl;
+    cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n\n";
 //    start = clock();
     if (mode == 'c') {
         connected_components_.estimateConnectedComponents();
@@ -127,29 +129,50 @@ void OperationsControl::runQueries(const char &mode) {
     while ((ch = getchar()) == '\n') continue;
     while ((ch = getchar()) != '\n') continue;
 
+    struct timespec start, finish;
+    double elapsed;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     while ((ch = getchar()) != EOF) {
 
         if (ch == 'F') {
-            if (mode != 's') {
+            /* Not needed unless CC::insertNewEdge assertion fails. (there are no new nodes in the workload files) */
+            /*if (mode != 's') {
                 for (uint32_t i = 0 ; i < paths_.getElements() ; i++) {
                     paths_[i]->increaseExploreSet();
                 }
-            }
-
-            // cout << res_array_.getElements() << endl;
+            }*/
             if (res_array_.getSize() < counter) {
-                // cout << "yes" << endl;
                 res_array_.increaseSize(counter);
             }
 
             res_array_.setElements(counter);
             scheduler_.executeAllJobs();
-            // break;
-            // cout << "results = " << res_array_.getElements() << endl;
-            for (uint32_t i = 0; i < res_array_.getElements(); i++) {
-                cout << res_array_[i] << "\n";
+            if (mode == 'c') {
+                clock_gettime(CLOCK_MONOTONIC, &finish);
+                elapsed = (finish.tv_sec - start.tv_sec);
+                elapsed += (finish.tv_nsec - start.tv_nsec) / BILLION;
+                cout << "Batch time: " << elapsed << "\n";
             }
+
+            //    for (uint32_t i = 0; i < res_array_.getElements(); i++) {
+        //        cout << res_array_[i] << "\n";
+        //    }
             counter = 0;
+            if (mode == 'c') {
+                if (connected_components_.needRebuilding()) {
+                    clock_gettime(CLOCK_REALTIME, &start);
+                    connected_components_.rebuildIndexes();
+                    clock_gettime(CLOCK_REALTIME, &finish);
+                    elapsed = (finish.tv_sec - start.tv_sec);
+                    elapsed += (finish.tv_nsec - start.tv_nsec) / BILLION;
+                    cout << "Rebuilding time: " << elapsed << "\n";
+                    //total_rebuilding_time += (clock() - start) / (double) CLOCKS_PER_SEC;
+                }
+                connected_components_.setQueriesCount(0);
+                connected_components_.setUpdateIndexUseCount(0);
+                clock_gettime(CLOCK_MONOTONIC, &start);
+            }
         } else if (ch == 'Q') {
             ch = getchar();
             ch = getchar();
@@ -170,7 +193,7 @@ void OperationsControl::runQueries(const char &mode) {
                 if (! version_change) {
                     version_change = true;
                 }
-                new_job = new DynamicJob(counter, sourceNode, targetNode, current_version, paths_, connected_components_);
+                new_job = new DynamicJob(counter, sourceNode, targetNode, current_version, paths_, connected_components_, mode);
             } else {
                 new_job = new StaticJob(counter, sourceNode, targetNode, paths_, strongly_conn_, grail_index_);
             }
@@ -188,7 +211,7 @@ void OperationsControl::runQueries(const char &mode) {
             parseNodeIds(&sourceNode, &targetNode);
 
             if (graph_.insertEdge(sourceNode, targetNode, 'N', current_version) && mode == 'c') {
-                connected_components_.insertNewEdge(sourceNode, targetNode);
+                connected_components_.insertNewEdge(sourceNode, targetNode, current_version);
             }
         }
     }

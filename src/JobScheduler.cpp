@@ -168,9 +168,21 @@ void JobScheduler::executeAllJobs() {
 }
 
 int DynamicJob::serve(const uint32_t &id) {
-    int ret = paths_[id]->shortestPath(source_, target_, 'D', current_version_);
-    paths_[id]->reset();
-    return ret;
+    if (mode_ == 'n') {
+        int ret = paths_[id]->shortestPath(source_, target_, 'D', current_version_);
+        paths_[id]->reset();
+        return ret;
+    } else if (mode_ == 'c') {
+        if (cc_.sameConnectedComponent(source_, target_, current_version_)) {
+            int ret = paths_[id]->shortestPath(source_, target_, 'D', current_version_);
+            paths_[id]->reset();
+            return ret;
+        }
+        else {
+            //cout << "s";
+            return -1;
+        }
+    }
 }
 
 int StaticJob::serve(const uint32_t &id) {
