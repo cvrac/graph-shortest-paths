@@ -1,4 +1,4 @@
-#include "../Garray.hpp"
+#include "../src/Garray.hpp"
 #include "gtest/gtest.h"
 
 using namespace std;
@@ -194,7 +194,7 @@ namespace {
     EXPECT_TRUE(stack.isFull());
     EXPECT_EQ(stack.getSize(), 2);
     EXPECT_EQ(stack.getHead(), 0);
-    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getTail(), 2);
     EXPECT_EQ(stack.getElements(), 2);
     
     
@@ -247,7 +247,7 @@ namespace {
     EXPECT_TRUE(stack.isFull());
     EXPECT_EQ(stack.getSize(), 4);
     EXPECT_EQ(stack.getHead(), 0);
-    EXPECT_EQ(stack.getTail(), 0);
+    EXPECT_EQ(stack.getTail(), 4);
     EXPECT_EQ(stack.getElements(), 4);
     
     

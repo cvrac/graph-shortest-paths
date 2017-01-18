@@ -1,4 +1,4 @@
-#include "../ListNode.hpp"
+#include "../src/ListNode.hpp"
 #include "gtest/gtest.h"
 
 namespace {
@@ -39,19 +39,19 @@ namespace {
     EXPECT_FALSE(listNode.search(10));
     EXPECT_FALSE(listNode.isFull());
 
-    listNode.insertNeighbor(10);
+    listNode.insertNeighbor(10, 'S', 0);
     EXPECT_FALSE(listNode.isFull());
     EXPECT_FALSE(listNode.search(11));
     EXPECT_TRUE(listNode.search(10));
 
-    listNode.insertNeighbor(11);
+    listNode.insertNeighbor(11, 'S', 0);
     EXPECT_FALSE(listNode.isFull());
     EXPECT_FALSE(listNode.search(12));
     EXPECT_TRUE(listNode.search(10));
     EXPECT_TRUE(listNode.search(11));
 
-    listNode.insertNeighbor(12);
-    EXPECT_FALSE(listNode.isFull());
+    listNode.insertNeighbor(12, 'S', 0);
+    EXPECT_TRUE(listNode.isFull());
     EXPECT_FALSE(listNode.search(13));
     EXPECT_TRUE(listNode.search(10));
     EXPECT_TRUE(listNode.search(11));

@@ -1,5 +1,5 @@
-OBJS =   ArrayTest.o
-HEADER =  ../Garray.hpp
+OBJS =   ArrayTest.o ListNodeCheck.o NodeIndexCheck.o BufferCheck.o HashTableCheck.o ListNode.o NodeIndex.o Buffer.o
+HEADER =  ../src/Garray.hpp
 
 all: check
 
@@ -12,17 +12,17 @@ LINK_FLAGS  = -L $(GTEST_LIBDIR) -l gtest_main -lpthread
 check: $(OBJS) $(HEADER)
 	$(CC) $(OBJS) $(LINK_FLAGS) -o check
 
-NodeIndex.o: ../NodeIndex.cpp
-	$(CC) $(COMP_FLAGS) ../NodeIndex.cpp
+NodeIndex.o: ../src/NodeIndex.cpp
+	$(CC) $(COMP_FLAGS) ../src/NodeIndex.cpp
 
-ListNode.o: ../ListNode.cpp
-	$(CC) $(COMP_FLAGS) ../ListNode.cpp
+ListNode.o: ../src/ListNode.cpp
+	$(CC) $(COMP_FLAGS) ../src/ListNode.cpp
 
-Buffer.o: ../Buffer.cpp
-	$(CC) $(COMP_FLAGS) ../Buffer.cpp
+Buffer.o: ../src/Buffer.cpp
+	$(CC) $(COMP_FLAGS) ../src/Buffer.cpp
 
-Graph.o: ../Graph.cpp
-	$(CC) $(COMP_FLAGS) ../Graph.cpp
+Graph.o: ../src/Graph.cpp
+	$(CC) $(COMP_FLAGS) ../src/Graph.cpp
 
 ListNodeCheck.o: ListNodeCheck.cpp
 	$(CC) $(COMP_FLAGS) ListNodeCheck.cpp
@@ -35,15 +35,6 @@ BufferCheck.o: BufferCheck.cpp
 
 HashTableCheck.o: HashTableCheck.cpp
 	$(CC) $(COMP_FLAGS) HashTableCheck.cpp
-
-HashTable.o: ../HashTable.cpp
-	$(CC) $(COMP_FLAGS) ../HashTable.cpp
-
-Queue.o: ../Queue.cpp
-	$(CC) $(COMP_FLAGS) ../Queue.cpp
-
-QueueCheck.o: QueueCheck.cpp
-	$(CC) $(COMP_FLAGS) QueueCheck.cpp
 
 Check.o: Check.cpp
 	$(CC) $(COMP_FLAGS) Check.cpp

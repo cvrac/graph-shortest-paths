@@ -1,4 +1,4 @@
-#include "../NodeIndex.hpp"
+#include "../src/NodeIndex.hpp"
 #include "gtest/gtest.h"
 
 namespace {
@@ -9,7 +9,7 @@ namespace {
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        IndexTest() {
+        IndexTest() : index(3) {
             // You can do set-up work for each test here.
         }
 
@@ -30,7 +30,7 @@ namespace {
             // before the destructor).
         }
 
-        Index index;
+        NodeIndex index;
     };
 
 // Tests that the Foo::Bar() method does Abc.

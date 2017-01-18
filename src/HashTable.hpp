@@ -16,7 +16,6 @@ class HashTable {
 public:
 	HashTable(const uint32_t &numofbucks) : hashentries_(numofbucks), table_(hashentries_) {}
 	~HashTable() {};
-	inline uint32_t size();
 	void insert(const T &nodeid);
 	bool search(const T &entry_id);
     bool searchInsert(const T &entry_id);

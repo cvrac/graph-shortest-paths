@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 // Test value: 3
-// Actual value: 20
 
 #define MAX_NEIGHBORS 20
 class ListNode {

@@ -1,4 +1,4 @@
-#include "../Buffer.hpp"
+#include "../src/Buffer.hpp"
 #include "gtest/gtest.h"
 
 namespace {
@@ -9,7 +9,7 @@ namespace {
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        BufferTest() {
+        BufferTest() : buffer(1) {
             // You can do set-up work for each test here.
         }
 
@@ -38,23 +38,30 @@ namespace {
     ASSERT_EQ(buffer.getMaxListNodes(), 1);
 
     EXPECT_EQ(buffer.getCurListNodes(), 0);
-    ListNodePos list_node = buffer.allocNewNode();
-    BufferFeedback feedback = buffer.insertNeighbor(list_node.pos, 5, false);
-    EXPECT_FALSE(feedback.edge_exists);
 
-    feedback = buffer.insertNeighbor(list_node.pos, 6, false);
-    EXPECT_FALSE(feedback.edge_exists);
+    uint32_t pos = buffer.allocNewNode();
+    long last_pos;
+    bool feedback = buffer.insertNeighbor(pos, 5, 'S', 0, false, &last_pos);
+    EXPECT_TRUE(feedback);
 
-    feedback = buffer.insertNeighbor(list_node.pos, 7, false);
-    EXPECT_FALSE(feedback.edge_exists);
+    feedback = buffer.insertNeighbor(pos, 6, 'S', 0, false, &last_pos);
+    EXPECT_TRUE(feedback);
 
-    feedback = buffer.insertNeighbor(list_node.pos, 6, false);
-    EXPECT_TRUE(feedback.edge_exists);
+    feedback = buffer.insertNeighbor(pos, 7, 'S', 0, false, &last_pos);
+    EXPECT_TRUE(feedback);
 
-    feedback = buffer.insertNeighbor(list_node.pos, 8, true);
-    EXPECT_FALSE(feedback.edge_exists);
-    EXPECT_EQ(feedback.last_pos, 1);
+    feedback = buffer.insertNeighbor(pos, 6, 'S', 0, false, &last_pos);
+    EXPECT_FALSE(feedback);
 
+    feedback = buffer.insertNeighbor(pos, 8, 'S', 0, false, &last_pos);
+    EXPECT_TRUE(feedback);
+    EXPECT_EQ(last_pos, 1);
+
+    feedback = buffer.insertNeighbor(last_pos, 9, 'S', 0, true, &last_pos);
+    EXPECT_TRUE(feedback);
+
+    feedback = buffer.insertNeighbor(pos, 9, 'S', 0, false, &last_pos);
+    EXPECT_FALSE(feedback);
 
     EXPECT_EQ(buffer.getTotalReallocs(), 1);
     EXPECT_EQ(buffer.getCurListNodes(), 2);
