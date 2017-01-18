@@ -114,10 +114,6 @@ T Garray<T>::popBack() {
     if (! this->isEmpty()) {
         --elements_;
         return array_[--tail_];
-        // int temp = tail_;
-        // --tail_;
-        // --elements_;
-        // return array_[temp];
     }
 }
 

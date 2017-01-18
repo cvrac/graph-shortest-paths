@@ -25,9 +25,7 @@ public:
     ~Graph();
     bool insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode, const uint32_t &edge_version);
     void getNeighbors(const uint32_t &node_id, const char &direction, const char &randomness, Garray<uint32_t> &neighbors_array);
-    void getNeighborsDynamic(const uint32_t &node_id, const char &direction, Garray<uint32_t> &neighbors_array, Garray<uint32_t> &edge_version);
     uint32_t getNeighborsCount(const uint32_t &source, const char &direction);
-    uint32_t getNeighbor(const uint32_t &source, const uint32_t &neighbor, const char &direction, Garray<uint32_t> &neighbors_array);
     uint32_t getNodes(const char &mode) {
         if (mode == 'S') {
             return scc_outer_index_.getCurSize();
@@ -46,7 +44,6 @@ private:
     void insertNode(const uint32_t node_id);
     void toggleDirection(const uint32_t &source_node_id, const uint32_t &target_node_id, const uint32_t **node1, const uint32_t **node2, NodeIndex **index, Buffer **buffer, const char &mode);
     void getNeighbors(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Garray<uint32_t> &neighbors_array);
-    void getNeighborsDynamic(const uint32_t &node_id, const NodeIndex &index, const Buffer &buffer, Garray<uint32_t> &neighbors_array, Garray<uint32_t> &edge_version);
     void printAll(const NodeIndex &index, const Buffer &buffer);
     void print(const NodeIndex &index, const Buffer &buffer);
 

@@ -2,7 +2,6 @@
 #define GRAPHSHORTESTPATHS_LISTNODE_H
 
 #include <stdint.h>
-// #include "ListNodePos.hpp"
 
 // Test value: 3
 // Actual value: 20
@@ -30,7 +29,6 @@ private:
     uint32_t cur_neighbors_;
     long next_pos_;
     uint32_t edge_version_[MAX_NEIGHBORS];
-    //ListNodePos next_pos_;
 };
 
 #endif //GRAPHSHORTESTPATHS_LISTNODE_H

@@ -86,7 +86,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &m
                         if (explored_set_back_.checkVisitedNode(tempId, visit_version_))  {
                             return distance_front_ + distance_back_ + 1;
                         } else if (explored_set_front_.checkMarkVisitedNode(tempId, visit_version_)) {
-                            //explored_set_.insert(tempId);
                             uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirf_);
                             if (grandch == 0)
                                 continue;
@@ -135,7 +134,6 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &m
                         if (explored_set_front_.checkVisitedNode(tempId, visit_version_))  {
                             return distance_front_ + distance_back_ + 1;
                         } else if (explored_set_back_.checkMarkVisitedNode(tempId, visit_version_)) {
-                            //explored_set_x.insert(tempId);
                             uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirb_);
                             if (grandch == 0)
                                 continue;

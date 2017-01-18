@@ -49,4 +49,4 @@ clean:
 	rm -f gsp $(OBJS)
 
 count:
-	wc -l *.cpp $(HEADER)
+	wc -l src/*.cpp $(HEADER)

@@ -31,8 +31,6 @@ public:
     void init(const uint32_t &size);
 
 private:
-    //ListNode *getListNode(const long &list_node_pos) {return &buffer_[list_node_pos];}
-
     ListNode *buffer_;
     long cur_list_nodes_;
     long max_list_nodes_;

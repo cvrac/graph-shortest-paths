@@ -62,7 +62,7 @@ bool Buffer::insertNeighbor(const long &first_pos, const uint32_t &neighbor_id, 
     long cur_pos = first_pos;
     ListNode *cur_node = this->getListNode(cur_pos);
 
-    // No duplicates
+    /* No duplicates */
     if (! skip_search && cur_node->search(neighbor_id)) {
         return false;
     }
