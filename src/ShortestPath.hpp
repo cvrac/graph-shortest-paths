@@ -19,10 +19,8 @@ public:
 	~ShortestPath();
 	int shortestPath(uint32_t &source, uint32_t &target, const char &mode, const uint32_t &current_version);
 	void reset();
-	void init() {explored_set_front_.init(pr_graph_.getNodes('N'));
-				 explored_set_back_.init(pr_graph_.getNodes('N'));}
-	void increaseExploreSet() {explored_set_front_.update(pr_graph_.getNodes('N'));
-		                       explored_set_back_.update(pr_graph_.getNodes('N'));}
+	void init() {explored_set_.init(pr_graph_.getNodes('N'));}
+	void increaseExploreSet() {explored_set_.update(pr_graph_.getNodes('N'));}
 
 private:
 	unsigned int clevelf_, clevelf1_;
@@ -32,8 +30,7 @@ private:
 	GrailIndex &grail_;
 	Garray<uint32_t> frontier_front_;
 	Garray<uint32_t> frontier_back_;
-	ExploredSet explored_set_front_;
-	ExploredSet explored_set_back_;
+	ExploredSet explored_set_;
 	unsigned int distance_front_;
 	unsigned int distance_back_;
 	char dirf_;

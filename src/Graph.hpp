@@ -67,12 +67,18 @@ public:
     ~ExploredSet() {}
     void init(const uint32_t &total_nodes);
     void update(const uint32_t &total_nodes);
-    bool checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version);
-    bool checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version);
+    bool checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version, const char &dir);
+    bool checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version, const char &dir);
 
 private:
+
+    struct Entry {
+        unsigned long long visit_version;
+        char dir;
+    };
+
     Graph &graph_;
-    Garray<uint32_t> explored_set_;
+    Garray<Entry> explored_set_;
 };
 
 

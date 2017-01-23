@@ -12,7 +12,7 @@ ShortestPath::ShortestPath(Graph &gr, SCC &comp, GrailIndex &grail) : visit_vers
 																	  distance_front_(0), distance_back_(0), dirf_('F'), dirb_('B'),
 												   					  frontier_front_(INITIAL_FRONTIER_ARRAY_SIZE),
 																	  frontier_back_(INITIAL_FRONTIER_ARRAY_SIZE),
-																	  explored_set_front_(gr), explored_set_back_(gr) {}
+																	  explored_set_(gr) {}
 ShortestPath::~ShortestPath() { }
 
 int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &mode, const uint32_t &current_version) {
@@ -40,8 +40,8 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &m
 	frontier_front_.enqueue(source);
 	frontier_back_.enqueue(target);
 
-	explored_set_front_.checkMarkVisitedNode(source, visit_version_);
-	explored_set_back_.checkMarkVisitedNode(target, visit_version_);
+	explored_set_.checkMarkVisitedNode(source, visit_version_, dirf_);
+	explored_set_.checkMarkVisitedNode(target, visit_version_, dirb_);
 
 	uint32_t c1 = pr_graph_.getNeighborsCount(source, dirf_), c2 = pr_graph_.getNeighborsCount(target, dirb_);
 
@@ -83,9 +83,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &m
                                 continue;
                             }
                         }
-                        if (explored_set_back_.checkVisitedNode(tempId, visit_version_))  {
+                        if (explored_set_.checkVisitedNode(tempId, visit_version_, dirb_))  {
                             return distance_front_ + distance_back_ + 1;
-                        } else if (explored_set_front_.checkMarkVisitedNode(tempId, visit_version_)) {
+                        } else if (explored_set_.checkMarkVisitedNode(tempId, visit_version_, dirf_)) {
                             uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirf_);
                             if (grandch == 0)
                                 continue;
@@ -131,9 +131,9 @@ int ShortestPath::shortestPath(uint32_t& source, uint32_t& target, const char &m
                                 continue;
                             }
                          }
-                        if (explored_set_front_.checkVisitedNode(tempId, visit_version_))  {
+                        if (explored_set_.checkVisitedNode(tempId, visit_version_, dirf_))  {
                             return distance_front_ + distance_back_ + 1;
-                        } else if (explored_set_back_.checkMarkVisitedNode(tempId, visit_version_)) {
+                        } else if (explored_set_.checkMarkVisitedNode(tempId, visit_version_, dirb_)) {
                             uint32_t grandch = pr_graph_.getNeighborsCount(tempId, dirb_);
                             if (grandch == 0)
                                 continue;

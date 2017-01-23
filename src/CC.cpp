@@ -20,7 +20,7 @@ void CC::estimateConnectedComponents() {
     bool first = true;
     uint32_t cc_id = 0;
     for (uint32_t start_node = 0 ; start_node < total_nodes ; start_node++) {
-        if (! explored_set_.checkMarkVisitedNode(start_node, index_version_)) {
+        if (! explored_set_.checkMarkVisitedNode(start_node, index_version_, 'F')) {
             continue;
         }
         if (!first) {
@@ -33,7 +33,7 @@ void CC::estimateConnectedComponents() {
             graph_.getNeighbors(node, 'A', 0, neighbors_);
             for (int i = 0; i < neighbors_.getElements(); i++) {
                 node = neighbors_[i];
-                if (explored_set_.checkMarkVisitedNode(node, index_version_)) {
+                if (explored_set_.checkMarkVisitedNode(node, index_version_, 'F')) {
                     frontier_.enstack(node);
                     ccindex_[node] = cc_id;
                 }

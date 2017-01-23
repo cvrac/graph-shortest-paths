@@ -270,7 +270,7 @@ void ExploredSet::init(const uint32_t &total_nodes) {
     explored_set_.init(total_nodes);
     explored_set_.setElements(total_nodes);
     for (uint32_t n = 0 ; n < total_nodes ; n++) {
-        explored_set_[n] = 0;
+        explored_set_[n].visit_version = 0;
     }
 }
 
@@ -282,20 +282,21 @@ void ExploredSet::update(const uint32_t &total_nodes) {
     explored_set_.increaseSize(total_nodes);
     explored_set_.setElements(total_nodes);
     for (uint32_t n = old_elements ; n < total_nodes ; n++) {
-        explored_set_[n] = 0;
+        explored_set_[n].visit_version = 0;
     }
 }
 
-bool ExploredSet::checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version) {
-    if (explored_set_[node_id] == visit_version) {
+bool ExploredSet::checkMarkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version, const char &dir) {
+    if (explored_set_[node_id].visit_version == visit_version && dir == explored_set_[node_id].dir) {
         return false;
     }
-    explored_set_[node_id] = visit_version;
+    explored_set_[node_id].visit_version = visit_version;
+    explored_set_[node_id].dir = dir;
     return true;
 }
 
-bool ExploredSet::checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version) {
-    if (explored_set_[node_id] == visit_version) {
+bool ExploredSet::checkVisitedNode(const uint32_t &node_id, const unsigned long long &visit_version, const char &dir) {
+    if (explored_set_[node_id].visit_version == visit_version && dir == explored_set_[node_id].dir) {
         return true;
     } else {
         return false;
