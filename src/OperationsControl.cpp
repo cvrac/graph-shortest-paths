@@ -14,9 +14,9 @@
 using namespace std;
 
 OperationsControl::OperationsControl(const float &cc_threshold, const uint32_t pool_size) :
- paths_(pool_size),  strongly_conn_(graph_),
- cc_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
- res_array_(40), scheduler_(pool_size, res_array_) {
+        paths_(pool_size),  strongly_conn_(graph_),
+        cc_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
+        res_array_(40), scheduler_(pool_size, res_array_) {
 
     for (uint32_t i = 0; i < pool_size; i++) {
         paths_[i] = new ShortestPath(graph_, strongly_conn_, grail_index_);
@@ -34,7 +34,6 @@ OperationsControl::~OperationsControl() {
 void OperationsControl::run(const char &mode) {
     clock_t start = clock();
     this->buildGraph(mode);
-    cout << "Threshold " << cc_.getThreshold() << endl;
     cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n\n";
     if (mode == 'c') {
         cc_.estimateConnectedComponents();
@@ -94,9 +93,7 @@ void OperationsControl::buildGraph(const char &mode) {
 
 void OperationsControl::runQueries(const char &mode) {
     Job *new_job;
-    uint32_t search_skips = 0, sourceNode, targetNode;
-    double total_rebuilding_time = 0;
-    double total_query_time = 0;
+    uint32_t sourceNode, targetNode;
     int ch;
     uint32_t queries_count = 0;
     uint32_t current_version = 0;
@@ -104,10 +101,6 @@ void OperationsControl::runQueries(const char &mode) {
 
     while ((ch = getchar()) == '\n') continue;
     while ((ch = getchar()) != '\n') continue;
-
-    struct timespec start, finish;
-    double elapsed;
-    clock_gettime(CLOCK_MONOTONIC, &start);
 
     while ((ch = getchar()) != EOF) {
 
@@ -124,30 +117,16 @@ void OperationsControl::runQueries(const char &mode) {
             res_array_.setElements(queries_count);
             scheduler_.executeAllJobs();
 
-            if (mode == 'c') {
-                clock_gettime(CLOCK_MONOTONIC, &finish);
-                elapsed = (finish.tv_sec - start.tv_sec);
-                elapsed += (finish.tv_nsec - start.tv_nsec) / BILLION;
-                cout << "Batch time: " << elapsed << "\n";
+            for (uint32_t i = 0; i < res_array_.getElements(); i++) {
+                cout << res_array_[i] << "\n";
             }
-
-//             for (uint32_t i = 0; i < res_array_.getElements(); i++) {
-//                  cout << res_array_[i] << "\n";
-//             }
             queries_count = 0;
             if (mode == 'c') {
                 if (cc_.needRebuilding()) {
-                    clock_gettime(CLOCK_REALTIME, &start);
                     cc_.rebuildIndexes();
-                    clock_gettime(CLOCK_REALTIME, &finish);
-                    elapsed = (finish.tv_sec - start.tv_sec);
-                    elapsed += (finish.tv_nsec - start.tv_nsec) / BILLION;
-                    cout << "Rebuilding time: " << elapsed << "\n";
-                    //total_rebuilding_time += (clock() - start) / (double) CLOCKS_PER_SEC;
                 }
                 cc_.setQueriesCount(0);
                 cc_.setUpdateIndexUseCount(0);
-                clock_gettime(CLOCK_MONOTONIC, &start);
             }
         } else if (ch == 'Q') {
             ch = getchar();

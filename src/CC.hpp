@@ -27,7 +27,7 @@ public:
     void insertNewEdge(const uint32_t &source_node, const uint32_t &target_node, const long &graph_version);
     bool sameConnectedComponent(const uint32_t &source_node, const uint32_t &target_node, const long &graph_version);
     void rebuildIndexes() {total_rebuilds_++; this->estimateConnectedComponents();}
-    bool needRebuilding() const {cout << (float) (update_index_use_count_) / queries_count_ << " -> " << update_index_use_count_ << "\n\n";
+    bool needRebuilding() const {//cout << (float) (update_index_use_count_) / queries_count_ << " -> " << update_index_use_count_ << "\n\n";
                             return (float) (update_index_use_count_) / queries_count_ > threshold_;}
     uint32_t getTotalRebuilds() const {return total_rebuilds_;}
     float getThreshold() const {return threshold_;}
