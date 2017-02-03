@@ -9,14 +9,12 @@
 #include <unistd.h>
 #include <time.h>
 
-#define BILLION  1000000000L;
-
 using namespace std;
 
-OperationsControl::OperationsControl(const float &cc_threshold, const uint32_t pool_size) :
+OperationsControl::OperationsControl(const uint32_t pool_size) :
         paths_(pool_size),  strongly_conn_(graph_),
-        cc_(graph_, cc_threshold), grail_index_(graph_, strongly_conn_),
-        res_array_(40), scheduler_(pool_size, res_array_) {
+        cc_(graph_), grail_index_(graph_, strongly_conn_),
+        res_array_(40), scheduler_(pool_size, res_array_), mode_('c') {
 
     for (uint32_t i = 0; i < pool_size; i++) {
         paths_[i] = new ShortestPath(graph_, strongly_conn_, grail_index_);
@@ -31,14 +29,22 @@ OperationsControl::~OperationsControl() {
     }
 }
 
-void OperationsControl::run(const char &mode) {
+void OperationsControl::run() {
     clock_t start = clock();
-    this->buildGraph(mode);
+    this->buildGraph();
     cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n\n";
-    if (mode == 'c') {
+
+    char ch;
+    while ((ch = getchar()) == '\n');
+    if (ch == 'S') {
+        mode_ = 's';
+    }
+    while ((ch = getchar()) != '\n');
+
+    if (mode_ == 'c') {
         cc_.estimateConnectedComponents();
     }
-    if (mode == 's') {
+    if (mode_ == 's') {
         // start = clock();
         this->strongly_conn_.init();
         this->strongly_conn_.estimateStronglyConnectedComponents();
@@ -52,14 +58,14 @@ void OperationsControl::run(const char &mode) {
     for (uint32_t i = 0; i < paths_.getElements(); i++)
         paths_[i]->init();
     //start = clock();
-    this->runQueries(mode);
+    this->runQueries();
     //cout << "runQueries: " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
     // cout << "Total swaps: " << graph_.Graph::swaps_ << endl;
 }
 
 void OperationsControl::parseNodeIds(uint32_t *source, uint32_t *target) {
     uint32_t sourceNode = *source;
-    int ch;
+    uint32_t ch;
     while (ch != ' ' && ch != '\t') {
         if (ch >= '0' && ch <= '9') {
             sourceNode = sourceNode * 10 + (ch - '0');
@@ -81,7 +87,7 @@ void OperationsControl::parseNodeIds(uint32_t *source, uint32_t *target) {
     *target = targetNode;
 }
 
-void OperationsControl::buildGraph(const char &mode) {
+void OperationsControl::buildGraph() {
     int ch;
     uint32_t sourceNode, targetNode;
     while ((ch = getchar()) != EOF && ch != 'S') {
@@ -91,16 +97,13 @@ void OperationsControl::buildGraph(const char &mode) {
     }
 }
 
-void OperationsControl::runQueries(const char &mode) {
+void OperationsControl::runQueries() {
     Job *new_job;
     uint32_t sourceNode, targetNode;
     int ch;
     uint32_t queries_count = 0;
     uint32_t current_version = 0;
     bool version_change = false;
-
-    while ((ch = getchar()) == '\n') continue;
-    while ((ch = getchar()) != '\n') continue;
 
     while ((ch = getchar()) != EOF) {
 
@@ -121,7 +124,7 @@ void OperationsControl::runQueries(const char &mode) {
                 cout << res_array_[i] << "\n";
             }
             queries_count = 0;
-            if (mode == 'c') {
+            if (mode_ == 'c') {
                 if (cc_.needRebuilding()) {
                     cc_.rebuildIndexes();
                 }
@@ -143,11 +146,11 @@ void OperationsControl::runQueries(const char &mode) {
                 continue;
             }
 
-            if (mode != 's') {
+            if (mode_ != 's') {
                 if (! version_change) {
                     version_change = true;
                 }
-                new_job = new DynamicJob(queries_count, sourceNode, targetNode, current_version, paths_, cc_, mode);
+                new_job = new DynamicJob(queries_count, sourceNode, targetNode, current_version, paths_, cc_, mode_);
             } else {
                 new_job = new StaticJob(queries_count, sourceNode, targetNode, paths_, strongly_conn_, grail_index_);
             }
@@ -164,11 +167,10 @@ void OperationsControl::runQueries(const char &mode) {
             sourceNode = ch - '0';
             parseNodeIds(&sourceNode, &targetNode);
 
-            if (graph_.insertEdge(sourceNode, targetNode, 'N', current_version) && mode == 'c') {
+            if (graph_.insertEdge(sourceNode, targetNode, 'N', current_version) && mode_ == 'c') {
                 cc_.insertNewEdge(sourceNode, targetNode, current_version);
             }
         }
     }
     scheduler_.terminateThreads();
-//    cout << "Search skips: " << search_skips << endl;
 }

@@ -5,7 +5,7 @@
 
 // Test value: 3
 
-#define MAX_NEIGHBORS 20
+#define MAX_NEIGHBORS 5
 class ListNode {
 friend class ShortestPath;
 

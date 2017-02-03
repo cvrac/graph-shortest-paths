@@ -11,13 +11,13 @@
 class OperationsControl {
 
 public:
-    OperationsControl(const float &cc_threshold, const uint32_t pool_size);
+    OperationsControl(const uint32_t pool_size);
     ~OperationsControl();
-    void run(const char &mode);
+    void run();
 
 private:
-    void buildGraph(const char &mode);
-    void runQueries(const char &mode);
+    void buildGraph();
+    void runQueries();
     void parseNodeIds(uint32_t *source, uint32_t *target);
 
     Graph graph_;
@@ -27,6 +27,7 @@ private:
     GrailIndex grail_index_;
     Garray<int> res_array_;
     JobScheduler scheduler_;
+    char mode_;
 };
 
 #endif //GRAPHSHORTESTPATHS_OPERATIONSCONTROL_H

@@ -6,6 +6,7 @@
 #include "Garray.hpp"
 
 #define INITIAL_FRONTIER_ARRAY_SIZE 131
+#define THRESHOLD 1
 
 class CC {
 
@@ -15,12 +16,11 @@ public:
 
         uint32_t neighbor;
         long graph_version; /* For multi threading with dynamic edge additions */
-        long index_version; /* Used to mark visited cells; at each visit, set to CC::index_version_. If rebuilding happens, increase CC:index_version_
-                                instead of going through each cell to mark as unvisited. */
+        long index_version; /* Used to mark visited cells; at each visit, set to CC::index_version_ */
     };
 
-    CC(Graph &graph, const float &threshold) : graph_(graph), frontier_(INITIAL_FRONTIER_ARRAY_SIZE), index_version_(0),
-                                               queries_count_(0), update_index_use_count_(0), threshold_(threshold), total_rebuilds_(0),
+    CC(Graph &graph) : graph_(graph), frontier_(INITIAL_FRONTIER_ARRAY_SIZE), index_version_(0),
+                                               queries_count_(0), update_index_use_count_(0), threshold_(THRESHOLD), total_rebuilds_(0),
                                                explored_set_(graph), neighbors_(INITIAL_NEIGHBORS_ARRAY_SIZE) {}
     ~CC();
     void estimateConnectedComponents();

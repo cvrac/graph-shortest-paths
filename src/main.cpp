@@ -1,23 +1,15 @@
 #include <stdint.h>
 
-#include "Graph.hpp"
-#include "ShortestPath.hpp"
 #include "OperationsControl.hpp"
 
 using namespace std;
 
 int main(int argc, char **argv) {
-    char mode = 'n';
-    float cc_threshold = 1;
+    int threads = 6;
     if (argc > 1) {
-        mode = argv[1][0];
+        threads = atoi(argv[1]);
     }
-    if (argc > 2) {
-        cc_threshold = atof(argv[2]);
-    }
-
-    OperationsControl operationsControl(cc_threshold, 6);
-    operationsControl.run(mode);
-
+    OperationsControl operationsControl(threads);
+    operationsControl.run();
     return 0;
 }
