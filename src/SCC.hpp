@@ -8,17 +8,20 @@
 #include "ShortestPath.hpp"
 
 class ShortestPath;
-
 class Graph;
 
 class SCC {
+
+    class ComponentCursor;
+
 public:
+
     SCC(Graph &prgraph);
     ~SCC();
     void estimateStronglyConnectedComponents();
-    int findNodeStronglyConnectedComponentID(uint32_t &node_id);
-    void iterateStronglyConnectedComponentID();
-    bool nextStronglyConnectedComponentID();
+    int findNodeStronglyConnectedComponentID(uint32_t &node_id) {return id_belongs_to_component_[node_id];}
+    void iterateStronglyConnectedComponentID(ComponentCursor *cursor);
+    bool nextStronglyConnectedComponentID(ComponentCursor *cursor);
     // int estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target);
     uint32_t getSccNumber() { return this->components_.getElements(); }
     void addSccNeighbors();
@@ -36,10 +39,6 @@ private:
         uint32_t included_nodes_count;
         Garray<uint32_t> included_node_ids;
         // Component& operator= (const Component &comp);
-    };
-
-    class ComponentCursor {
-        Component *component_ptr;
     };
 
     struct Vertex {
@@ -60,6 +59,14 @@ private:
         bool visited;
     };
 
+    struct ComponentCursor {
+
+        ComponentCursor() : component_ptr_(NULL), next(0) {}
+
+        Component *component_ptr_;
+        uint32_t next;
+    };
+
     void tarjanAlgorithm();
     void stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<uint32_t> &tarj_stack, Garray<Vertex> &vertices, uint32_t *index);
 
@@ -68,5 +75,6 @@ private:
     Garray<uint32_t> id_belongs_to_component_;
     Garray<uint32_t> neighbors_;
 };
+
 
 #endif

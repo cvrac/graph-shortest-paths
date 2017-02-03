@@ -122,13 +122,6 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
     tarj_stack.clear();
 }
 
-
-
-
-int SCC::findNodeStronglyConnectedComponentID(uint32_t &node_id) {
-    return id_belongs_to_component_[node_id];
-}
-
 // int SCC::estimateShortestPathStronglyConnectedComponents(uint32_t &source, uint32_t &target) {
 //     if (id_belongs_to_component_[source] == id_belongs_to_component_[target])
 //         return path.shortestPath(source, target, 'S');
@@ -168,12 +161,39 @@ void SCC::addSccNeighbors() {
 //    cout << "edge counter hypergraph = " << edgeCounter << endl;
 }
 
+void SCC::iterateStronglyConnectedComponentID(ComponentCursor *cursor) {
+    if (cursor == NULL) {
+        return;
+    }
+    cursor->next = 0;
+}
+
+bool SCC::nextStronglyConnectedComponentID(ComponentCursor *cursor) {
+    if (cursor == NULL) {
+        return false;
+    }
+    if (cursor->next++ >= components_.getElements()) {
+        return false;
+    }
+    cursor->component_ptr_ = &components_[cursor->next-1];
+    return true;
+}
+
 void SCC::print() {
-    for (int i = 0; i < components_.getElements(); i++) {
+/*    for (int i = 0; i < components_.getElements(); i++) {
         cout << "Component " << i << "\n";
         components_[i].included_node_ids.print();
         cout << "-------------------------------" << "\n";
     }
+*/
+    ComponentCursor cursor;
+    this->iterateStronglyConnectedComponentID(&cursor);
+    while (this->nextStronglyConnectedComponentID(&cursor)) {
+        cout << "Component " << cursor.next-1 << "\n";
+        cursor.component_ptr_->included_node_ids.print();
+        cout << "-------------------------------" << "\n";
+    }
+
     for (int i = 0 ; i < id_belongs_to_component_.getElements() ; i++) {
         cout << "inverted_index[" << i << "] = " << id_belongs_to_component_[i] << "\n";
     }
