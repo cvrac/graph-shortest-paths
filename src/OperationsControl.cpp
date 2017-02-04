@@ -33,7 +33,6 @@ void OperationsControl::run() {
     clock_t start = clock();
     this->buildGraph();
     cout << "buildGraph: " << (clock() - start) / (double) CLOCKS_PER_SEC << "\n\n";
-
     char ch;
     while ((ch = getchar()) == '\n');
     if (ch == 'S') {
@@ -106,7 +105,6 @@ void OperationsControl::runQueries() {
     bool version_change = false;
 
     while ((ch = getchar()) != EOF) {
-
         if (ch == 'F') {
             /* Not needed unless CC::insertNewEdge assertion fails. (there are no new nodes in the workload files) */
             /*if (mode != 's') {

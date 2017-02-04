@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+\usepackage{xltxtra} 
+\usepackage{xgreek}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\setmainfont[Mapping=tex-text]{GFS Didot}
+
+\title{Ανάπτυξη Λογισμικού Για Πληροφοριακά Συστήματα}
+\author{Βραχάς Χρίστος 1115201300024\\Παπατσώρης Ιωάννης 1115201300137}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+How to run: \textbf{./gsp <threads>} 
+	where <threads> is the number of threads to be used for query processing, defaults to 6.
+	We recommend adjusting this value according to your machine for best performance.
+
+Run with input redirection: \textbf{./gsp <threads> < <graph\_file> < <workload\_file>}\\
+	Make sure the last line on <graph\_file> is an \textit{S}.
+	If you manually concatenate the two files in one and run \textbf{./gsp <threads> < <input>}, 
+	there needs be a newline after the \textit{S}.
+
+\vspace{5mm}
+
+Although the use of a Hash Table regarding lookup about whether an edge between two nodes already exists has been suggested by the instructor, it turned out to hinder performance and is not used, but it still exists commented out within the code.
+
+\vspace{5mm}
+
+Three different approaches were tested for the Connected Components Update Index.
+One of them was based around maintaining a list for each initial component, that would include each component it connected with.
+Every time 2 components had to be connected, 4 memory copy operations were required to update the lists.
+With an additional optimization, the lookup about whether 2 components were connected would be accomplished
+in constant time or in $O(m)$ at worst, where $m$ is the number of components connected to the given component. 
+However, in practice the worst case would never happen even in the largest dataset, so it was always constant time.
+
+One other approach was to hold an array of size equal to the number of initial components and assign
+a shared ID number across connected ones, resulting in constant time for connection lookup.
+When connecting 2 components, if one of them was not already connected with any different one, the connection would also be made in constant time.
+If not, the most naive way to update the structure would require $O(n)$ time where $n$ is the number of initial components, which could be improved on with various optimizations.
+But in practice, the second case would only occur 23 times out of 1 million in the largest dataset.
+
+The real problem with the above approaches is that they cannot be tweaked so that they can be shared between various versions of the graph and be used in parallel,
+without becoming memory inefficient. For each batch, that would require $V$ times more memory, where $V$ is the number of different graph versions in the current batch.
+The second approach was altered to work in parallel, and while time performance was identical to the final approach, memory usage on the largest dataset was off limits.
+Although the main thread could check whether 2 components are connected right away without assigning the job to the Scheduler, thus eliminating the need of multiple graph versions,
+it would give up completely on parallelism and perform worse than the third approach, which is presented bellow:
+
+Here is the final approach, which can operate in parallel between multiple versions of the graph efficiently.
+
+\begin{algorithm}
+\caption{CC Update Index}\label{euclid}
+\begin{algorithmic}[1]
+\Procedure{ConnectTwoComponents}{}
+\State $a \gets min\{c1, c2\}$
+\State $b \gets max\{c1, c2\}$
+\While{$update[a] \textnormal{ NOT EMPTY } \textnormal{ and }update[a].version \leq current\_version $ }
+	\If {$update[a].next == b $}
+		\State \Return \textit{'Already connected'}
+	\EndIf
+	\State $tmp \gets a$
+	\State $a \gets min\{update[tmp].next, b\}$
+	\State $b \gets max\{update[tmp].next, b\}$
+\EndWhile
+\State $update[a].id \gets b$
+\State $update[a].version \gets current\_version$
+\State \Return \textit{'Connection successful'}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+We hold an array of \textit{initial\_number\_of\_connected\_components} size. Each cell represents a component and
+holds an integer which is the next connected component that the current one is linked with, with all of the cells being empty at the beginning. 
+Considering that the two components $c1$ and $c2$ we want to connect do not seem to be already 
+connected from the CC Index, we consult the Update Index and connect them in the above manner.
+
+To check if two components are already connected using the update index, we use the same iteration in the above algorithm, but without altering the index.
+
+While index rebuilding according to a metric regarding Update Index usage was implemented, it did not improve performance in any of the approaches,
+even when rebuilding was performed at every batch and without even taking into account the extra time required for rebuilding.
+As a result, no rebuilding is done at all. This can be changed by altering the THRESHOLD defined value in CC.hpp file (float between $[0,1]$)
+
+
+
+\end{document}

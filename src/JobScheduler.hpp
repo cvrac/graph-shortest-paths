@@ -9,7 +9,6 @@
 #include "SCC.hpp"
 #include "CC.hpp"
 #include "GrailIndex.hpp"
-
 class Job {
 public:
     Job(const uint32_t &id, const uint32_t &source, const uint32_t &target, Garray<ShortestPath *> &path) : job_id_(id),

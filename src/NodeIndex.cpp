@@ -72,14 +72,14 @@ void NodeIndex::insertNode(const uint32_t &node_id) {
 //     return index_[node_id].neighbors_hash_->search(neighbor_id);
 // }
 //
-// bool NodeIndex::searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode) {
-//     if (index_[node_id].neighbors_hash_ == NULL) {
-//         index_[node_id].neighbors_hash_ = new HashTable<uint32_t>((mode == 'S' ? HASH_SIZE_SCC : HASH_SIZE));
-//         index_[node_id].neighbors_hash_->insert(neighbor_id);
-//         return true;
-//     }
-//     return index_[node_id].neighbors_hash_->searchInsert(neighbor_id);
-// }
+/* bool NodeIndex::searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode) {
+     if (index_[node_id].neighbors_hash_ == NULL) {
+         index_[node_id].neighbors_hash_ = new HashTable<uint32_t>((mode == 'S' ? HASH_SIZE_SCC : HASH_SIZE));
+         index_[node_id].neighbors_hash_->insert(neighbor_id);
+         return true;
+     }
+     return index_[node_id].neighbors_hash_->searchInsert(neighbor_id);
+}*/
 
 uint32_t NodeIndex::getAverageNeighbors() {
     long long sum = 0;
@@ -104,10 +104,10 @@ void NodeIndex::print() const {
 //     }
 // }
 
-// void NodeIndex::deleteNeigborsHash() {
-//     for (uint32_t node = 0; node < cur_size_; node++) {
-//         if (index_[node].neighbors_hash_ != NULL) {
-//             delete index_[node].neighbors_hash_;
-//         }
-//     }
-// }
+/* void NodeIndex::deleteNeigborsHash() {
+     for (uint32_t node = 0; node < cur_size_; node++) {
+         if (index_[node].neighbors_hash_ != NULL) {
+             delete index_[node].neighbors_hash_;
+         }
+     }
+}*/

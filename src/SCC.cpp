@@ -169,10 +169,7 @@ void SCC::iterateStronglyConnectedComponentID(ComponentCursor *cursor) {
 }
 
 bool SCC::nextStronglyConnectedComponentID(ComponentCursor *cursor) {
-    if (cursor == NULL) {
-        return false;
-    }
-    if (cursor->next++ >= components_.getElements()) {
+    if (cursor == NULL || cursor->next++ >= components_.getElements()) {
         return false;
     }
     cursor->component_ptr_ = &components_[cursor->next-1];

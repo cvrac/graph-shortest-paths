@@ -8,10 +8,7 @@
 using namespace std;
 
 Graph::~Graph() {
-    // outer_index_.deleteNeigborsHash();
-    // inner_index_.deleteNeigborsHash();
-    // scc_outer_index_.deleteNeigborsHash();
-    // scc_inner_index_.deleteNeigborsHash();
+     //outer_index_.deleteNeigborsHash();
 }
 
 inline void Graph::insertNode(const uint32_t node_id) {
@@ -34,6 +31,9 @@ uint32_t Graph::insertNodes(const uint32_t &source_node_id, const uint32_t &targ
 bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_node_id, const char &mode, const uint32_t &edge_version) {
     if (mode != 'S') {
         this->insertNodes(source_node_id, target_node_id);
+        /*if (! outer_index_.searchInsertHash(source_node_id, target_node_id, 'C')) {
+            return false;
+        }*/
     }
     const uint32_t *node1 = &source_node_id;
     const uint32_t *node2 = &target_node_id;
@@ -61,17 +61,6 @@ bool Graph::insertEdge(const uint32_t &source_node_id, const uint32_t &target_no
     } else {
         return false;
     }
-
-    // if (index->getHashNeighbors(*node1, *node2) > mirror_index->getHashNeighbors(*node2, *node1)) {
-    //     this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
-    // }
-    // if (this->insertEdge(*node1, *node2, index, buffer, mode, skip_search)) {
-    //     skip_search = true;
-    //     this->toggleDirection(source_node_id, target_node_id, &node1, &node2, &index, &buffer, mode);
-    //     this->insertEdge(*node1, *node2, index, buffer, mode, skip_search);
-    // } else {
-    //     return false;
-    // }
     return true;
 }
 

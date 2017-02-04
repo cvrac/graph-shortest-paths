@@ -8,7 +8,7 @@
 // Test size: 3
 
 #define HASH_SIZE 3
-#define HASH_SIZE_SCC 1
+#define HASH_SIZE_SCC 3
 
 class SCC;
 
@@ -30,7 +30,7 @@ public:
     void setListHeadNeighbors(const uint32_t &node_id, const uint32_t &n) {index_[node_id].total_neighbors = n;}
     // void insertNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode);
     // bool searchNeighborInHash(const uint32_t &node_id, const uint32_t &neighbor_id);
-    // bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode);
+    //bool searchInsertHash(const uint32_t &node_id, const uint32_t &neighbor_id, const char &mode);
     uint32_t getListHeadNeighbors(const uint32_t &node_id) const {return index_[node_id].total_neighbors;}
     // uint32_t getHashNeighbors(const uint32_t &source, const uint32_t &target) const {
     //     if (index_[source].neighbors_hash_ == NULL) {
@@ -44,20 +44,20 @@ public:
     uint32_t getMaxSize() const {return max_size_;}
     void print() const;
     // void printNeighborsHash(const uint32_t &node_id) const;
-    // void deleteNeigborsHash();
+    //void deleteNeigborsHash();
 
 private:
     struct ListHead {
         friend class SCC;
 
-        ListHead() : pos(-1), last_pos(-1), total_neighbors(0) {
+        ListHead() : pos(-1), last_pos(-1), total_neighbors(0) { //,neighbors_hash_(NULL) {
             //neighbors_hash_ = new HashTable(HASH_SIZE);
         }
 
         long pos;
         long last_pos;
         uint32_t total_neighbors;
-        // HashTable<uint32_t> *neighbors_hash_; // Allocate only when needed
+        //HashTable<uint32_t> *neighbors_hash_; // Allocate only when needed
     };
 
     ListHead *index_;
