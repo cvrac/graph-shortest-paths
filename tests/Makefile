@@ -3,8 +3,8 @@ HEADER =  ../src/Garray.hpp
 
 all: check
 
-GTEST_INCLUDE = ~/googletest/googletest/include
-GTEST_LIBDIR = ~/googletest/googletest/make
+GTEST_INCLUDE = googletest/googletest/include
+GTEST_LIBDIR = googletest/googletest/make
 CC 	= g++
 COMP_FLAGS	= -c -I $(GTEST_INCLUDE)
 LINK_FLAGS  = -L $(GTEST_LIBDIR) -l gtest_main -lpthread

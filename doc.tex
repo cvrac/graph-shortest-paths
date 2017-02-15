@@ -9,6 +9,7 @@
 \usepackage[noend]{algpseudocode}
 
 \setmainfont{CMU Serif}
+%\setmainfont[Mapping=tex-text]{GFS Didot}
 
 \title{Software Development Project - Graph Shortest Paths \\ Fall 2016-2017}
 \author{Vrachas Christos \\ \texttt{1115201300024}
@@ -88,6 +89,8 @@ While index rebuilding according to a metric regarding Update Index usage was im
 even when rebuilding was performed at every batch and without even taking into account the extra time required for rebuilding.
 As a result, no rebuilding is done at all. This can be changed by altering the THRESHOLD defined value in CC.hpp file (float between $[0,1]$)
 
+\vspace{5mm}
 
+The GoogleTest library was used for some unit testing, which is included in the tests/googletest folder. To perform the tests, run \textbf{make} inside the tests/ folder and \textbf{./check}.
 
 \end{document}
