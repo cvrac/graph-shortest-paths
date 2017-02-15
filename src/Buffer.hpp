@@ -5,8 +5,6 @@
 
 #include "ListNode.hpp"
 
-// Test value: 1
-
 struct BufferFeedback {
 
 public:

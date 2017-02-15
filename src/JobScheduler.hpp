@@ -85,8 +85,6 @@ private:
     pthread_cond_t finished_;
     pthread_mutex_t served_mutex_;
     pthread_cond_t cond_served_;
-    // pthread_cond_t cond_nonfull_;
-
 };
 
 #endif
