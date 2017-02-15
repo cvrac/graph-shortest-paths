@@ -36,9 +36,7 @@ void GrailIndex::buildGrailIndex(const char &dir) {
     Garray<uint32_t> dfs_stack;
     Garray<Vertex> vertices(end);
     scc_index.init(end);
-    // cout << str_components_.getSccNumber() << endl;
     // scc_index.init(graph_.getNodes('S'));
-    // cout << scc_index.getSize() << endl;
 
     // scc_index = new Garray<uint32_t>[graph_.getNodes('S')];
     // assert(scc_index != NULL);
@@ -120,10 +118,7 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
             vertices[v].visited = true;
             if (vertices[v].total == 0) {
                 v = dfs_stack.popBack();
-                // if (v >= graph_.getNodes('S'))
-                //     cout << "v sucks" << v << endl;
                 Garray<uint32_t> &val_array = scc_index[v];
-                // cout << "foo" << endl;
                 val_array.enstack(order);
                 val_array.enstack(order);
                 ++order;
@@ -132,7 +127,6 @@ void GrailIndex::postOrderTraversal(const uint32_t &node, Garray<Vertex> &vertic
         }
         if (vertices[v].childrenvisited < vertices[v].total) {
             w = vertices[v].neighbors[vertices[v].childrenvisited];
-            // cout << v << " " << w << endl;
             if (vertices[w].visited == false && w != v)
                 dfs_stack.enstack(w);
             ++vertices[v].childrenvisited;

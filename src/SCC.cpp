@@ -78,7 +78,6 @@ void SCC::stronglyConnected(uint32_t &node, Garray<uint32_t> &dfs_stack, Garray<
             vertices[v].onStack = true;
         }
         if (vertices[v].childrenvisited < vertices[v].total) {
-            // cout << vertices[v].total << endl;
             // w = graph.getNeighbor(v, vertices[v].childrenvisited, 'F');
             w = vertices[v].neighbors[vertices[v].childrenvisited];
             if (vertices[w].visited == false) {
@@ -136,7 +135,6 @@ void SCC::addSccNeighbors() {
     // for (uint32_t comp = 0; comp < components_.getElements(); comp++) {
     //     Component &scc = components_[comp];
     //     for (uint32_t vertex = 0; vertex < scc.included_nodes_count; vertex++) {
-    //         // cout << comp << " " << scc.included_node_ids[vertex] << endl;
     //         Garray<uint32_t> &neighbors_ = graph.getNeighbors(scc.included_node_ids[vertex], 'F');
     //         for (uint32_t neighbor = 0; neighbor < neighbors_.getElements(); neighbor++) {
     //             neighborScc = id_belongs_to_component_[neighbors_[neighbor]];
@@ -158,7 +156,6 @@ void SCC::addSccNeighbors() {
         }
     }
 
-//    cout << "edge counter hypergraph = " << edgeCounter << endl;
 }
 
 void SCC::iterateStronglyConnectedComponentID(ComponentCursor *cursor) {
