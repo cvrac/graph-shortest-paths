@@ -89,10 +89,24 @@ void OperationsControl::parseNodeIds(uint32_t *source, uint32_t *target) {
 void OperationsControl::buildGraph() {
     int ch;
     uint32_t sourceNode, targetNode;
-    while ((ch = getchar()) != EOF && ch != 'S') {
-        sourceNode = ch - '0';
-        parseNodeIds(&sourceNode, &targetNode);
+//    while ((ch = getchar()) != EOF && ch != 'S') {
+//        sourceNode = ch - '0';
+//        parseNodeIds(&sourceNode, &targetNode);
+    char *line = NULL, *temp = NULL;
+    size_t size = 0;
+    int status = 0;
+    while ((status = getline(&line, &size, stdin)) != -1) {
+        if (line[0] == 'S') break;
+//        cout << "foo" << endl;
+//        line = strtok(line, "\t ");
+//        sourceNode = atoi(line);
+//        line = strtok(NULL, "\t ");
+//        targetNode = atoi(line);
+        sourceNode = strtol(line, &temp, 10);
+        targetNode = strtol(temp, &temp, 10);
+//        cout << sourceNode << " " << targetNode << endl;
         graph_.insertEdge(sourceNode, targetNode, 'N', 0);
+        line = NULL; temp = NULL;
     }
 }
 
@@ -103,9 +117,13 @@ void OperationsControl::runQueries() {
     uint32_t queries_count = 0;
     uint32_t current_version = 0;
     bool version_change = false;
+    char *line = NULL, *temp = NULL;
+    size_t size = 0;
+    int status = 0;
 
-    while ((ch = getchar()) != EOF) {
-        if (ch == 'F') {
+//    while ((ch = getchar()) != EOF) {
+    while ((status = getline(&line, &size, stdin)) != -1) {
+        if (line[0] == 'F') {
             /* Not needed unless CC::insertNewEdge assertion fails. (there are no new nodes in the workload files) */
             /*if (mode != 's') {
                 for (uint32_t i = 0 ; i < paths_.getElements() ; i++) {
@@ -129,11 +147,14 @@ void OperationsControl::runQueries() {
                 cc_.setQueriesCount(0);
                 cc_.setUpdateIndexUseCount(0);
             }
-        } else if (ch == 'Q') {
-            ch = getchar();
+        } else if (line[0] == 'Q') {
+/*            ch = getchar();
             ch = getchar();
             sourceNode = ch - '0';
             parseNodeIds(&sourceNode, &targetNode);
+            */
+            sourceNode = strtol(line + 1, &temp, 10);
+            targetNode = strtol(temp, &temp, 10);
 
             uint32_t total_nodes = graph_.getNodes('N');
             if (sourceNode >= total_nodes || targetNode >= total_nodes) {
@@ -155,20 +176,24 @@ void OperationsControl::runQueries() {
             scheduler_.submitJob(new_job);
             ++queries_count;
 
-        } else if (ch == 'A') {
+        } else if (line[0] == 'A') {
             if (version_change) {
                 current_version++;
                 version_change = false;
             }
-            ch = getchar();
+/*            ch = getchar();
             ch = getchar();
             sourceNode = ch - '0';
-            parseNodeIds(&sourceNode, &targetNode);
+            parseNodeIds(&sourceNode, &targetNode);*/
+            sourceNode = strtol(line + 1, &temp, 10);
+            targetNode = strtol(temp, &temp, 10);
+
 
             if (graph_.insertEdge(sourceNode, targetNode, 'N', current_version) && mode_ == 'c') {
                 cc_.insertNewEdge(sourceNode, targetNode, current_version);
             }
         }
+        line = NULL; temp = NULL;
     }
     scheduler_.terminateThreads();
 }
