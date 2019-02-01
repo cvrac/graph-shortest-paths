@@ -9,3 +9,16 @@ In this contest, the task is to answer shortest path queries on a changing graph
 The graphs (static/dynamic) are directed and unweighted. Input to your program will be provided via standard input, and the output must appear on the standard output.
 
 http://dsg.uwaterloo.ca/sigmod16contest/task.html
+
+# Installation #
+
+* `mkdir build ; cd build`
+* `cmake ..`
+* `make`
+
+# Run #
+
+* `build/gsp <NUM_THREADS>`
+* `build/gsp <NUM_THREADS> < inputGraph.txt < inputWorkload.txt`
+
+datasets directory contains several possible input datasets
