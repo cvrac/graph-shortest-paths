@@ -4,3 +4,5 @@ util.h
 tests/*.o
 tests/check
 *.txt
+.Makefile
+build
