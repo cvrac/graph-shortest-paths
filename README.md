@@ -1,4 +1,4 @@
-# SIGMOD PROGRAMMING CONTEST 2016 - Software Development Project 2017
+# SIGMOD PROGRAMMING CONTEST 2016 - Software Development Project 2016-2017
 
 # Team:
 * Ioannis Papatsoris
