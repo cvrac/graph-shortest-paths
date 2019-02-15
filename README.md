@@ -1,6 +1,8 @@
-SIGMOD PROGRAMMING CONTEST 2016
+# SIGMOD PROGRAMMING CONTEST 2016 - Software Development Project 2017
 
-Implemented by Ioannis Papatsoris, Christos Vrachas
+# Team:
+* Ioannis Papatsoris
+* Christos Vrachas
 
 In graph theory, the shortest path problem is the problem of finding a path between two vertices (or nodes) in a graph such that the sum of the weights of its constituent edges is minimized. This is a fundamental and well-studied combinatorial optimization problem with many practical uses: from GPS navigation to routing schemes in computer networks; search engines apply solutions to this problem on website interconnectivity graphs and social networks apply them on graphs of peoples' relationships.
 
